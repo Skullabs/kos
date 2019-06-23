@@ -1,0 +1,62 @@
+package {{packageName}};
+
+import kos.core.*;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.ext.web.RoutingContext;
+
+/**
+ * Auto generated server configuration for {@link {{packageName}}.{{simpleName}}}.
+ */
+@injector.Singleton
+@{{jdkGeneratedAnnotation}}("kos.apt.RestApiProcessor")
+public class {{className}} implements WebServerEventListener {
+
+    private final {{simpleName}} handler = Kos.implementationLoader
+            .instanceOfOrFail({{simpleName}}.class);
+
+    public void on(WebServerEventListener.BeforeDeployEvent event) {
+        {{#methods}}
+        {{#httpPath}}
+        event.router().route( HttpMethod.{{httpMethod}}, "{{.}}", new Handler<RoutingContext>() {
+
+            /**
+             * Auto generated wrapper for {@link {{packageName}}.{{simpleName}}#{{name}}}.
+             */
+            public void handle(final RoutingContext event) {
+                try {
+                    /* Call original handler */
+            {{#responseType}}
+                    final {{{responseType}}} response =
+            {{/responseType}}
+                    handler.{{name}}(
+                        /* Read request parameters */{{#parameters}}{{^first}},{{/first}}
+                        Request.read{{data.annotation}}( event, "{{data.name}}", {{data.type}}.class ){{/parameters}}
+                    );
+            {{#containsResponseType}}
+                    /* Wraps response as Future */
+                    Lang.asFuture(response).setHandler(new Handler<AsyncResult<{{{unwrappedResponseType}}}>>() {
+                        public void handle( AsyncResult<{{{unwrappedResponseType}}}> as ) {
+                            if (as.succeeded())
+                                Response.send(event, as.result());
+                            else
+                                Response.sendError(event, as.cause());
+                        }
+                    });
+            {{/containsResponseType}}{{^containsResponseType}}
+                    /* Sends the default response for "no content". */
+                    Response.sendDefaultNoContent( event );
+            {{/containsResponseType}}
+                } catch (Throwable cause){
+                    Response.sendError(event, cause);
+                }
+            }
+        });
+
+        {{/httpPath}}
+        {{/methods}}
+    }
+
+}

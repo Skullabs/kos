@@ -1,0 +1,913 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="Zero-overhead and minimalist web framework for Vert.x">
+      
+      
+        <link rel="canonical" href="https://skullabs.github.io/kos/21-kos-architecture/">
+      
+      
+        <meta name="author" content="Skullabs Contributors">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
+    
+    
+      
+        <title>Kos Architecture Overview - Kos</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-palette.01803549.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#ff7043">
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-orange" data-md-color-accent="blue-grey">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#kos-architecture-overview" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://skullabs.github.io/kos/" title="Kos" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Kos
+            </span>
+            <span class="md-header-nav__topic">
+              
+                Kos Architecture Overview
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/skullabs/kos/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+        
+
+<nav class="md-tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  <li class="md-tabs__item">
+    
+      <a href=".." title="Overview" class="md-tabs__link md-tabs__link--active">
+        Overview
+      </a>
+    
+  </li>
+
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</nav>
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="https://skullabs.github.io/kos/" title="Kos" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    Kos
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="https://github.com/skullabs/kos/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../01-getting-started/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../02-rest-apis/" title="Rest APIs" class="md-nav__link">
+      Rest APIs
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../11-dependency-injection/" title="Dependency Injection with Kos" class="md-nav__link">
+      Dependency Injection with Kos
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Kos Architecture Overview
+      </label>
+    
+    <a href="./" title="Kos Architecture Overview" class="md-nav__link md-nav__link--active">
+      Kos Architecture Overview
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#differences-between-vertx-and-kos" title="Differences between VertX and Kos" class="md-nav__link">
+    Differences between VertX and Kos
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vanilla-vertx-webapp" title="Vanilla Vert.x Webapp" class="md-nav__link">
+    Vanilla Vert.x Webapp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kos-webapp" title="Kos webapp" class="md-nav__link">
+    Kos webapp
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-injection-kos-backbone" title="Dependency Injection: Kos' Backbone" class="md-nav__link">
+    Dependency Injection: Kos' Backbone
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#webservice-verticle" title="WebService Verticle" class="md-nav__link">
+    WebService Verticle
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kos-launcher" title="Kos Launcher" class="md-nav__link">
+    Kos Launcher
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#differences-between-vertx-and-kos" title="Differences between VertX and Kos" class="md-nav__link">
+    Differences between VertX and Kos
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vanilla-vertx-webapp" title="Vanilla Vert.x Webapp" class="md-nav__link">
+    Vanilla Vert.x Webapp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kos-webapp" title="Kos webapp" class="md-nav__link">
+    Kos webapp
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-injection-kos-backbone" title="Dependency Injection: Kos' Backbone" class="md-nav__link">
+    Dependency Injection: Kos' Backbone
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#webservice-verticle" title="WebService Verticle" class="md-nav__link">
+    WebService Verticle
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kos-launcher" title="Kos Launcher" class="md-nav__link">
+    Kos Launcher
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/21-kos-architecture.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="kos-architecture-overview">Kos Architecture Overview<a class="headerlink" href="#kos-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>In the following topics we're going to introduce you the main points that Kos may come in handy on your project,
+how it reduces boilerplate codes but keeps the performance close to a pure Vert.x solution.</p>
+<h2 id="differences-between-vertx-and-kos">Differences between VertX and Kos<a class="headerlink" href="#differences-between-vertx-and-kos" title="Permanent link">&para;</a></h2>
+<p>To understand the benefits of using Kos, lets create a <em>trivial</em>
+<a href="https://en.wikipedia.org/wiki/Create%2C_read%2C_update_and_delete">CRUD</a> of <code>User</code>. Below, we have
+a basic source code that covers the creation, removal and retrieval of user. We'll use it as persistence
+layer for two experiments: one using Kos and another one using pure Vert.x.</p>
+<div class="superfences-tabs">
+<input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
+<label for="__tab_1_0">User.java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">lombok.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+
+    <span class="kd">final</span> <span class="n">UUID</span> <span class="n">id</span> <span class="o">=</span> <span class="n">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">();</span>
+    <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="n">ZonedDateTime</span> <span class="n">creationDate</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div></div>
+<input name="__tabs_1" type="radio" id="__tab_1_1" />
+<label for="__tab_1_1">UserRepository.java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">io.vertx.core.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.time.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">interface</span> <span class="nc">UserRepository</span> <span class="o">{</span>
+
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="nf">retrieveUserById</span><span class="o">(</span><span class="n">UUID</span> <span class="n">id</span><span class="o">);</span>
+
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;&gt;</span> <span class="nf">retrieveUsersCreatedBetween</span><span class="o">(</span>
+        <span class="n">ZonedDateTime</span> <span class="n">initialDate</span><span class="o">,</span> <span class="n">ZonedDateTime</span> <span class="n">endDate</span><span class="o">);</span>
+
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">UUID</span><span class="o">&gt;</span> <span class="nf">createUser</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">);</span>
+
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span> <span class="nf">removeUser</span><span class="o">(</span><span class="n">UUID</span> <span class="n">id</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div></div>
+</div>
+<p>It worth mention that:</p>
+<ul>
+<li>All the example files bellow are written in Java, although it may look similar if written in Kotlin or Scala.</li>
+<li><code>User.java</code> is the entity to be stored in the database - later we'll also use it as a <em>model</em> in our Rest API.
+For brevity, it uses <a href="http://projectlombok.org">Lombok</a> to make example simpler.</li>
+<li><code>UserRepository.java</code> the concrete implementation of our repository. For brevity, we've designed it as an interface.
+Lets assume that we have a class <code>DefaultUserRepository</code> else where that properly implements the required methods.</li>
+</ul>
+<h3 id="vanilla-vertx-webapp">Vanilla Vert.x Webapp<a class="headerlink" href="#vanilla-vertx-webapp" title="Permanent link">&para;</a></h3>
+<div class="superfences-tabs">
+<input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
+<label for="__tab_2_0">App.java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">io.vertx.core.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.vertx.core.http.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.vertx.ext.web.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">App</span> <span class="o">{</span> <span class="c1">// 1</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Vertx</span> <span class="n">vertx</span> <span class="o">=</span> <span class="n">Vertx</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+
+    <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">val</span> <span class="n">configRetriever</span> <span class="o">=</span> <span class="n">loadConfigRetriever</span><span class="o">();</span> <span class="c1">// 2</span>
+        <span class="n">configRetriever</span><span class="o">.</span><span class="na">getConfig</span><span class="o">(</span><span class="n">res</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">res</span><span class="o">.</span><span class="na">failed</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">handleFatalFailure</span><span class="o">(</span><span class="s">&quot;Failed to load configuration&quot;</span><span class="o">,</span> <span class="n">res</span><span class="o">.</span><span class="na">cause</span><span class="o">());</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">Router</span> <span class="n">router</span> <span class="o">=</span> <span class="n">Router</span><span class="o">.</span><span class="na">router</span><span class="o">(</span><span class="n">vertx</span><span class="o">);</span> <span class="c1">// 3</span>
+                <span class="c1">// Ensure any POST message will have its body payload buffered before the</span>
+                <span class="c1">// expected request handler method is called.</span>
+                <span class="n">router</span><span class="o">.</span><span class="na">post</span><span class="o">().</span><span class="na">handler</span><span class="o">(</span> <span class="n">BodyHandler</span><span class="o">.</span><span class="na">create</span><span class="o">()</span> <span class="o">);</span>
+
+                <span class="n">val</span> <span class="n">config</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="na">result</span><span class="o">();</span>
+                <span class="n">deployVerticlesWithConfig</span><span class="o">(</span><span class="n">router</span><span class="o">,</span> <span class="n">config</span><span class="o">);</span>
+                <span class="n">startVertxHttpServer</span><span class="o">(</span><span class="n">router</span><span class="o">,</span> <span class="n">config</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">ConfigRetriever</span> <span class="nf">loadConfigRetriever</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">val</span> <span class="n">store</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConfigStoreOptions</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">setOptional</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">setType</span><span class="o">(</span><span class="s">&quot;file&quot;</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">setFormat</span><span class="o">(</span><span class="s">&quot;yaml&quot;</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">setConfig</span><span class="o">(</span><span class="k">new</span> <span class="n">JsonObject</span><span class="o">().</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;path&quot;</span><span class="o">,</span> <span class="s">&quot;conf/application.yml&quot;</span><span class="o">));</span>
+
+        <span class="n">val</span> <span class="n">retrieverOptions</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConfigRetrieverOptions</span><span class="o">();</span>
+        <span class="n">retrieverOptions</span><span class="o">.</span><span class="na">addStore</span><span class="o">(</span><span class="n">store</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="n">ConfigRetriever</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">vertx</span><span class="o">,</span> <span class="n">retrieverOptions</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">deployVerticlesWithConfig</span><span class="o">(</span><span class="n">Router</span> <span class="n">router</span><span class="o">,</span> <span class="n">JsonObject</span> <span class="n">config</span><span class="o">){</span>
+        <span class="n">val</span> <span class="n">options</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DeploymentOptions</span><span class="o">().</span><span class="na">setConfig</span><span class="o">(</span><span class="n">res</span><span class="o">.</span><span class="na">result</span><span class="o">());</span>
+        <span class="n">val</span> <span class="n">repository</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultUserRepository</span><span class="o">();</span>
+        <span class="n">val</span> <span class="n">userVerticle</span> <span class="o">=</span> <span class="n">UserApi</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">router</span><span class="o">,</span> <span class="n">repository</span><span class="o">);</span>
+        <span class="n">vertx</span><span class="o">.</span><span class="na">deployVerticle</span><span class="o">(</span><span class="n">verticle</span><span class="o">,</span> <span class="n">options</span><span class="o">);</span> <span class="c1">// 4</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">startVertxHttpServer</span><span class="o">(</span><span class="n">Router</span> <span class="n">router</span><span class="o">,</span> <span class="n">JsonObject</span> <span class="n">config</span><span class="o">){</span>
+        <span class="n">val</span> <span class="n">httpOptions</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpServerOptions</span><span class="o">(</span><span class="n">config</span><span class="o">);</span>
+
+        <span class="n">vertx</span><span class="o">.</span><span class="na">createHttpServer</span><span class="o">(</span><span class="n">httpServerOptions</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">requestHandler</span><span class="o">(</span><span class="n">router</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">listen</span><span class="o">(</span> <span class="n">res</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span> <span class="n">res</span><span class="o">.</span><span class="na">failed</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
+                    <span class="n">handleFatalFailure</span><span class="o">(</span><span class="s">&quot;Could not start server&quot;</span><span class="o">,</span> <span class="n">as</span><span class="o">.</span><span class="na">cause</span><span class="o">()</span> <span class="o">);</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                    <span class="n">val</span> <span class="n">server</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="na">result</span><span class="o">();</span>
+                    <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">addShutdownHook</span><span class="o">(</span><span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">server</span><span class="o">::</span><span class="n">close</span><span class="o">));</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;Application started and listening for requests&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleFatalFailure</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">cause</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">fatal</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="n">cause</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// Starts the application from the command line.</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span> <span class="c1">// 5</span>
+            <span class="s">&quot;vertx.logger-delegate-factory-class-name&quot;</span><span class="o">,</span>
+            <span class="n">SLF4JLogDelegateFactory</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getCanonicalName</span><span class="o">()</span>
+        <span class="o">);</span>
+
+        <span class="k">new</span> <span class="n">App</span><span class="o">().</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></div>
+<input name="__tabs_2" type="radio" id="__tab_2_1" />
+<label for="__tab_2_1">UserApi.java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">io.vertx.core.http.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.vertx.core.buffer.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.vertx.core.logging.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.vertx.core.json.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.vertx.ext.web.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.time.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">UserApi</span> <span class="o">{</span> <span class="c1">// 6</span>
+
+    <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+    <span class="kd">final</span> <span class="n">UserRepository</span> <span class="n">repository</span><span class="o">;</span>
+
+    <span class="n">UserApi</span><span class="o">(</span><span class="n">UserRepository</span> <span class="n">repository</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">repository</span> <span class="o">=</span> <span class="n">repository</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">retrieveUserById</span><span class="o">(</span><span class="n">RoutingContext</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">val</span> <span class="n">idAsString</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">request</span><span class="o">().</span><span class="na">params</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;id&quot;</span><span class="o">);</span>
+        <span class="n">val</span> <span class="n">id</span> <span class="o">=</span> <span class="n">isAsString</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">UUID</span><span class="o">.</span><span class="na">fromString</span><span class="o">(</span><span class="n">isAsString</span><span class="o">);</span> <span class="c1">// 7</span>
+
+        <span class="n">repository</span><span class="o">.</span><span class="na">retrieveUserById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">UserApi</span><span class="o">::</span><span class="n">defaultResponseHandler</span><span class="o">);</span> <span class="c1">// 8</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">retrieveUsersCreatedBetween</span><span class="o">(</span><span class="n">RoutingContext</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">val</span> <span class="n">initialDateAsString</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">request</span><span class="o">().</span><span class="na">params</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;initDate&quot;</span><span class="o">);</span>
+        <span class="n">val</span> <span class="n">initialDate</span> <span class="o">=</span> <span class="n">ZonedDateTime</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">initialDateAsString</span><span class="o">);</span>
+        <span class="n">val</span> <span class="n">endDateAsString</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">request</span><span class="o">().</span><span class="na">params</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;endDate&quot;</span><span class="o">);</span>
+        <span class="n">val</span> <span class="n">endDate</span> <span class="o">=</span> <span class="n">ZonedDateTime</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">endDateAsString</span><span class="o">);</span>
+
+        <span class="n">retrieveUsersCreatedBetween</span><span class="o">(</span><span class="n">initialDate</span><span class="o">,</span> <span class="n">endDate</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">UserApi</span><span class="o">::</span><span class="n">defaultResponseHandler</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">createUser</span><span class="o">(</span><span class="n">RoutingContext</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">val</span> <span class="n">user</span> <span class="o">=</span> <span class="n">Json</span><span class="o">.</span><span class="na">decodeValue</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getBody</span><span class="o">(),</span> <span class="n">User</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">createUser</span><span class="o">(</span><span class="n">user</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">UserApi</span><span class="o">::</span><span class="n">defaultResponseHandler</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">removeUser</span><span class="o">(</span><span class="n">RoutingContext</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">val</span> <span class="n">idAsString</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">request</span><span class="o">().</span><span class="na">params</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;id&quot;</span><span class="o">);</span>
+        <span class="n">val</span> <span class="n">id</span> <span class="o">=</span> <span class="n">isAsString</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">UUID</span><span class="o">.</span><span class="na">fromString</span><span class="o">(</span><span class="n">isAsString</span><span class="o">);</span>
+
+        <span class="n">removeUser</span><span class="o">(</span><span class="n">id</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">UserApi</span><span class="o">::</span><span class="n">defaultResponseHandler</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">defaultResponseHandler</span><span class="o">(</span><span class="n">AsyncResult</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">res</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// 9</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">res</span><span class="o">.</span><span class="na">failed</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">sendInternalServerError</span><span class="o">(</span><span class="n">event</span><span class="o">,</span> <span class="n">res</span><span class="o">.</span><span class="na">cause</span><span class="o">());</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">sendOkResponseAsJson</span><span class="o">(</span><span class="n">event</span><span class="o">,</span> <span class="n">res</span><span class="o">.</span><span class="na">result</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sendInternalServerError</span><span class="o">(</span><span class="n">RoutingContext</span> <span class="n">event</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">cause</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// 10</span>
+        <span class="n">val</span> <span class="n">req</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">request</span><span class="o">();</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;Failed to handle request: &quot;</span> <span class="o">+</span> <span class="n">req</span><span class="o">..</span><span class="na">method</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; - &quot;</span> <span class="o">+</span> <span class="o">.</span><span class="na">path</span><span class="o">(),</span> <span class="n">cause</span><span class="o">);</span>
+        <span class="n">event</span><span class="o">.</span><span class="na">response</span><span class="o">().</span><span class="na">setStatusCode</span><span class="o">(</span><span class="mi">500</span><span class="o">).</span><span class="na">end</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sendOkResponseAsJson</span><span class="o">(</span><span class="n">RoutingContext</span> <span class="n">event</span><span class="o">,</span> <span class="n">Object</span> <span class="n">object</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">val</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">Json</span><span class="o">.</span><span class="na">encodeToBuffer</span><span class="o">(</span><span class="n">object</span><span class="o">);</span> <span class="c1">// 11</span>
+        <span class="n">event</span><span class="o">.</span><span class="na">response</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">putHeader</span><span class="o">(</span><span class="n">HttpHeaders</span><span class="o">.</span><span class="na">CONTENT_TYPE</span><span class="o">,</span> <span class="s">&quot;application/json&quot;</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">setStatusCode</span><span class="o">(</span><span class="mi">200</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">end</span><span class="o">(</span><span class="n">buffer</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">UserApi</span> <span class="nf">create</span><span class="o">(</span><span class="n">Router</span> <span class="n">router</span><span class="o">,</span> <span class="n">UserRepository</span> <span class="n">repository</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">val</span> <span class="n">api</span> <span class="o">=</span> <span class="n">UserApi</span><span class="o">(</span><span class="n">repository</span><span class="o">);</span>
+        <span class="n">router</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;/users/:id&quot;</span><span class="o">,</span> <span class="n">api</span><span class="o">::</span><span class="n">retrieveUserById</span><span class="o">);</span> <span class="c1">// 12</span>
+        <span class="n">router</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;/users/:initDate/:endDate&quot;</span><span class="o">,</span> <span class="n">api</span><span class="o">::</span><span class="n">retrieveUsersCreatedBetween</span><span class="o">);</span>
+        <span class="n">router</span><span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="s">&quot;/users&quot;</span><span class="o">,</span> <span class="n">api</span><span class="o">::</span><span class="n">createUser</span><span class="o">);</span>
+        <span class="n">router</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="s">&quot;/users/:id&quot;</span><span class="o">,</span> <span class="n">api</span><span class="o">::</span><span class="n">removeUser</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">api</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></div>
+</div>
+<p>Although the above application is perfectly efficient and fast as it is reliant on Vert.x core,
+the code itself is far from simple. Let's dive into the source code and look into the numbered
+lines to understand what it's actually doing.</p>
+<ol>
+<li>The <code>App</code> class is responsible for starting the web server, providing everything is absolutely
+necessary to deploy our verticles. Usually the pieces here configured doesn't change that often.</li>
+<li>It will read the configuration file as the first thing will happen when the application start,
+exiting the application once it fails.</li>
+<li>The router will be used as argument for our verticles. Following the
+<a href="https://vertx.io/docs/vertx-web/java/#_request_body_handling">instructions</a> of the
+official documentation, here it has been configured to eagerly read body payloads received by
+any POST request.</li>
+<li>Manually deploying Verticles is not a hard task although it comes with its own challenges.
+Due to the flexible nature of Vertx Web API, there's not standard way to organize the source
+code and deploy our web verticles. A simple look into the available
+<a href="https://github.com/vert-x3/vertx-examples">vertx examples</a> and you'll easily notice that. Here
+we've decided to delegate the endpoint mapping to the verticle itself, centralizing the routing
+strategy in a single place.</li>
+<li>The JVM ecosystem has several mature and reliable log frameworks which diverges in contract
+and configuration. Thankfully Vertx Core has it's logging mechanism configurable. Here we forced
+to use popular SLF4J as logger implementation. This strategy also allows us to provide a self-contained
+package that doesn't expects command line parameters to spin the application.</li>
+<li>The <code>UserApi</code> class acts bridge between our Rest API and the <code>UserRepository</code>. Depending on how
+big are the changes in requirements, this class may have to be changed frequently by the developers.</li>
+<li>Extracting parameters from the request is a trivial task too. It can be tricky though to parse
+strings values, check for nullable values and pass the values to the expected business logic (in our
+case, our repository).</li>
+<li>Underneath Vert.x makes heavily usage of its netty-based Event Loop implementation. Smart developers
+will never block the EL and will always rely on non-blocking or asynchronous APIs to perform calls to
+a downstream service. The caveat though is that we should properly compose <code>Future</code> and <code>Promise</code>
+objects in order to provide a consistent and integer API to our users.</li>
+<li>Here we have our centralized handler that is used any time we need to analyze <code>Future</code> objects and
+send a response to the client of our Rest API.</li>
+<li>Our naive error handler implementation here is straightforward, sending a simple 500 response to
+the Http client.</li>
+<li>Response serialization is something that should be manually handled here and if properly written
+will not impact that much on developers productivity.</li>
+<li>As described before, the Route Mapping algorithm has been moved to the UserApi class, as it makes
+sense to have the mapping and the bridge methods in the same place.</li>
+</ol>
+<h3 id="kos-webapp">Kos webapp<a class="headerlink" href="#kos-webapp" title="Permanent link">&para;</a></h3>
+<p>The above steps indeed makes sense and covers a fairly amount of features that is expected from a development
+platform, although one may expect to have less work to bridge their business logic from the network. Kos comes
+as tool to significantly reduce this layer.</p>
+<div class="superfences-tabs">
+<input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
+<label for="__tab_3_0">UserApi.java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.time.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.extern.slf4j.Slf4j</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">injector.Singleton</span><span class="o">;</span>
+
+<span class="nd">@Slf4j</span>
+<span class="nd">@Path</span><span class="o">(</span><span class="s">&quot;users&quot;</span><span class="o">)</span>
+<span class="nd">@Singleton</span> <span class="kd">class</span> <span class="nc">UserApi</span> <span class="o">{</span>
+
+    <span class="kd">final</span> <span class="n">UserRepository</span> <span class="n">repository</span><span class="o">;</span>
+
+    <span class="n">UserApi</span><span class="o">(</span><span class="n">UserRepository</span> <span class="n">repository</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">repository</span> <span class="o">=</span> <span class="n">repository</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@GET</span><span class="o">(</span><span class="s">&quot;:id&quot;</span><span class="o">)</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="nf">retrieveUserById</span><span class="o">(</span><span class="nd">@Param</span> <span class="n">UUID</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">repository</span><span class="o">.</span><span class="na">retrieveUserById</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@GET</span><span class="o">(</span><span class="s">&quot;:initDate/:endDate&quot;</span><span class="o">)</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;&gt;</span> <span class="nf">retrieveUsersCreatedBetween</span><span class="o">(</span>
+        <span class="nd">@Param</span> <span class="n">ZonedDateTime</span> <span class="n">initDate</span><span class="o">,</span>
+        <span class="nd">@Param</span> <span class="n">ZonedDateTime</span> <span class="n">endDate</span>
+    <span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">repository</span><span class="o">.</span><span class="na">retrieveUsersCreatedBetween</span><span class="o">(</span><span class="n">initDate</span><span class="o">,</span><span class="n">endDate</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@POST</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">UUID</span><span class="o">&gt;</span> <span class="nf">createUser</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">repository</span><span class="o">.</span><span class="na">createUser</span><span class="o">(</span><span class="n">user</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@DELETE</span><span class="o">(</span><span class="s">&quot;:id&quot;</span><span class="o">)</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span> <span class="nf">removeUser</span><span class="o">(</span><span class="n">UUID</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">repository</span><span class="o">.</span><span class="na">removeUser</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></div>
+</div>
+<p>It was rather simplified. Let's walk through the biggest differences we have between both examples.</p>
+<ol>
+<li>The first thing that draws our attention once we read the source code is the introduction of Kos annotations
+that are used as mapping entry points. It is mainly used to mark routing methods and automatically bind them
+to a Rest endpoint.</li>
+<li>Our controller is not being manually bond to the Vert.x <code>Router</code> or event the <code>Vertx</code> instance. In fact,
+we don't even had to configure a Vertx application at all. Underneath a new <code>Vertx</code> and <code>Router</code>
+instance will be spun up and use it whenever you use the Kos annotations.</li>
+<li>The introduction of the <code>injector.Singleton</code> annotation. Kos is very flexible and provides a versatile
+dependency injection where you can optionally use your favorite Dependency Injection framework. Out-of-box
+though it only supports <a href="https://skullabs.github.io/injector/">Injector</a> and
+<a href="https://www.baeldung.com/java-spi">SPI classes</a> - more on that below.</li>
+</ol>
+<h2 id="dependency-injection-kos-backbone">Dependency Injection: Kos' Backbone<a class="headerlink" href="#dependency-injection-kos-backbone" title="Permanent link">&para;</a></h2>
+<p>Dependency injection is the literally Kos' backbone. As you can imagine from the previous examples,
+in order to simplify the way you design a Rest API a few conventions has been adopted to automatically
+discovery your endpoints, to deploy verticles and even read the configuration file from the file system.</p>
+<p>Looking to the steps we usually do in order to have a Vert.x application up and running, we figured out
+that Kos should perform the following during the boot:</p>
+<ol>
+<li>Load all classes implementing <code>io.vertx.core.Verticle</code>: We need a way to discovery <em>verticles</em> and
+deploy them automatically.</li>
+<li>Load <a href="https://vertx.io/docs/vertx-config/java/">configuration</a> automatically: It's also convenient to
+have the configuration file loaded automatically once the application is started.</li>
+<li>Discovery Rest endpoints automatically - or at least provide a way for developers to access Vert.x
+<a href="https://vertx.io/docs/vertx-web/java/#_basic_vert_x_web_concepts">Router</a>.</li>
+<li>Figure out which (supported) log API the developer is using and make Vert.x use it automatically -
+instead of manually set a parameter in command line every time you spin up your server.</li>
+</ol>
+<p>There are multiple ways to achieve these goals, and few libraries can easily provide that for us. There are
+though a few assumptions that we had to assess them:</p>
+<ul>
+<li>Everything should be optional.</li>
+<li>Any automation should be consciously triggered by the developers will.</li>
+<li>It should have little to no cost during the application startup.</li>
+<li>It should impose no-overhead in our application runtime.</li>
+</ul>
+<p>Taking the previously mentioned item 1 as an example, the optimal scenario should deploy all the classes which
+implements <code>Verticle</code> interface, but only the ones intentionally marked as "discoverable". After a few days
+of research and experiments we can with the idea of using <a href="https://www.baeldung.com/java-spi">Java 6 Service Provider Interfaces</a>(SPI)
+to discover those implementations. It obviously fits our requirements, and requires no external dependency.</p>
+<p>The major limitation of SPI lies on the fact that your classes should have a default (no-args) constructor.
+This can impose severe restrictions on how developers will bridge their business logic from the Rest API. It
+forced us to make <a href="dependency-injection">Dependency Injection customizable</a>. <a href="https://skullabs.github.io/injector/">Injector</a>
+is an optional dependency injector that can be used to surpass such limitations, as it also fits into our requirements,
+makes no-use of reflection and class loader, and is standalone - no external dependency. A list of alternative
+supported DI frameworks can be found <a href="dependency-injection">here</a>.</p>
+<h2 id="webservice-verticle">WebService Verticle<a class="headerlink" href="#webservice-verticle" title="Permanent link">&para;</a></h2>
+<p><code>kos.core.VertxWebServer</code> is an special <code>Verticle</code> implementation that comes with the <code>kos-core</code> module.
+It is responsible for:</p>
+<ul>
+<li>Spinning up Vert.x <a href="https://vertx.io/docs/vertx-web/java/#_basic_vert_x_web_concepts">Router</a> and
+the <a href="https://vertx.io/docs/vertx-web/java/#_basic_vert_x_web_concepts">HttpServer</a>.</li>
+<li>Discovering Rest endpoints mapped via <code>kos-annotations</code></li>
+<li>Trigger all implementations of <code>WebServerEventListener</code></li>
+</ul>
+<h2 id="kos-launcher">Kos Launcher<a class="headerlink" href="#kos-launcher" title="Permanent link">&para;</a></h2>
+<p>Kos applications are started by the <code>kos.core.Launcher</code> class. Its main job is:</p>
+<ul>
+<li>Lookup for all classes that implements <code>Verticle</code> interface - exposed as SPI - and automatically deploy them.</li>
+<li>Lookup for the first <code>ConfigRetriever</code> implementations - exposed as SPI - and automatically deploy it.</li>
+</ul>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../11-dependency-injection/" title="Dependency Injection with Kos" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Dependency Injection with Kos
+              </span>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2018 - 2020 Skullabs Contributors
+          </div>
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.245445c6.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+    
+  </body>
+</html>

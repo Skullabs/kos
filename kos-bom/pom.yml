@@ -1,0 +1,17 @@
+modelVersion: 4.0.0
+
+parent:
+  groupId: io.skullabs.kos
+  artifactId: kos-parent
+  version: 0.1.0-SNAPSHOT
+  relativePath: "../pom.yml"
+
+artifactId: kos-bom
+packaging: pom
+
+dependencies:
+- { groupId: "io.skullabs.kos", artifactId: kos-core }
+- { groupId: "io.skullabs.kos", artifactId: kos-annotations }
+- { groupId: "io.skullabs.kos", artifactId: kos-config-yaml }
+- { groupId: "io.skullabs.kos", artifactId: kos-logging-slf4j }
+- { groupId: "io.skullabs.kos", artifactId: kos-injector }

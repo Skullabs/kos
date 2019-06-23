@@ -1,0 +1,168 @@
+package kos.rest.sample;
+
+import kos.core.*;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.ext.web.RoutingContext;
+
+/**
+ * Auto generated server configuration for {@link kos.rest.sample.SimpleApi}.
+ */
+@injector.Singleton
+@javax.annotation.processing.Generated("kos.apt.RestApiProcessor")
+public class SimpleApiRoutingContextHandler implements WebServerEventListener {
+
+    private final SimpleApi handler = Kos.implementationLoader
+            .instanceOfOrFail(SimpleApi.class);
+
+    public void on(WebServerEventListener.BeforeDeployEvent event) {
+        event.router().route( HttpMethod.DELETE, "/api/simple/:user_id", new Handler<RoutingContext>() {
+
+            /**
+             * Auto generated wrapper for {@link kos.rest.sample.SimpleApi#deleteUser}.
+             */
+            public void handle(final RoutingContext event) {
+                try {
+                    /* Call original handler */
+                    handler.deleteUser(
+                        /* Read request parameters */
+                        Request.readParam( event, "user_id", java.lang.String.class ),
+                        Request.readContext( event, "httpServerRequest", io.vertx.core.http.HttpServerRequest.class )
+                    );
+                    /* Sends the default response for "no content". */
+                    Response.sendDefaultNoContent( event );
+                } catch (Throwable cause){
+                    Response.sendError(event, cause);
+                }
+            }
+        });
+
+        event.router().route( HttpMethod.PATCH, "/api/simple/:user_id", new Handler<RoutingContext>() {
+
+            /**
+             * Auto generated wrapper for {@link kos.rest.sample.SimpleApi#patchUser}.
+             */
+            public void handle(final RoutingContext event) {
+                try {
+                    /* Call original handler */
+                    final kos.core.Response response =
+                    handler.patchUser(
+                        /* Read request parameters */
+                        Request.readParam( event, "user_id", java.lang.String.class ),
+                        Request.readHeader( event, "Authorization", java.lang.String.class ),
+                        Request.readBody( event, "user", kos.rest.sample.User.class )
+                    );
+                    /* Wraps response as Future */
+                    Lang.asFuture(response).setHandler(new Handler<AsyncResult<kos.core.Response>>() {
+                        public void handle( AsyncResult<kos.core.Response> as ) {
+                            if (as.succeeded())
+                                Response.send(event, as.result());
+                            else
+                                Response.sendError(event, as.cause());
+                        }
+                    });
+                } catch (Throwable cause){
+                    Response.sendError(event, cause);
+                }
+            }
+        });
+
+        event.router().route( HttpMethod.GET, "/api/simple", new Handler<RoutingContext>() {
+
+            /**
+             * Auto generated wrapper for {@link kos.rest.sample.SimpleApi#retrieveUser}.
+             */
+            public void handle(final RoutingContext event) {
+                try {
+                    /* Call original handler */
+                    final io.vertx.core.Future<kos.rest.sample.User> response =
+                    handler.retrieveUser(
+                        /* Read request parameters */
+                    );
+                    /* Wraps response as Future */
+                    Lang.asFuture(response).setHandler(new Handler<AsyncResult<kos.rest.sample.User>>() {
+                        public void handle( AsyncResult<kos.rest.sample.User> as ) {
+                            if (as.succeeded())
+                                Response.send(event, as.result());
+                            else
+                                Response.sendError(event, as.cause());
+                        }
+                    });
+                } catch (Throwable cause){
+                    Response.sendError(event, cause);
+                }
+            }
+        });
+
+        event.router().route( HttpMethod.GET, "/api/simple/all", new Handler<RoutingContext>() {
+
+            /**
+             * Auto generated wrapper for {@link kos.rest.sample.SimpleApi#retrieveUser}.
+             */
+            public void handle(final RoutingContext event) {
+                try {
+                    /* Call original handler */
+                    final io.vertx.core.Future<kos.rest.sample.User> response =
+                    handler.retrieveUser(
+                        /* Read request parameters */
+                    );
+                    /* Wraps response as Future */
+                    Lang.asFuture(response).setHandler(new Handler<AsyncResult<kos.rest.sample.User>>() {
+                        public void handle( AsyncResult<kos.rest.sample.User> as ) {
+                            if (as.succeeded())
+                                Response.send(event, as.result());
+                            else
+                                Response.sendError(event, as.cause());
+                        }
+                    });
+                } catch (Throwable cause){
+                    Response.sendError(event, cause);
+                }
+            }
+        });
+
+        event.router().route( HttpMethod.POST, "/api/simple", new Handler<RoutingContext>() {
+
+            /**
+             * Auto generated wrapper for {@link kos.rest.sample.SimpleApi#saveUser}.
+             */
+            public void handle(final RoutingContext event) {
+                try {
+                    /* Call original handler */
+                    handler.saveUser(
+                        /* Read request parameters */
+                        Request.readBody( event, "user", kos.rest.sample.User.class )
+                    );
+                    /* Sends the default response for "no content". */
+                    Response.sendDefaultNoContent( event );
+                } catch (Throwable cause){
+                    Response.sendError(event, cause);
+                }
+            }
+        });
+
+        event.router().route( HttpMethod.PUT, "/api/simple/:id", new Handler<RoutingContext>() {
+
+            /**
+             * Auto generated wrapper for {@link kos.rest.sample.SimpleApi#updateUser}.
+             */
+            public void handle(final RoutingContext event) {
+                try {
+                    /* Call original handler */
+                    handler.updateUser(
+                        /* Read request parameters */
+                        Request.readParam( event, "id", java.lang.String.class )
+                    );
+                    /* Sends the default response for "no content". */
+                    Response.sendDefaultNoContent( event );
+                } catch (Throwable cause){
+                    Response.sendError(event, cause);
+                }
+            }
+        });
+
+    }
+
+}

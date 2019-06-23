@@ -1,0 +1,37 @@
+site_name: Kos
+site_description: 'Zero-overhead and minimalist web framework for Vert.x'
+site_author: 'Skullabs Contributors'
+site_url: 'https://skullabs.github.io/kos/'
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'deep orange'
+    accent: 'blue grey'
+  feature:
+    tabs: true
+
+extra_css:
+  - "theme.css"
+
+docs_dir: docs_src
+site_dir: docs
+
+repo_url: 'https://github.com/skullabs/kos'
+edit_uri: 'https://github.com/skullabs/kos/edit/master/docs_src'
+copyright: 'Copyright &copy; 2018 - 2020 Skullabs Contributors'
+
+# Plugins
+plugins:
+  - search
+  - bootstrap-tables
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: true

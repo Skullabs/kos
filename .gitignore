@@ -1,0 +1,14 @@
+output
+target
+dist
+
+*.zip
+*.jar
+*.class
+
+.idea
+.classpath
+.project
+*.iml
+
+.DS_Store

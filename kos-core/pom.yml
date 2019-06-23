@@ -1,0 +1,28 @@
+modelVersion: 4.0.0
+
+parent:
+  groupId: io.skullabs.kos
+  artifactId: kos-parent
+  version: 0.1.0-SNAPSHOT
+  relativePath: "../pom.yml"
+
+artifactId: kos-core
+packaging: jar
+
+dependencies:
+# Vert.X
+- { groupId: io.vertx, artifactId: vertx-core }
+- { groupId: io.vertx, artifactId: vertx-config }
+- { groupId: io.vertx, artifactId: vertx-web, scope: provided }
+- { groupId: io.vertx, artifactId: vertx-web-client }
+- { groupId: io.skullabs.injector, artifactId: injector-core, scope: provided }
+- { groupId: io.skullabs.injector, artifactId: injector-processor, scope: provided }
+  # Test dependencies
+- { groupId: org.junit.jupiter, artifactId: junit-jupiter-engine }
+- { groupId: org.mockito, artifactId: mockito-core }
+- { groupId: org.mockito, artifactId: mockito-junit-jupiter }
+
+build:
+  plugins:
+    - groupId: org.jacoco
+      artifactId: jacoco-maven-plugin
