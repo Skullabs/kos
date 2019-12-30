@@ -12,3 +12,4 @@ dist
 *.iml
 
 .DS_Store
+*.yml-e

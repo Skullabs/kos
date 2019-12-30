@@ -7,7 +7,7 @@ parent:
 
 groupId: io.skullabs.kos
 artifactId: kos-parent
-version: 0.1.0-SNAPSHOT
+version: 0.1.0
 packaging: pom
 
 properties:
@@ -34,11 +34,11 @@ modules:
 # Pre-configured dependencies
 dependencyManagement:
   dependencies:
-    - { groupId: "io.skullabs.kos", version: "0.1.0-SNAPSHOT", artifactId: kos-core }
-    - { groupId: "io.skullabs.kos", version: "0.1.0-SNAPSHOT", artifactId: kos-annotations }
-    - { groupId: "io.skullabs.kos", version: "0.1.0-SNAPSHOT", artifactId: kos-config-yaml }
-    - { groupId: "io.skullabs.kos", version: "0.1.0-SNAPSHOT", artifactId: kos-injector }
-    - { groupId: "io.skullabs.kos", version: "0.1.0-SNAPSHOT", artifactId: kos-logging-slf4j }
+    - { groupId: "io.skullabs.kos", version: "0.1.0", artifactId: kos-core }
+    - { groupId: "io.skullabs.kos", version: "0.1.0", artifactId: kos-annotations }
+    - { groupId: "io.skullabs.kos", version: "0.1.0", artifactId: kos-config-yaml }
+    - { groupId: "io.skullabs.kos", version: "0.1.0", artifactId: kos-injector }
+    - { groupId: "io.skullabs.kos", version: "0.1.0", artifactId: kos-logging-slf4j }
 
     # Mockito
     - { groupId: org.mockito,version: "${version.mockito}", scope: test, artifactId: mockito-core }

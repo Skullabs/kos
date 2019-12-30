@@ -3,7 +3,7 @@ modelVersion: 4.0.0
 parent:
   groupId: io.skullabs.kos
   artifactId: kos-parent
-  version: 0.1.0-SNAPSHOT
+  version: 0.1.0
   relativePath: "../pom.yml"
 
 artifactId: kos-annotations
