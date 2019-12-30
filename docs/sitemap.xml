@@ -2,27 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://skullabs.github.io/kos/</loc>
-     <lastmod>2019-12-27</lastmod>
+     <lastmod>2019-12-30</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://skullabs.github.io/kos/01-getting-started/</loc>
-     <lastmod>2019-12-27</lastmod>
+     <lastmod>2019-12-30</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://skullabs.github.io/kos/02-rest-apis/</loc>
-     <lastmod>2019-12-27</lastmod>
+     <lastmod>2019-12-30</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://skullabs.github.io/kos/03-rest-clients/</loc>
+     <lastmod>2019-12-30</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://skullabs.github.io/kos/11-dependency-injection/</loc>
-     <lastmod>2019-12-27</lastmod>
+     <lastmod>2019-12-30</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://skullabs.github.io/kos/21-kos-architecture/</loc>
-     <lastmod>2019-12-27</lastmod>
+     <lastmod>2019-12-30</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

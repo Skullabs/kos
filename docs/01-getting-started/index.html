@@ -69,6 +69,8 @@
     <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
+      <link rel="stylesheet" href="../theme.css">
+    
     
       
     
@@ -207,6 +209,8 @@
       
         
       
+        
+      
     </ul>
   </div>
 </nav>
@@ -301,8 +305,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../11-dependency-injection/" title="Dependency Injection with Kos" class="md-nav__link">
-      Dependency Injection with Kos
+    <a href="../03-rest-clients/" title="Rest Clients" class="md-nav__link">
+      Rest Clients
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../11-dependency-injection/" title="Dependency Injection" class="md-nav__link">
+      Dependency Injection
     </a>
   </li>
 
@@ -372,13 +388,19 @@ other JVM languages like Kotlin and Scala. To import Kos you should include
 the following libraries on your project.</p>
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
-<label for="__tab_1_0">Gradle (kts)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">dependencies</span> <span class="p">{</span>
+<label for="__tab_1_0">Maven (pom.kts)</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">dependencyManagement</span> <span class="p">{</span>
+  <span class="n">dependencies</span> <span class="p">{</span>
     <span class="c1">// Import the Bill of Materials</span>
-    <span class="n">implementation</span><span class="p">(</span><span class="n">platform</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-bom:${version_kos}&quot;</span><span class="p">))</span>
+    <span class="k">import</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-bom:${kosVersion}&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-    <span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-core&quot;</span><span class="p">)</span>
-    <span class="n">compileOnly</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-annotations&quot;</span><span class="p">)</span>
+<span class="n">dependencies</span> <span class="p">{</span>
+  <span class="c1">// Kos Dependencies</span>
+  <span class="n">compile</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-core&quot;</span><span class="p">)</span>
+  <span class="n">compile</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-injector&quot;</span><span class="p">)</span>
+  <span class="n">provided</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-annotations&quot;</span><span class="p">)</span>
 <span class="p">}</span>
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_1" />
@@ -408,26 +430,20 @@ the following libraries on your project.</p>
 <span class="nt">&lt;/dependency&gt;</span>
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_2" />
-<label for="__tab_1_2">Maven (pom.kts)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">dependencyManagement</span> <span class="p">{</span>
-  <span class="n">dependencies</span> <span class="p">{</span>
+<label for="__tab_1_2">Gradle (kts)</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">dependencies</span> <span class="p">{</span>
     <span class="c1">// Import the Bill of Materials</span>
-    <span class="k">import</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-bom:${kosVersion}&quot;</span><span class="p">)</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+    <span class="n">implementation</span><span class="p">(</span><span class="n">platform</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-bom:${version_kos}&quot;</span><span class="p">))</span>
 
-<span class="n">dependencies</span> <span class="p">{</span>
-  <span class="c1">// Kos Dependencies</span>
-  <span class="n">compile</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-core&quot;</span><span class="p">)</span>
-  <span class="n">compile</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-injector&quot;</span><span class="p">)</span>
-  <span class="n">provided</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-annotations&quot;</span><span class="p">)</span>
+    <span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-core&quot;</span><span class="p">)</span>
+    <span class="n">compileOnly</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-annotations&quot;</span><span class="p">)</span>
 <span class="p">}</span>
 </pre></div></div>
 </div>
 <p>Now let's create a simple HelloWorld API.</p>
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
-<label for="__tab_2_0">HelloWorldApi.kt</label>
+<label for="__tab_2_0">Kotlin</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">@Path</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">HelloWorldApi</span> <span class="p">{</span>
 
@@ -436,7 +452,7 @@ the following libraries on your project.</p>
 <span class="p">}</span>
 </pre></div></div>
 <input name="__tabs_2" type="radio" id="__tab_2_1" />
-<label for="__tab_2_1">HelloWorldApi.java</label>
+<label for="__tab_2_1">Java</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nd">@Path</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">)</span>
 <span class="kd">class</span> <span class="nc">HelloWorldApi</span> <span class="o">{</span>
 
@@ -450,15 +466,25 @@ the following libraries on your project.</p>
 <p>Finally, we have to bundle all dependencies together and generate a runnable jar with them.</p>
 <div class="superfences-tabs">
 <input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
-<label for="__tab_3_0">Gradle (kts)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="c1">// You can use either Shadow or VertX plugin to generate a fat jar</span>
-<span class="c1">// We&#39;ve picked VertX in this example</span>
-<span class="n">plugins</span> <span class="p">{</span>
-    <span class="n">id</span><span class="p">(</span><span class="s">&quot;io.vertx.vertx-plugin&quot;</span><span class="p">)</span> <span class="n">version</span> <span class="s">&quot;1.0.1&quot;</span>
-<span class="p">}</span>
-
-<span class="n">vertx</span> <span class="p">{</span>
-    <span class="n">launcher</span> <span class="p">=</span> <span class="n">launcherClass</span>
+<label for="__tab_3_0">Maven (pom.kts)</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">plugins</span> <span class="p">{</span>
+  <span class="n">plugin</span><span class="p">(</span><span class="s">&quot;org.apache.maven.plugins:maven-shade-plugin:3.2.0&quot;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">executions</span> <span class="p">{</span>
+      <span class="n">execution</span><span class="p">(</span><span class="n">id</span> <span class="p">=</span> <span class="s">&quot;default-package&quot;</span><span class="p">,</span> <span class="n">phase</span> <span class="p">=</span> <span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">goals</span> <span class="p">=</span> <span class="n">listOf</span><span class="p">(</span><span class="s">&quot;shade&quot;</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="n">configuration</span> <span class="p">{</span>
+      <span class="s">&quot;createDependencyReducedPom&quot;</span> <span class="n">to</span> <span class="k">true</span>
+      <span class="s">&quot;dependencyReducedPomLocation&quot;</span> <span class="n">to</span> <span class="s">&quot;\${project.build.directory}/pom-reduced.xml&quot;</span>
+      <span class="s">&quot;transformers&quot;</span> <span class="p">{</span>
+        <span class="s">&quot;org.apache.maven.plugins.shade.resource.ServicesResourceTransformer&quot;</span> <span class="p">{}</span>
+        <span class="s">&quot;org.apache.maven.plugins.shade.resource.ManifestResourceTransformer&quot;</span> <span class="p">{</span>
+          <span class="s">&quot;manifestEntries&quot;</span> <span class="p">{</span>
+            <span class="s">&quot;Main-Class&quot;</span> <span class="n">to</span> <span class="n">launcherClass</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div></div>
 <input name="__tabs_3" type="radio" id="__tab_3_1" />
@@ -490,25 +516,15 @@ the following libraries on your project.</p>
 <span class="nt">&lt;/plugin&gt;</span>
 </pre></div></div>
 <input name="__tabs_3" type="radio" id="__tab_3_2" />
-<label for="__tab_3_2">Maven (pom.kts)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">plugins</span> <span class="p">{</span>
-  <span class="n">plugin</span><span class="p">(</span><span class="s">&quot;org.apache.maven.plugins:maven-shade-plugin:3.2.0&quot;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">executions</span> <span class="p">{</span>
-      <span class="n">execution</span><span class="p">(</span><span class="n">id</span> <span class="p">=</span> <span class="s">&quot;default-package&quot;</span><span class="p">,</span> <span class="n">phase</span> <span class="p">=</span> <span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">goals</span> <span class="p">=</span> <span class="n">listOf</span><span class="p">(</span><span class="s">&quot;shade&quot;</span><span class="p">))</span>
-    <span class="p">}</span>
-    <span class="n">configuration</span> <span class="p">{</span>
-      <span class="s">&quot;createDependencyReducedPom&quot;</span> <span class="n">to</span> <span class="k">true</span>
-      <span class="s">&quot;dependencyReducedPomLocation&quot;</span> <span class="n">to</span> <span class="s">&quot;\${project.build.directory}/pom-reduced.xml&quot;</span>
-      <span class="s">&quot;transformers&quot;</span> <span class="p">{</span>
-        <span class="s">&quot;org.apache.maven.plugins.shade.resource.ServicesResourceTransformer&quot;</span> <span class="p">{}</span>
-        <span class="s">&quot;org.apache.maven.plugins.shade.resource.ManifestResourceTransformer&quot;</span> <span class="p">{</span>
-          <span class="s">&quot;manifestEntries&quot;</span> <span class="p">{</span>
-            <span class="s">&quot;Main-Class&quot;</span> <span class="n">to</span> <span class="n">launcherClass</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<label for="__tab_3_2">Gradle (kts)</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="c1">// You can use either Shadow or VertX plugin to generate a fat jar</span>
+<span class="c1">// We&#39;ve picked VertX in this example</span>
+<span class="n">plugins</span> <span class="p">{</span>
+    <span class="n">id</span><span class="p">(</span><span class="s">&quot;io.vertx.vertx-plugin&quot;</span><span class="p">)</span> <span class="n">version</span> <span class="s">&quot;1.0.1&quot;</span>
+<span class="p">}</span>
+
+<span class="n">vertx</span> <span class="p">{</span>
+    <span class="n">launcher</span> <span class="p">=</span> <span class="n">launcherClass</span>
 <span class="p">}</span>
 </pre></div></div>
 </div>

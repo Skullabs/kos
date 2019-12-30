@@ -69,6 +69,8 @@
     <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
+      <link rel="stylesheet" href="../theme.css">
+    
     
       
     
@@ -207,6 +209,8 @@
       
         
       
+        
+      
     </ul>
   </div>
 </nav>
@@ -320,6 +324,68 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#defining-uris-for-your-endpoints" title="Defining URIs for your endpoints" class="md-nav__link">
+    Defining URIs for your endpoints
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sending-responses-to-the-http-client" title="Sending responses to the Http Client" class="md-nav__link">
+    Sending responses to the Http Client
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uri-mapping-conventions" title="URI Mapping Conventions" class="md-nav__link">
+    URI Mapping Conventions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capturing-parameters" title="Capturing parameters" class="md-nav__link">
+    Capturing parameters
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-parameters" title="Path Parameters" class="md-nav__link">
+    Path Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-parameters" title="Query parameters" class="md-nav__link">
+    Query parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-headers" title="Http Headers" class="md-nav__link">
+    Http Headers
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capturing-the-request-payload" title="Capturing the request payload" class="md-nav__link">
+    Capturing the request payload
+  </a>
+  
+</li>
+      
       
       
       
@@ -337,8 +403,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../11-dependency-injection/" title="Dependency Injection with Kos" class="md-nav__link">
-      Dependency Injection with Kos
+    <a href="../03-rest-clients/" title="Rest Clients" class="md-nav__link">
+      Rest Clients
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../11-dependency-injection/" title="Dependency Injection" class="md-nav__link">
+      Dependency Injection
     </a>
   </li>
 
@@ -389,6 +467,68 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#defining-uris-for-your-endpoints" title="Defining URIs for your endpoints" class="md-nav__link">
+    Defining URIs for your endpoints
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sending-responses-to-the-http-client" title="Sending responses to the Http Client" class="md-nav__link">
+    Sending responses to the Http Client
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uri-mapping-conventions" title="URI Mapping Conventions" class="md-nav__link">
+    URI Mapping Conventions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capturing-parameters" title="Capturing parameters" class="md-nav__link">
+    Capturing parameters
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-parameters" title="Path Parameters" class="md-nav__link">
+    Path Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-parameters" title="Query parameters" class="md-nav__link">
+    Query parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-headers" title="Http Headers" class="md-nav__link">
+    Http Headers
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capturing-the-request-payload" title="Capturing the request payload" class="md-nav__link">
+    Capturing the request payload
+  </a>
+  
+</li>
+      
       
       
       
@@ -416,41 +556,64 @@ and double-check if you have enabled APT compilation as well (enabled by default
 only in Java projects).</p>
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
-<label for="__tab_1_0">Gradle (kts)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">compileOnly</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-annotations&quot;</span><span class="p">)</span>
+<label for="__tab_1_0">Maven (pom.kts)</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">provided</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-annotations&quot;</span><span class="p">)</span>
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_1" />
 <label for="__tab_1_1">Maven (pom.xml)</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
     <span class="nt">&lt;groupId&gt;</span>io.skullabs.kos<span class="nt">&lt;/groupId&gt;</span>
     <span class="nt">&lt;artifactId&gt;</span>kos-annotations<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_2" />
-<label for="__tab_1_2">Maven (pom.kts)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">provided</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-annotations&quot;</span><span class="p">)</span>
+<label for="__tab_1_2">Gradle (kts)</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">compileOnly</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-annotations&quot;</span><span class="p">)</span>
 </pre></div></div>
 </div>
 <h2 id="classes-as-api-entrypoints">Classes as API entrypoints<a class="headerlink" href="#classes-as-api-entrypoints" title="Permanent link">&para;</a></h2>
 <p>Kos relies on JVM classes as entrypoint for your APIs. That said, you
 should identify your class with the <code>kos.rest.RestApi</code> annotation. It will
 allow Kos to monitor this class for routes.</p>
-<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
+<div class="superfences-tabs">
+<input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
+<label for="__tab_2_0">Kotlin</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.rest.*</span>
+
+<span class="n">@RestApi</span>
+<span class="k">class</span> <span class="nc">MyApi</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div></div>
+<input name="__tabs_2" type="radio" id="__tab_2_1" />
+<label for="__tab_2_1">Java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
 
 <span class="nd">@RestApi</span>
 <span class="kd">class</span> <span class="nc">MyApi</span> <span class="o">{</span>
 <span class="o">}</span>
-</pre></div>
-
+</pre></div></div>
+</div>
 <p>If your API contains a common root path that would be shared by two or more
 endpoints, you can set a root path for you API using the <code>RestApi</code> annotation.</p>
-<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
+<div class="superfences-tabs">
+<input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
+<label for="__tab_3_0">Kotlin</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.rest.*</span>
+
+<span class="n">@RestApi</span><span class="p">(</span><span class="s">&quot;/money&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MyApi</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div></div>
+<input name="__tabs_3" type="radio" id="__tab_3_1" />
+<label for="__tab_3_1">Java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
 
 <span class="nd">@RestApi</span><span class="o">(</span><span class="s">&quot;/money&quot;</span><span class="o">)</span>
 <span class="kd">class</span> <span class="nc">MyApi</span> <span class="o">{</span>
 <span class="o">}</span>
-</pre></div>
-
+</pre></div></div>
+</div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>By default <code>kos-annotation</code> module will include your class in the
@@ -469,17 +632,103 @@ Rest endpoint by using one of the following annotations:</p>
 <li><code>kos.rest.DELETE</code></li>
 <li><code>kos.rest.PATCH</code></li>
 </ul>
-<p>Please be aware that your REST API methods might behave differently depending on
-the type of object you define as return type:</p>
+<h2 id="defining-uris-for-your-endpoints">Defining URIs for your endpoints<a class="headerlink" href="#defining-uris-for-your-endpoints" title="Permanent link">&para;</a></h2>
+<p>Just as <code>kos.rest.RestApi</code> can be used to map a (root) path to an endpoint, the above
+mentioned annotations can also be used to define a more specific endpoint URI for your
+methods.</p>
+<p>In the below example we have two methods exposed as Rest endpoints:</p>
 <ul>
-<li><code>void</code>: which means your API will receive the request and immediately return <code>204</code> as default answer </li>
-<li><code>io.vertx.core.Future&lt;?&gt;</code>: which means your API will receive the request and once the <code>Future</code> is resolved
-a response will be sent back to the Http Client.</li>
-<li>Plain Objects: which will render render the returned object and sent it automatically as
-response to the Http Client.</li>
+<li><code>MyApi.getMoney</code> will be exposed as <code>GET</code> operation mapped to <code>/money</code> URI.</li>
+<li><code>MyApi.getMoreMoney</code> will also be exposed as <code>GET</code> operation, but mapped to <code>/money/double</code> URI.</li>
 </ul>
-<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
+<div class="superfences-tabs">
+<input name="__tabs_4" type="radio" id="__tab_4_0" checked="checked" />
+<label for="__tab_4_0">Kotlin</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.rest.*</span>
+
+<span class="n">@RestApi</span><span class="p">(</span><span class="s">&quot;/money&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MyApi</span> <span class="p">{</span>
+
+    <span class="n">@GET</span>
+    <span class="k">fun</span> <span class="nf">getMoney</span><span class="p">()</span> <span class="p">=</span> <span class="m">10</span>
+
+    <span class="n">@GET</span><span class="p">(</span><span class="s">&quot;/double&quot;</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">getMoreMoney</span><span class="p">()</span> <span class="p">=</span> <span class="n">getMoney</span><span class="p">()</span> <span class="p">*</span> <span class="m">2</span>
+<span class="p">}</span>
+</pre></div></div>
+<input name="__tabs_4" type="radio" id="__tab_4_1" />
+<label for="__tab_4_1">Java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
+
+<span class="nd">@RestApi</span><span class="o">(</span><span class="s">&quot;/money&quot;</span><span class="o">)</span>
+<span class="kd">class</span> <span class="nc">MyApi</span> <span class="o">{</span>
+
+    <span class="nd">@GET</span>
+    <span class="n">Integer</span> <span class="nf">getMoney</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="mi">10</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@GET</span><span class="o">(</span><span class="s">&quot;/double&quot;</span><span class="o">)</span>
+    <span class="n">Integer</span> <span class="nf">getMoreMoney</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">getMoney</span><span class="o">()</span> <span class="o">*</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></div>
+</div>
+<h2 id="sending-responses-to-the-http-client">Sending responses to the Http Client<a class="headerlink" href="#sending-responses-to-the-http-client" title="Permanent link">&para;</a></h2>
+<p>Kos Rest API's will infer the response from the return type defined on your functions:</p>
+<ul>
+<li><code>kos.core.Response</code>: this is a special response type bundled in Kos so developers can easily define
+  custom responses to Http Clients. It is particularly useful when you method needs to return different
+  types of Response objects, or different types of Http Status Responses. </li>
+<li><code>void</code>: methods that doesn't return a value will make your method API receive the request, perform
+  all the synchronous tasks defined within it and immediately return <code>204</code> as default answer. </li>
+<li><code>io.vertx.core.Future&lt;?&gt;</code>: by returning Vert.x's Future your Http Clients will be waiting for the
+  the <code>Future</code> to be resolved in order to receive a response. The object defined as Future's result
+  will be later serialized using the Default Serializer mechanism. On the other hand, if your Future
+  holds a failure result, an error message will be sent using the default Exception Handler mechanism
+  defined on your application.</li>
+<li>Plain Objects: API's that returns plain object will have it's returned object serialized via Default
+  Serializer mechanism and sent as response to your Http Client.</li>
+</ul>
+<div class="superfences-tabs">
+<input name="__tabs_5" type="radio" id="__tab_5_0" checked="checked" />
+<label for="__tab_5_0">Kotlin</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.rest.*</span>
+<span class="k">import</span> <span class="nn">io.vertx.core.*</span>
+<span class="k">import</span> <span class="nn">java.util.concurrent.ThreadLocalRandom</span>
+
+<span class="n">@RestApi</span><span class="p">(</span><span class="s">&quot;/money&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MyApi</span> <span class="p">{</span>
+
+    <span class="n">@GET</span>
+    <span class="k">fun</span> <span class="nf">getMoney</span><span class="p">():</span> <span class="n">Future</span><span class="p">&lt;</span><span class="n">Integer</span><span class="p">&gt;</span> <span class="p">{</span>
+        <span class="k">val</span> <span class="py">money</span> <span class="p">=</span> <span class="n">Promise</span><span class="p">.</span><span class="n">promise</span><span class="p">()</span>
+        <span class="cm">/*</span>
+<span class="cm">         * Compute my money. It can be done using any asynchronous operation</span>
+<span class="cm">         * as long as you don&#39;t block Vert.x&#39;s Event Loop.</span>
+<span class="cm">         */</span>
+        <span class="k">return</span> <span class="n">money</span><span class="p">.</span><span class="n">future</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="n">@GET</span><span class="p">(</span><span class="s">&quot;/random&quot;</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">getMoreMoney</span><span class="p">()</span> <span class="p">=</span>
+        <span class="k">return</span> <span class="n">ThreadLocalRandom</span><span class="p">.</span><span class="n">current</span><span class="p">().</span><span class="n">nextInt</span><span class="p">();</span>
+
+    <span class="n">@POST</span>
+    <span class="k">fun</span> <span class="nf">generateMoney</span><span class="p">(){</span>
+        <span class="n">println</span><span class="p">(</span><span class="s">&quot;This might increase the inflation!&quot;</span><span class="p">)</span>
+
+        <span class="k">val</span> <span class="py">generated</span> <span class="p">=</span> <span class="n">ThreadLocalRandom</span><span class="p">.</span><span class="n">current</span><span class="p">().</span><span class="n">nextInt</span><span class="p">()</span>
+        <span class="n">println</span><span class="p">(</span><span class="s">&quot;Generated money: $$generated.00&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+<input name="__tabs_5" type="radio" id="__tab_5_1" />
+<label for="__tab_5_1">Java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">io.vertx.core.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.ThreadLocalRandom</span><span class="o">;</span>
 
 <span class="nd">@RestApi</span><span class="o">(</span><span class="s">&quot;/money&quot;</span><span class="o">)</span>
 <span class="kd">class</span> <span class="nc">MyApi</span> <span class="o">{</span>
@@ -487,11 +736,181 @@ response to the Http Client.</li>
     <span class="nd">@GET</span>
     <span class="n">Future</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">getMoney</span><span class="o">(){</span>
         <span class="n">Promise</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">money</span> <span class="o">=</span> <span class="n">Promise</span><span class="o">.</span><span class="na">promise</span><span class="o">();</span>
-        <span class="c1">// compute my money</span>
+        <span class="cm">/*</span>
+<span class="cm">         * Compute my money. It can be done using any asynchronous operation</span>
+<span class="cm">         * as long as you don&#39;t block Vert.x&#39;s Event Loop.</span>
+<span class="cm">         */</span>
         <span class="k">return</span> <span class="n">money</span><span class="o">.</span><span class="na">future</span><span class="o">();</span>
     <span class="o">}</span>
+
+    <span class="nd">@GET</span><span class="o">(</span><span class="s">&quot;/random&quot;</span><span class="o">)</span>
+    <span class="n">Integer</span> <span class="nf">getMoreMoney</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">ThreadLocalRandom</span><span class="o">.</span><span class="na">current</span><span class="o">().</span><span class="na">nextInt</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@POST</span>
+    <span class="kt">void</span> <span class="nf">generateMoney</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;This might increase the inflation!&quot;</span><span class="o">);</span>
+
+        <span class="kt">int</span> <span class="n">generated</span> <span class="o">=</span> <span class="n">ThreadLocalRandom</span><span class="o">.</span><span class="na">current</span><span class="o">().</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Generated money: $&quot;</span> <span class="o">+</span> <span class="n">generated</span> <span class="o">+</span> <span class="s">&quot;.00&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
 <span class="o">}</span>
-</pre></div>
+</pre></div></div>
+</div>
+<h2 id="uri-mapping-conventions">URI Mapping Conventions<a class="headerlink" href="#uri-mapping-conventions" title="Permanent link">&para;</a></h2>
+<p>As Kos does't replace Vert.x routing mechanism, but only automates it's creation,
+you still can take full advantage of it when using Kos' annotation. You can use:</p>
+<ul>
+<li><a href="https://vertx.io/docs/vertx-web/js/#_routing_by_exact_path">fixed defined paths</a> -
+  with no placeholders or wildcard marks. e.g. <code>/some/path/</code></li>
+<li><a href="https://vertx.io/docs/vertx-web/js/#_routing_by_paths_that_begin_with_something">paths that begins with something</a> -
+  e.g. <code>/some/path/*</code></li>
+<li><a href="https://vertx.io/docs/vertx-web/js/#_capturing_path_parameters">paths with variable placeholders</a> -
+  e.g. <code>/catalogue/products/:producttype/:productid/</code></li>
+</ul>
+<p>It worth notice though that it doesn't support RegEx mapping though.</p>
+<h2 id="capturing-parameters">Capturing parameters<a class="headerlink" href="#capturing-parameters" title="Permanent link">&para;</a></h2>
+<p>The following sub-topics will describe how to capture parameters received from the
+Http Client (e.g. path parameters) in your Rest endpoint method. As parameters are
+received as either <code>CharSequence</code> or <code>String</code> by the Vert.x core, they will be converted
+into the desired type by the <em>String Converter Mechanism</em> beforehand, making these
+values available for developers transparently.</p>
+<p>A few rules apply though:</p>
+<ul>
+<li>You have to define the placeholder name you are willing to use</li>
+<li>If you haven't defined the parameter name, the parameter variable name will be used instead</li>
+<li>If the defined name doesn't match any existing placeholder, an Exception might be thrown</li>
+<li>If you have defined a complex object for you captured parameter, and no converted has been
+defined to that given type, an Exception might be thrown</li>
+</ul>
+<h3 id="path-parameters">Path Parameters<a class="headerlink" href="#path-parameters" title="Permanent link">&para;</a></h3>
+<p>All the matched path placeholders can be easily mapped as parameters in your just
+created method by using the <code>kos.rest.Path</code> annotation.</p>
+<div class="superfences-tabs">
+<input name="__tabs_6" type="radio" id="__tab_6_0" checked="checked" />
+<label for="__tab_6_0">Kotlin</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.rest.*</span>
+
+<span class="n">@RestApi</span>
+<span class="k">class</span> <span class="nc">MyApi</span> <span class="p">{</span>
+
+    <span class="n">@GET</span><span class="p">(</span><span class="s">&quot;/calc/number/:a&quot;</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">getMoney</span><span class="p">(</span> <span class="n">@Param</span> <span class="n">a</span><span class="p">:</span> <span class="n">String</span> <span class="p">)</span> <span class="p">=</span> <span class="n">a</span>
+
+    <span class="n">@POST</span><span class="p">(</span><span class="s">&quot;/calc/plus/:a/:b&quot;</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">generateMoney</span><span class="p">(</span>
+        <span class="n">@Param</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">)</span> <span class="n">first</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span>
+        <span class="n">@Param</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">)</span> <span class="n">second</span><span class="p">:</span> <span class="n">Int</span>
+    <span class="p">)</span> <span class="p">=</span> <span class="n">first</span> <span class="p">+</span> <span class="n">second</span>
+<span class="p">}</span>
+</pre></div></div>
+<input name="__tabs_6" type="radio" id="__tab_6_1" />
+<label for="__tab_6_1">Java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
+
+<span class="nd">@RestApi</span>
+<span class="kd">class</span> <span class="nc">MyApi</span> <span class="o">{</span>
+
+    <span class="nd">@GET</span><span class="o">(</span><span class="s">&quot;/calc/number/:a&quot;</span><span class="o">)</span>
+    <span class="n">Integer</span> <span class="nf">getMoney</span><span class="o">(</span> <span class="nd">@Param</span> <span class="n">Integer</span> <span class="n">a</span> <span class="o">){</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@POST</span><span class="o">(</span><span class="s">&quot;/calc/plus/:a/:b&quot;</span><span class="o">)</span>
+    <span class="n">Integer</span> <span class="nf">generateMoney</span><span class="o">(</span>
+        <span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">)</span> <span class="n">Integer</span> <span class="n">first</span><span class="o">,</span>
+        <span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;b&quot;</span><span class="o">)</span> <span class="n">Integer</span> <span class="n">second</span>
+    <span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">first</span> <span class="o">+</span> <span class="n">second</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></div>
+</div>
+<h3 id="query-parameters">Query parameters<a class="headerlink" href="#query-parameters" title="Permanent link">&para;</a></h3>
+<p>As Vert.x treats query parameters and paths in a similar way (both being accessible via
+<code>io.vertx.core.http.HttpServerRequest.getParam(String)</code>), you can use the same
+<code>kos.rest.Path</code> to capture query strings as well.</p>
+<h3 id="http-headers">Http Headers<a class="headerlink" href="#http-headers" title="Permanent link">&para;</a></h3>
+<p>Similarly to path and query parameters, we can capture headers send by the Http Client
+by using the <code>kos.rest.Header</code> annotation.</p>
+<div class="superfences-tabs">
+<input name="__tabs_7" type="radio" id="__tab_7_0" checked="checked" />
+<label for="__tab_7_0">Kotlin</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.rest.*</span>
+
+<span class="n">@RestApi</span>
+<span class="k">class</span> <span class="nc">MyApi</span> <span class="p">{</span>
+
+    <span class="n">@GET</span><span class="p">(</span><span class="s">&quot;/what-is-my-user-agent&quot;</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">whatIsMyUserAgent</span><span class="p">(</span>
+        <span class="n">@Param</span><span class="p">(</span><span class="s">&quot;Content-Type&quot;</span><span class="p">)</span> <span class="n">contentType</span><span class="p">:</span> <span class="n">String</span>
+    <span class="p">)</span> <span class="p">=</span> <span class="n">contentType</span>
+<span class="p">}</span>
+</pre></div></div>
+<input name="__tabs_7" type="radio" id="__tab_7_1" />
+<label for="__tab_7_1">Java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
+
+<span class="nd">@RestApi</span>
+<span class="kd">class</span> <span class="nc">MyApi</span> <span class="o">{</span>
+
+    <span class="nd">@GET</span><span class="o">(</span><span class="s">&quot;/what-is-my-user-agent&quot;</span><span class="o">)</span>
+    <span class="n">String</span> <span class="nf">whatIsMyUserAgent</span><span class="o">(</span>
+        <span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">contentType</span>
+    <span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">contentType</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></div>
+</div>
+<h2 id="capturing-the-request-payload">Capturing the request payload<a class="headerlink" href="#capturing-the-request-payload" title="Permanent link">&para;</a></h2>
+<p>As you might imagine, similarly to capturing other params you can capture the request
+payload sent in the Http Request's body using an annotation. In this case, it will be
+<code>kos.rest.Body</code>. Unlike other parameters though, payloads will be converted into an
+object by the default <em>Serializer Mechanism</em> configured on your application.</p>
+<div class="superfences-tabs">
+<input name="__tabs_8" type="radio" id="__tab_8_0" checked="checked" />
+<label for="__tab_8_0">Kotlin</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.rest.*</span>
+
+<span class="n">@RestApi</span>
+<span class="k">class</span> <span class="nc">MyApi</span> <span class="p">{</span>
+
+    <span class="n">@POST</span><span class="p">(</span><span class="s">&quot;/money&quot;</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">sendMoney</span><span class="p">(</span>
+        <span class="n">@Body</span> <span class="n">request</span><span class="p">:</span><span class="n">SendMoneyRequest</span>
+    <span class="p">)</span> <span class="p">=</span> <span class="s">&quot;${request.to} has received $${request.amount}&quot;</span>
+<span class="p">}</span>
+
+<span class="k">data</span> <span class="k">class</span> <span class="nc">SendMoneyRequest</span><span class="p">(</span>
+    <span class="k">val</span> <span class="py">to</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span>
+    <span class="k">val</span> <span class="py">amount</span><span class="p">:</span> <span class="n">Double</span>
+<span class="p">)</span>
+</pre></div></div>
+<input name="__tabs_8" type="radio" id="__tab_8_1" />
+<label for="__tab_8_1">Java</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
+
+<span class="nd">@RestApi</span>
+<span class="kd">class</span> <span class="nc">MyApi</span> <span class="o">{</span>
+
+    <span class="nd">@POST</span><span class="o">(</span><span class="s">&quot;/money&quot;</span><span class="o">)</span>
+    <span class="n">String</span> <span class="nf">sendMoney</span><span class="o">(</span>
+        <span class="nd">@Body</span> <span class="n">SendMoneyRequest</span> <span class="n">request</span>
+    <span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="na">to</span> <span class="s">&quot; has received $&quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">amount</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">SendMoneyRequest</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">to</span><span class="o">;</span>
+    <span class="n">Double</span> <span class="n">amount</span><span class="o">;</span>
+
+    <span class="c1">// getters and setters</span>
+<span class="o">}</span>
+</pre></div></div>
+</div>
                 
                   
                 
@@ -527,13 +946,13 @@ response to the Http Client.</li>
           </a>
         
         
-          <a href="../11-dependency-injection/" title="Dependency Injection with Kos" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../03-rest-clients/" title="Rest Clients" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Dependency Injection with Kos
+                Rest Clients
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
