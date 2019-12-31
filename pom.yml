@@ -22,6 +22,11 @@ properties:
   version.compile-testing: "0.18"
   version.class-generator: "0.3.0"
   version.jacoco: "0.8.5"
+  
+  # CONFIGS
+  sonar.jacoco.reportPaths: "${project.basedir}/../report/output/aggregated.exec"
+  sonar.language: java
+  sonar.java.coveragePlugin: jacoco
 
 modules:
   - kos-core
@@ -30,6 +35,7 @@ modules:
   - kos-annotations
   - kos-logging-slf4j
   - kos-bom
+  - report 
 
 # Pre-configured dependencies
 dependencyManagement:
@@ -69,20 +75,6 @@ build:
       - groupId: org.jacoco
         version: "${version.jacoco}"
         artifactId: jacoco-maven-plugin
-        executions:
-          - id: prepare-agent
-            goals: [ "prepare-agent" ]
-            phase: validate
-          - id: check
-            goals: [ "report", "check" ]
-            phase: verify
-        configuration:
-          rules:
-            - element: BUNDLE
-              excludes: [ "*Test" ]
-              limits:
-                - { counter: COMPLEXITY, value: COVEREDRATIO, minimum: "61%" }
-                - { counter: LINE, value: COVEREDRATIO, minimum: "70%" }
 
       - artifactId: maven-javadoc-plugin
         version: 3.1.0
@@ -91,3 +83,22 @@ build:
             - "-Xdoclint:none"
           excludePackageNames: "kos.apt:kos.core.client"
           source: "8"
+
+  plugins:
+    - groupId: org.jacoco
+      artifactId: jacoco-maven-plugin
+      executions:
+        - id: prepare-agent
+          phase: validate
+          goals: ["prepare-agent"]
+          configuration:
+            append: true
+      configuration:
+        rules:
+          - element: BUNDLE
+            excludes: [ "*Test" ]
+            limits:
+              - { counter: COMPLEXITY, value: COVEREDRATIO, minimum: "61%" }
+              - { counter: LINE, value: COVEREDRATIO, minimum: "70%" }
+        #dataFile: "${sonar.jacoco.reportPaths}"
+        destFile: "${sonar.jacoco.reportPaths}"

@@ -26,3 +26,7 @@ build:
   plugins:
     - groupId: org.jacoco
       artifactId: jacoco-maven-plugin
+      executions:
+        - id: check
+          goals: [ "check" ]
+          phase: package
