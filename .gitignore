@@ -1,6 +1,7 @@
 output
 target
 dist
+jacoco
 
 *.zip
 *.jar

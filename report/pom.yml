@@ -1,0 +1,44 @@
+modelVersion: 4.0.0
+
+parent:
+  groupId: io.skullabs.kos
+  artifactId: kos-parent
+  version: 0.1.0
+  relativePath: "../pom.yml"
+
+artifactId: tests-report
+packaging: jar
+
+dependencies:
+- { groupId: io.skullabs.kos, artifactId: kos-core }
+- { groupId: io.skullabs.kos, artifactId: kos-annotations }
+- { groupId: io.skullabs.kos, artifactId: kos-config-yaml }
+- { groupId: io.skullabs.kos, artifactId: kos-injector }
+- { groupId: io.skullabs.kos, artifactId: kos-logging-slf4j }
+
+build:
+  plugins:
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-deploy-plugin
+      version: 2.7
+      configuration:
+        skip: true
+
+    - groupId: org.jacoco
+      artifactId: jacoco-maven-plugin
+      executions:
+#        - id: merge
+#          phase: package
+#          goals: ["merge"]
+#          configuration:
+#            destFile: "${project.build.directory}/jacoco.exec"
+#            fileSets:
+#              - directory: "${project.basedir}/jacoco/"
+#                includes: ["*.exec"]
+        - id: report
+          phase: package
+          goals: ["report", "report-aggregate"]
+          configuration:
+            dataFile: "${sonar.jacoco.reportPaths}"
+#            dataFileIncludes:
+#              - "${sonar.jacoco.reportPaths}"

@@ -1,6 +1,8 @@
 # Kos
 Zero-overhead and minimalist web framework for [Vert.x](https://vertx.io/).
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.skullabs.kos/kos-core/badge.svg?style=flat-square&logo=appveyor)](https://maven-badges.herokuapp.com/maven-central/io.skullabs.kos/kos-core)
+
 ## Goals
 This small project aims to leverage Vert.x web developers productivity by providing them
 a zero-overhead and minimalistic API layer. It was carefully designed to not hide
