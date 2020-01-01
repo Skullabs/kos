@@ -3,7 +3,7 @@ modelVersion: 4.0.0
 parent:
   groupId: io.skullabs.kos
   artifactId: kos-parent
-  version: 0.1.0
+  version: 0.2.0
   relativePath: "../pom.yml"
 
 artifactId: kos-core
@@ -13,7 +13,7 @@ dependencies:
 # Vert.X
 - { groupId: io.vertx, artifactId: vertx-core }
 - { groupId: io.vertx, artifactId: vertx-config }
-- { groupId: io.vertx, artifactId: vertx-web, scope: provided }
+- { groupId: io.vertx, artifactId: vertx-web }
 - { groupId: io.vertx, artifactId: vertx-web-client }
 - { groupId: io.skullabs.injector, artifactId: injector-core, scope: provided }
 - { groupId: io.skullabs.injector, artifactId: injector-processor, scope: provided }
