@@ -6,9 +6,9 @@ Zero-overhead and minimalist web framework for [Vert.x](https://vertx.io/).
 ## Goals
 This small project aims to leverage Vert.x web developers productivity by providing them
 a zero-overhead and minimalistic API layer. It was carefully designed to not hide
-from developers how the software works underneath. Kos also embrace Vert.x philosophy
-and doesn't enforce developers to follow opinionated conventions - as all of them are
-optional - but provide them an easy and transparent mechanism to avoid repetitive tasks.
+from developers how the software works underneath. Kos also embrace Vert.x philosophy:
+although it provides opinionated conventions, all of them are
+optional and provide an easy and transparent mechanism to avoid repetitive tasks.
 
 Kos is for you if you need:
 - a reflection-free layer over Vert.x web API
