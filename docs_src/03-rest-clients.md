@@ -23,25 +23,6 @@ It means:
 - You can even use the same [Body annotation](../02-rest-apis/#capturing-the-request-payload)
   to serialize and send request payloads
 
-!!! important
-    In order to use Kos Rest Clients you need to include on your project
-    `vertx-web` dependency.
-
-    ```kotlin tab="Maven (pom.kts)"
-    compile("io.vertx:vertx-web")
-    ```
-    
-    ```xml tab="Maven (pom.xml)"
-    <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-web</artifactId>
-    </dependency>
-    ```
-    
-    ```kotlin tab="Gradle (kts)"
-    implementation("io.vertx:vertx-web")
-    ```
-
 ## Interfaces as API entrypoints
 The biggest difference though lies on the fact that you don't write concrete classes,
 but interfaces to define your Rest Clients. You also have to annotate them with `kos.rest.RestClient`
