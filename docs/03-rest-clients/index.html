@@ -501,35 +501,13 @@ of annotations.</p>
 <li>You can even use the same <a href="../02-rest-apis/#capturing-the-request-payload">Body annotation</a>
   to serialize and send request payloads</li>
 </ul>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>In order to use Kos Rest Clients you need to include on your project
-<code>vertx-web</code> dependency.</p>
-<div class="superfences-tabs">
-<input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
-<label for="__tab_1_0">Maven (pom.kts)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;io.vertx:vertx-web&quot;</span><span class="p">)</span>
-</pre></div></div>
-<input name="__tabs_1" type="radio" id="__tab_1_1" />
-<label for="__tab_1_1">Maven (pom.xml)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>io.vertx<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>vertx-web<span class="nt">&lt;/artifactId&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</pre></div></div>
-<input name="__tabs_1" type="radio" id="__tab_1_2" />
-<label for="__tab_1_2">Gradle (kts)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.vertx:vertx-web&quot;</span><span class="p">)</span>
-</pre></div></div>
-</div>
-</div>
 <h2 id="interfaces-as-api-entrypoints">Interfaces as API entrypoints<a class="headerlink" href="#interfaces-as-api-entrypoints" title="Permanent link">&para;</a></h2>
 <p>The biggest difference though lies on the fact that you don't write concrete classes,
 but interfaces to define your Rest Clients. You also have to annotate them with <code>kos.rest.RestClient</code>
 instead of the <code>kos.core.RestApi</code> one.</p>
 <div class="superfences-tabs">
-<input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
-<label for="__tab_2_0">Kotlin</label>
+<input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
+<label for="__tab_1_0">Kotlin</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.rest.*</span>
 
 <span class="n">@RestClient</span><span class="p">(</span><span class="s">&quot;/calc&quot;</span><span class="p">)</span>
@@ -548,8 +526,8 @@ instead of the <code>kos.core.RestApi</code> one.</p>
     <span class="p">):</span> <span class="n">Future</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
 <span class="p">}</span>
 </pre></div></div>
-<input name="__tabs_2" type="radio" id="__tab_2_1" />
-<label for="__tab_2_1">Java</label>
+<input name="__tabs_1" type="radio" id="__tab_1_1" />
+<label for="__tab_1_1">Java</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">kos.rest.*</span><span class="o">;</span>
 
 <span class="nd">@RestClient</span><span class="o">(</span><span class="s">&quot;/calc&quot;</span><span class="o">)</span>
@@ -595,8 +573,8 @@ consumption they have. For further details on how Dependency Injection works wit
 please process to <a href="../11-dependency-injection">this topic</a>. </p>
 <h3 id="using-dependency-injection">Using Dependency Injection<a class="headerlink" href="#using-dependency-injection" title="Permanent link">&para;</a></h3>
 <div class="superfences-tabs">
-<input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
-<label for="__tab_3_0">Kotlin</label>
+<input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
+<label for="__tab_2_0">Kotlin</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">injector.*</span>
 <span class="k">import</span> <span class="nn">kos.core.client.RestClientConfiguration</span>
 
@@ -622,8 +600,8 @@ please process to <a href="../11-dependency-injection">this topic</a>. </p>
     <span class="k">fun</span> <span class="nf">calculateTwoPlusTwo</span><span class="p">()</span> <span class="p">=</span> <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
 <span class="p">}</span>
 </pre></div></div>
-<input name="__tabs_3" type="radio" id="__tab_3_1" />
-<label for="__tab_3_1">Java</label>
+<input name="__tabs_2" type="radio" id="__tab_2_1" />
+<label for="__tab_2_1">Java</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">injector.*</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">io.vertx.core.Future</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">kos.core.client.RestClientConfiguration</span><span class="o">;</span>
@@ -665,8 +643,8 @@ please process to <a href="../11-dependency-injection">this topic</a>. </p>
 </div>
 <h3 id="using-plain-code">Using plain code<a class="headerlink" href="#using-plain-code" title="Permanent link">&para;</a></h3>
 <div class="superfences-tabs">
-<input name="__tabs_4" type="radio" id="__tab_4_0" checked="checked" />
-<label for="__tab_4_0">Kotlin</label>
+<input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
+<label for="__tab_3_0">Kotlin</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="k">import</span> <span class="nn">kos.core.client.RestClientConfiguration</span>
 
 <span class="k">class</span> <span class="nc">CalculatorApiClientConfiguration</span> <span class="p">{</span>
@@ -693,8 +671,8 @@ please process to <a href="../11-dependency-injection">this topic</a>. </p>
     <span class="k">fun</span> <span class="nf">calculateTwoPlusTwo</span><span class="p">()</span> <span class="p">=</span> <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
 <span class="p">}</span>
 </pre></div></div>
-<input name="__tabs_4" type="radio" id="__tab_4_1" />
-<label for="__tab_4_1">Java</label>
+<input name="__tabs_3" type="radio" id="__tab_3_1" />
+<label for="__tab_3_1">Java</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">io.vertx.core.Future</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">kos.core.client.RestClientConfiguration</span><span class="o">;</span>
 
