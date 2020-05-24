@@ -17,6 +17,7 @@
 package kos.apt;
 
 import generator.apt.SimplifiedAST;
+import kos.core.KosException;
 import kos.core.Lang;
 import kos.rest.*;
 import lombok.Value;
@@ -225,10 +226,14 @@ import static kos.core.Lang.*;
     }
 
     private static boolean isATypeThatRequiresTypeReference(String type){
-        val rawType = TypeUtils.rawType(type).orElse(type);
-        val actualClass = Lang.classFor(rawType);
-        return Map.class.isAssignableFrom(actualClass)
-            || Collection.class.isAssignableFrom(actualClass);
+        try {
+            val rawType = TypeUtils.rawType(type).orElse(type);
+            val actualClass = Lang.classFor(rawType);
+            return Map.class.isAssignableFrom(actualClass)
+                    || Collection.class.isAssignableFrom(actualClass);
+        } catch (KosException cause) {
+            return false;
+        }
     }
 
     static void resetReferenceCounter(){
