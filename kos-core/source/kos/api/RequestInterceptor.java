@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
-import io.vertx.config.*;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpServerRequest;
 
-public interface ConfigStoreOptionsFactory {
+public interface RequestInterceptor {
 
-    default int priority(){
-        return Integer.MIN_VALUE;
-    }
-
-    ConfigStoreOptions create();
+    /**
+     * Handles a request. If the {@code next} interceptor in the chain
+     * were not called, the request will be interrupted. Please make sure
+     * you have sent a response to the client if you choose to interrupt
+     * the request chain.
+     *
+     * @param request Request object
+     * @param next Next interceptor in the chain.
+     */
+    void handle(HttpServerRequest request, Handler<HttpServerRequest> next);
 }

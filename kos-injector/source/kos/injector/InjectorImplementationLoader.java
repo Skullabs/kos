@@ -18,7 +18,7 @@ package kos.injector;
 
 import injector.Injector;
 import io.vertx.core.logging.Logger;
-import kos.core.ImplementationLoader;
+import kos.api.ImplementationLoader;
 import kos.core.Kos;
 import kos.core.Lang.Lazy;
 import kos.core.Lang.Result;

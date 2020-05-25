@@ -47,7 +47,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
             public void handle(final RoutingContext event) {
                 try {
                     /* Call original handler */
-                    final kos.core.Response response =
+                    final kos.api.Response response =
                     handler.patchUser(
                         /* Read request parameters */
                         Request.readParam( event, "user_id", java.lang.String.class ),
@@ -55,8 +55,8 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         Request.readBody( event, "user", kos.rest.sample.User.class )
                     );
                     /* Wraps response as Future */
-                    Lang.asFuture(response).setHandler(new Handler<AsyncResult<kos.core.Response>>() {
-                        public void handle( AsyncResult<kos.core.Response> as ) {
+                    Lang.asFuture(response).setHandler(new Handler<AsyncResult<kos.api.Response>>() {
+                        public void handle( AsyncResult<kos.api.Response> as ) {
                             if (as.succeeded())
                                 Response.send(event, as.result());
                             else

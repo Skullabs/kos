@@ -19,10 +19,11 @@ package kos.core;
 import io.vertx.core.*;
 import io.vertx.core.json.*;
 import io.vertx.core.logging.*;
+import kos.api.Deployment;
+import kos.api.ImplementationLoader;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,46 +42,60 @@ public class Launcher {
     }
 
     public void run(){
-        configureApp();
-
+        log.debug("Launcher is initializing...");
         log.info("Loading configuration...");
-        Kos.readConfig( res -> {
-            deployVerticlesWithConfig( res );
+        Kos.readConfig( conf -> {
+            val deployment = new LauncherDeployment(conf);
+            deployWebServer( deployment );
+            deployVerticlesWithConfig( deployment );
+            log.debug("Launcher has finished!");
         });
     }
 
     /**
-     * Configure a Kos application. This method will be called before sensible
-     * default configuration has been loaded. It is the ideal place for developers
-     * to overwrite {@link Kos} defaults that would be applied widely in the
-     * application.
+     * Configure a custom Kos application. 
      */
     public void configureApp() {}
 
-    /**
-     * Manually deploy the following verticles using the discovered configuration
-     * loaded by {@link Kos}.
-     *
-     * @param verticles verticles to be deployed.
-     */
-    public void deploy(Verticle...verticles) {
-        Collections.addAll(customVerticles, verticles);
+    private void deployWebServer(LauncherDeployment deployment) {
+        if (deployment.config.getBoolean( "kos.auto", true )) {
+            val server = Kos.implementationLoader.instanceOfOrFail(VertxWebServer.class);
+            deployment.deploy(server);
+        }
     }
 
-    private void deployVerticlesWithConfig(JsonObject config) {
-        log.info("Looking for verticles to be deployed...");
-        deployVerticlesWithConfig(config, verticles);
+    private void deployVerticlesWithConfig(LauncherDeployment deployment) {
+        log.info("Looking for verticles...");
+        deployment.deploy(verticles);
 
         if (!customVerticles.isEmpty())
-            deployVerticlesWithConfig(config, customVerticles);
-
-        log.debug("Deployment finished");
+            deployment.deploy(customVerticles);
     }
 
-    private void deployVerticlesWithConfig(JsonObject config, Iterable<Verticle> verticles) {
-        val vertx = Kos.defaultVertx.get();
+    @RequiredArgsConstructor
+    private class LauncherDeployment implements Deployment {
 
-        for (val verticle : verticles) {
+        final Vertx vertx = Kos.defaultVertx.get();
+        final JsonObject config;
+
+        @Override
+        public void deploy(Iterable<Verticle> verticles) {
+            deploy(verticles, config);
+        }
+
+        @Override
+        public void deploy(Verticle verticle) {
+            deploy(verticle, config);
+        }
+
+        @Override
+        public void deploy(Iterable<Verticle> verticles, JsonObject config) {
+            for (val verticle : verticles)
+                deploy(verticle, config);
+        }
+
+        @Override
+        public void deploy(Verticle verticle, JsonObject config) {
             val options = new DeploymentOptions().setConfig(config);
             log.info("Deploying " + verticle.getClass().getCanonicalName() + "...");
             vertx.deployVerticle(verticle, options);

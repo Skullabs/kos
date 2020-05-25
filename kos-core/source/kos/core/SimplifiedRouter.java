@@ -21,6 +21,9 @@ import io.vertx.core.http.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
 import io.vertx.ext.web.handler.*;
+import kos.api.RequestHandler;
+import kos.api.RequestInterceptor;
+import kos.api.Response;
 import lombok.*;
 import lombok.experimental.*;
 

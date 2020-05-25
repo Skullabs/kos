@@ -17,9 +17,10 @@
 package kos.core;
 
 import io.vertx.core.Context;
-import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
+import kos.api.PayloadSerializationStrategy;
+import kos.api.Response;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
@@ -35,9 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static io.vertx.core.http.HttpMethod.GET;
-import static kos.core.Lang.await;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 

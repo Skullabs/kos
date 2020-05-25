@@ -19,7 +19,7 @@ package kos.apt;
 import generator.apt.SimplifiedAST;
 import injector.apt.InjectorProcessor;
 import kos.core.Lang;
-import kos.core.WebServerEventListener;
+import kos.api.WebServerEventListener;
 import kos.rest.RestClient;
 import lombok.val;
 

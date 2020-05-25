@@ -23,7 +23,9 @@ import io.vertx.core.json.*;
 import io.vertx.core.logging.*;
 import io.vertx.core.spi.logging.*;
 import io.vertx.ext.web.client.WebClient;
+import kos.api.*;
 import kos.core.Lang.*;
+import kos.core.client.RestClientSerializer;
 import lombok.*;
 
 import java.util.*;
@@ -73,26 +75,26 @@ public final class Kos {
 
     /**
      * Found serializers for Rest Clients.
-     * @see kos.core.client.Serializer
+     * @see RestClientSerializer
      * @see Kos#defaultRestClientSerializer
      */
-    public static final Map<String, kos.core.client.Serializer> restClientSerializers = loadRestClientSerializers();
+    public static final Map<String, RestClientSerializer> restClientSerializers = loadRestClientSerializers();
 
     /**
      * Default {@link Serializer} for Rest Clients. If not otherwise configured,
      * this will be used to deserialize payloads received as a request response or to
      * automatically serialize objects used as request payload.
      */
-    public static kos.core.client.Serializer defaultRestClientSerializer =
+    public static RestClientSerializer defaultRestClientSerializer =
         restClientSerializers.get("application/json");
 
-    private static Map<String, kos.core.client.Serializer> loadRestClientSerializers() {
-        val serializers = new HashMap<String, kos.core.client.Serializer>();
+    private static Map<String, RestClientSerializer> loadRestClientSerializers() {
+        val serializers = new HashMap<String, RestClientSerializer>();
 
-        val json = new kos.core.client.Serializer.JsonSerializer();
+        val json = new RestClientSerializer.JsonRestClientSerializer();
         serializers.put(json.contentType(), json);
 
-        spi.instancesExposedAs(kos.core.client.Serializer.class)
+        spi.instancesExposedAs(RestClientSerializer.class)
             .forEach(s -> serializers.put(s.contentType(), s));
         return serializers;
     }

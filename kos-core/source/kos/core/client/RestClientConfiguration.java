@@ -20,7 +20,7 @@ import io.vertx.core.MultiMap;
 import io.vertx.ext.web.client.WebClient;
 import kos.core.Kos;
 import kos.core.KosException;
-import kos.core.StringConverter;
+import kos.api.StringConverter;
 import lombok.*;
 
 import java.net.MalformedURLException;
@@ -38,7 +38,7 @@ public class RestClientConfiguration {
 
     @NonNull final URL url;
     @Builder.Default @NonNull final MultiMap headers = MultiMap.caseInsensitiveMultiMap();
-    @Builder.Default @NonNull final Serializer serializer = Kos.defaultRestClientSerializer;
+    @Builder.Default @NonNull final RestClientSerializer restClientSerializer = Kos.defaultRestClientSerializer;
     @Builder.Default @NonNull final WebClient client = Kos.webClient.get();
     @Builder.Default @NonNull final StringConverter stringConverter = Kos.stringConverter.get();
 

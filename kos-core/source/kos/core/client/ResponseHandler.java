@@ -41,7 +41,7 @@ public abstract class ResponseHandler<T>
     private static final String MSG_UNEXPECTED_RESPONSE = "Expected status between 200 and 299";
 
     private final Promise<T> promise = Promise.promise();
-    protected final Serializer serializer;
+    protected final RestClientSerializer restClientSerializer;
 
     @Override
     public void handle(AsyncResult<HttpResponse<Buffer>> event) {
@@ -73,12 +73,12 @@ public abstract class ResponseHandler<T>
         return promise.future();
     }
 
-    public static <T> ResponseHandler<T> create(Serializer serializer, Class<T> targetClass){
-        return new SimpleTypeResponseHandler<>(serializer, targetClass);
+    public static <T> ResponseHandler<T> create(RestClientSerializer restClientSerializer, Class<T> targetClass){
+        return new SimpleTypeResponseHandler<>(restClientSerializer, targetClass);
     }
 
-    public static <T> ResponseHandler<T> create(Serializer serializer, TypeReference<T> targetClass){
-        return new TypeReferenceResponseHandler<>(serializer, targetClass);
+    public static <T> ResponseHandler<T> create(RestClientSerializer restClientSerializer, TypeReference<T> targetClass){
+        return new TypeReferenceResponseHandler<>(restClientSerializer, targetClass);
     }
 }
 
@@ -86,14 +86,14 @@ class SimpleTypeResponseHandler<T> extends ResponseHandler<T> {
 
     private final Class<T> targetClass;
 
-    SimpleTypeResponseHandler(Serializer serializer, Class<T> targetClass) {
-        super(serializer);
+    SimpleTypeResponseHandler(RestClientSerializer restClientSerializer, Class<T> targetClass) {
+        super(restClientSerializer);
         this.targetClass = targetClass;
     }
 
     @Override
     protected T deserialize(HttpResponse<Buffer> response) {
-        return serializer.deserialize(response, targetClass);
+        return restClientSerializer.deserialize(response, targetClass);
     }
 }
 
@@ -101,13 +101,13 @@ class TypeReferenceResponseHandler<T> extends ResponseHandler<T> {
 
     private final TypeReference<T> typeReference;
 
-    TypeReferenceResponseHandler(Serializer serializer, TypeReference<T> typeReference) {
-        super(serializer);
+    TypeReferenceResponseHandler(RestClientSerializer restClientSerializer, TypeReference<T> typeReference) {
+        super(restClientSerializer);
         this.typeReference = typeReference;
     }
 
     @Override
     protected T deserialize(HttpResponse<Buffer> response) {
-        return serializer.deserialize(response, typeReference);
+        return restClientSerializer.deserialize(response, typeReference);
     }
 }

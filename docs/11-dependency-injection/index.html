@@ -519,8 +519,8 @@ to make ordinary classes able to be managed by Injector you should annotated the
 either <code>injector.Singleton</code> or <code>injector.New</code>.</p>
 <p>Below you can find a <em>Custom Exception Handler</em> implementation.
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">injector.ExposedAs</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">kos.core.ExceptionHandler</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">kos.core.Response</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">kos.api.ExceptionHandler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">kos.api.Response</span><span class="o">;</span>
 
 <span class="nd">@ExposedAs</span><span class="o">(</span><span class="n">ExceptionHandler</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomExceptionHandler</span> <span class="kd">implements</span> <span class="n">ExceptionHandler</span> <span class="o">{</span>
@@ -561,10 +561,10 @@ so we know in what to put more effort for the releases.</p>
 <h3 id="custom-dependency-injection-mechanism">Custom Dependency Injection Mechanism<a class="headerlink" href="#custom-dependency-injection-mechanism" title="Permanent link">&para;</a></h3>
 <p>As mentioned before Kos dependency injection mechanism is quite simple and doesn't
 enforce you to stick with a single implementation. To provide your own Implementaion Loader
-you need to implement the <code>kos.core.ImplementationLoader</code> interface. Once you've
+you need to implement the <code>kos.api.ImplementationLoader</code> interface. Once you've
 implemented you need to register it as the default Implementation Loader by exposing
 it as Service Provider implementation. You can do so by creating a
-<code>META-INF/services/kos.core.ImplementationLoader</code> file with the canonical name of
+<code>META-INF/services/kos.api.ImplementationLoader</code> file with the canonical name of
 your just created class inside of it.</p>
                 
                   

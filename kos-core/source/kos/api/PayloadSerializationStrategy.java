@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
 import io.vertx.core.*;
 import io.vertx.core.http.*;
-import lombok.*;
+import kos.core.Kos;
+import kos.core.KosException;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 import java.util.function.*;
 
@@ -102,7 +105,7 @@ class HeaderParserStrategy implements PayloadSerializationStrategy {
         if (value == null)
             value = defaultContentType;
         else {
-            val pos = value.indexOf(';');
+            var pos = value.indexOf(';');
             value = value.substring(0, pos > -1 ? pos : value.length());
         }
         return value;

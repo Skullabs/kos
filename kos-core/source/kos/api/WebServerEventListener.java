@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
 import io.vertx.core.*;
 import io.vertx.core.http.*;
 import io.vertx.core.json.*;
+import kos.core.SimplifiedRouter;
+import kos.core.VertxWebServer;
 import lombok.*;
 import lombok.experimental.*;
 
@@ -40,9 +42,9 @@ public interface WebServerEventListener {
      */
     @Accessors(fluent = true)
     @Value class BeforeDeployEvent {
-        final Vertx vertx;
-        final HttpServerOptions options;
-        final SimplifiedRouter router;
-        final JsonObject config;
+        Vertx vertx;
+        HttpServerOptions options;
+        SimplifiedRouter router;
+        JsonObject config;
     }
 }

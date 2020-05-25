@@ -18,9 +18,8 @@ package kos.core;
 
 import io.vertx.core.*;
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.ext.web.*;
+import kos.api.RequestInterceptor;
 import lombok.*;
-import lombok.experimental.Delegate;
 
 /**
  *

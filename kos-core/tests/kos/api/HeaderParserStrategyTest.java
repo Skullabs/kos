@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
-import io.netty.handler.codec.*;
-import io.vertx.core.*;
 import io.vertx.core.http.*;
 import io.vertx.core.http.impl.headers.*;
 import lombok.*;

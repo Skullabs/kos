@@ -124,7 +124,7 @@ class MyApi {
 ## Sending responses to the Http Client
 Kos Rest API's will infer the response from the return type defined on your functions:
 
-- `kos.core.Response`: this is a special response type bundled in Kos so developers can easily define
+- `kos.api.Response`: this is a special response type bundled in Kos so developers can easily define
   custom responses to Http Clients. It is particularly useful when you method needs to return different
   types of Response objects, or different types of Http Status Responses. 
 - `void`: methods that doesn't return a value will make your method API receive the request, perform

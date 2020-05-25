@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
 import lombok.*;
 
@@ -49,7 +49,7 @@ public interface StringConverter {
 
         private final Map<Class, Function> converters = new HashMap<>();
 
-        DefaultStringConverter() {
+        public DefaultStringConverter() {
             register(String.class, Function.identity());
             register(Character.TYPE, s -> s.charAt(0));
             register(Character.class, s -> s.charAt(0));

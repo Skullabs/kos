@@ -23,7 +23,7 @@ import io.vertx.ext.web.client.HttpResponse;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-public interface Serializer {
+public interface RestClientSerializer {
 
     String contentType();
 
@@ -33,7 +33,7 @@ public interface Serializer {
     <T> T deserialize(HttpResponse<Buffer> response, TypeReference<T> type);
 
     @Accessors(fluent = true)
-    class JsonSerializer implements Serializer {
+    class JsonRestClientSerializer implements RestClientSerializer {
 
         @Getter
         final String contentType = "application/json";

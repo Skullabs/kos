@@ -678,7 +678,7 @@ methods.</p>
 <h2 id="sending-responses-to-the-http-client">Sending responses to the Http Client<a class="headerlink" href="#sending-responses-to-the-http-client" title="Permanent link">&para;</a></h2>
 <p>Kos Rest API's will infer the response from the return type defined on your functions:</p>
 <ul>
-<li><code>kos.core.Response</code>: this is a special response type bundled in Kos so developers can easily define
+<li><code>kos.api.Response</code>: this is a special response type bundled in Kos so developers can easily define
   custom responses to Http Clients. It is particularly useful when you method needs to return different
   types of Response objects, or different types of Http Status Responses. </li>
 <li><code>void</code>: methods that doesn't return a value will make your method API receive the request, perform

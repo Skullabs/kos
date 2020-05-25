@@ -16,7 +16,7 @@
 
 package kos.core;
 
-import kos.core.StringConverter.DefaultStringConverter;
+import kos.api.StringConverter.DefaultStringConverter;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

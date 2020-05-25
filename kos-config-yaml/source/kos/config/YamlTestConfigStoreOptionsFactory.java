@@ -19,7 +19,7 @@ package kos.config;
 import injector.*;
 import io.vertx.config.*;
 import io.vertx.core.json.*;
-import kos.core.*;
+import kos.api.ConfigStoreOptionsFactory;
 
 @Singleton @ExposedAs(ConfigStoreOptionsFactory.class)
 public class YamlTestConfigStoreOptionsFactory implements ConfigStoreOptionsFactory {

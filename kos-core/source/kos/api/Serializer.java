@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
 import io.vertx.core.buffer.*;
 import io.vertx.core.json.*;
+import kos.core.Kos;
 import lombok.*;
 
 public interface Serializer {

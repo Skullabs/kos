@@ -18,6 +18,7 @@ package kos.injector;
 
 import injector.*;
 import io.vertx.core.logging.*;
+import kos.api.WebServerEventListener;
 import kos.core.*;
 import lombok.*;
 

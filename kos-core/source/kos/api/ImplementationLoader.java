@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
+import kos.core.KosException;
+import kos.core.Lang;
 import lombok.*;
 import java.util.*;
 

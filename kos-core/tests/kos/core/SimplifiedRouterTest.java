@@ -20,6 +20,8 @@ import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import kos.api.RequestHandler;
+import kos.api.RequestInterceptor;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +34,8 @@ import static org.mockito.Mockito.*;
 
 class SimplifiedRouterTest {
 
-    @Mock RequestHandler requestHandler;
+    @Mock
+    RequestHandler requestHandler;
     @Mock HttpServerRequest request;
     @Mock HttpServerResponse response;
 

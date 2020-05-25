@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package kos.config;
+package kos.api;
 
-import injector.*;
-import io.vertx.config.*;
-import io.vertx.core.json.*;
-import kos.api.ConfigStoreOptionsFactory;
+import io.vertx.core.*;
+import io.vertx.core.http.*;
+import io.vertx.ext.web.*;
 
-@Singleton @ExposedAs(ConfigStoreOptionsFactory.class)
-public class YamlConfigStoreOptionsFactory implements ConfigStoreOptionsFactory {
+/**
+ *
+ */
+public interface RequestHandler extends Handler<RoutingContext> {
 
     @Override
-    public ConfigStoreOptions create() {
-        return new ConfigStoreOptions()
-            .setOptional(true)
-            .setType("file")
-            .setFormat("yaml")
-            .setConfig(new JsonObject().put("path", "conf/application.yml"));
+    default void handle(RoutingContext event) {
+        handle(event.request(), event.response());
     }
+
+    void handle(HttpServerRequest request, HttpServerResponse response);
 }

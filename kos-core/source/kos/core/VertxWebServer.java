@@ -22,6 +22,7 @@ import io.vertx.core.http.*;
 import io.vertx.core.json.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
+import kos.api.WebServerEventListener;
 import lombok.*;
 import lombok.experimental.*;
 
@@ -32,7 +33,7 @@ import lombok.experimental.*;
  * This class was either designed to be compatible with Vert.x Verticle
  * mechanism or to be run as standalone Java application.
  */
-@Singleton @ExposedAs(Verticle.class)
+@Singleton
 @Setter @Getter
 @Accessors(fluent = true)
 public class VertxWebServer extends AbstractVerticle {

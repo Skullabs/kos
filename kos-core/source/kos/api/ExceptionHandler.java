@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
 import io.vertx.core.buffer.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
+import kos.core.Kos;
 import lombok.*;
 
 import java.io.*;

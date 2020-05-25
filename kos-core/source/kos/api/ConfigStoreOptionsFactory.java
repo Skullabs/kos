@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.api;
 
-import io.vertx.core.*;
-import io.vertx.core.http.*;
-import io.vertx.ext.web.*;
+import io.vertx.config.*;
 
-/**
- *
- */
-public interface RequestHandler extends Handler<RoutingContext> {
+public interface ConfigStoreOptionsFactory {
 
-    @Override
-    default void handle(RoutingContext event) {
-        handle(event.request(), event.response());
+    default int priority(){
+        return Integer.MIN_VALUE;
     }
 
-    void handle(HttpServerRequest request, HttpServerResponse response);
+    ConfigStoreOptions create();
 }

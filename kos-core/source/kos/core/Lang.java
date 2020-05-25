@@ -242,6 +242,16 @@ public final class Lang {
             return of(mapper.apply(data));
         }
 
+        @Override
+        public String toString() {
+            if (cause == null && data == null)
+                return "Result{empty=true}";
+            return "Result{" +
+                    "cause=" + cause +
+                    ", data=" + data +
+                    '}';
+        }
+
         public static <T, E extends RuntimeException> Result<T> failure(E cause){
             return new Result<>(cause, null);
         }

@@ -19,11 +19,9 @@ package kos.core;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import lombok.val;
-import lombok.var;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;

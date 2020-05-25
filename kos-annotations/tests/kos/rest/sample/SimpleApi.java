@@ -18,7 +18,7 @@ package kos.rest.sample;
 
 import io.vertx.core.Future;
 import io.vertx.core.http.*;
-import kos.core.*;
+import kos.api.Response;
 import kos.rest.*;
 import lombok.*;
 
