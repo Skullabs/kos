@@ -20,7 +20,7 @@ properties:
   version.slf4j: 1.7.9
   version.google-truth: 0.30
   version.compile-testing: "0.18"
-  version.class-generator: "0.3.0"
+  version.class-generator: "0.4.0"
   version.jacoco: "0.8.5"
   
   # CONFIGS

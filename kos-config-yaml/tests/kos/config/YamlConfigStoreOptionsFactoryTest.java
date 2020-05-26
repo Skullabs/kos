@@ -18,6 +18,7 @@ package kos.config;
 
 import io.vertx.config.*;
 import io.vertx.core.json.*;
+import kos.api.MutableKosConfiguration;
 import kos.core.*;
 import lombok.*;
 import org.junit.jupiter.api.*;
@@ -28,11 +29,13 @@ import java.util.concurrent.locks.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class YamlConfigStoreOptionsFactoryTest {
+    
+    LazyConfigRetriever retriever = new LazyConfigRetriever(new MutableKosConfiguration());
 
     @DisplayName("Can read prod yml file")
     @Test void canReadFile(){
         val options = new ConfigRetrieverOptions();
-        options.addStore( new YamlConfigStoreOptionsFactory().create() );
+        options.addStore( retriever.createStoreForProduction() );
 
         val configRef = new AtomicReference<JsonObject>();
         ConfigRetriever.create( Kos.defaultVertx.get(), options )
@@ -47,7 +50,7 @@ class YamlConfigStoreOptionsFactoryTest {
     @DisplayName("Can read test yml file")
     @Test void canReadTestFile(){
         val options = new ConfigRetrieverOptions();
-        options.addStore( new YamlTestConfigStoreOptionsFactory().create() );
+        options.addStore( retriever.createStoreForTest() );
 
         val configRef = new AtomicReference<JsonObject>();
         ConfigRetriever.create( Kos.defaultVertx.get(), options )
@@ -63,7 +66,7 @@ class YamlConfigStoreOptionsFactoryTest {
     @DisplayName("Can merge yml files correctly")
     @Test void canMergeYmlCorrectly(){
         val configRef = new AtomicReference<JsonObject>();
-        Kos.readConfig(configRef::set);
+        retriever.getConfig( res -> configRef.set(res.result()) );
 
         val config = awaitFor( configRef );
         val expected = new JsonObject()
