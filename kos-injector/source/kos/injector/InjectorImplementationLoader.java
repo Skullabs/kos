@@ -21,7 +21,6 @@ import io.vertx.core.logging.Logger;
 import kos.api.ImplementationLoader;
 import kos.core.Kos;
 import kos.core.Lang.Lazy;
-import kos.core.Lang.Result;
 import lombok.val;
 
 import java.util.function.Consumer;

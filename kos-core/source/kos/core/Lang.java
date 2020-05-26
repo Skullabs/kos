@@ -17,13 +17,12 @@
 package kos.core;
 
 import io.vertx.core.Future;
+import kos.api.ImplementationLoader;
 import lombok.*;
-import lombok.experimental.Accessors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.locks.LockSupport;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -56,7 +55,7 @@ public final class Lang {
         }
     }
 
-    public static <T> Lang.Result<T> first(Iterable<T> data ) {
+    public static <T> ImplementationLoader.Result<T> first(Iterable<T> data ) {
         return first( data, i -> true );
     }
 
@@ -68,12 +67,12 @@ public final class Lang {
         return false;
     }
 
-    public static <T> Lang.Result<T> first( Iterable<T> data, Function<T, Boolean> matcher ) {
+    public static <T> ImplementationLoader.Result<T> first(Iterable<T> data, Function<T, Boolean> matcher ) {
         for (val item: data){
             if ( matcher.apply(item) )
-                return Lang.Result.of( item );
+                return ImplementationLoader.Result.of( item );
         }
-        return Lang.Result.empty();
+        return ImplementationLoader.Result.empty();
     }
 
     public static <T> List<T> filter( Collection<T> data, Function<T, Boolean> matcher ) {
@@ -187,81 +186,5 @@ public final class Lang {
             return new Lazy<>( supplier );
         }
     }
-    
-    @RequiredArgsConstructor
-    @EqualsAndHashCode
-    @Accessors(fluent = true)
-    public static class Result<T> {
-        
-        final RuntimeException cause;
-        final T data;
-        
-        public boolean isEmpty(){
-            return data == null;
-        }
 
-        public boolean isPresent(){
-            return !isEmpty();
-        }
-        
-        public boolean failed(){
-            return cause != null;
-        }
-        
-        public T get(){
-            return data;
-        }
-
-        public <E extends RuntimeException> T orElseThrow(Supplier<E> cause) {
-            if (isEmpty())
-                throw cause.get();
-            return data;
-        }
-
-        public T orElse(T other){
-            if (isEmpty())
-                return other;
-            return data;
-        }
-
-        public T orElseGet(Supplier<T> other) {
-            if (isEmpty())
-                return other.get();
-            return data;
-        }
-
-        public T orElseGet(Function<RuntimeException,T> other) {
-            if (isEmpty())
-                return other.apply(cause);
-            return data;
-        }
-
-        public <R> Result<R> map(Function<T, R> mapper) {
-            if (isEmpty())
-                return empty();
-            return of(mapper.apply(data));
-        }
-
-        @Override
-        public String toString() {
-            if (cause == null && data == null)
-                return "Result{empty=true}";
-            return "Result{" +
-                    "cause=" + cause +
-                    ", data=" + data +
-                    '}';
-        }
-
-        public static <T, E extends RuntimeException> Result<T> failure(E cause){
-            return new Result<>(cause, null);
-        }
-
-        public static <T> Result<T> of(T value){
-            return new Result<>(null, value);
-        }
-
-        public static <T> Result<T> empty(){
-            return new Result<>(null, null);
-        }
-    }
 }

@@ -19,7 +19,11 @@ package kos.api;
 import kos.core.KosException;
 import kos.core.Lang;
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Loads implementations.
@@ -43,7 +47,7 @@ public interface ImplementationLoader {
      * @param <T> same type as {@code type}
      * @return an {@link Optional} instance containing or not the found instance.
      */
-    <T> Lang.Result<T> instanceOf(Class<T> type );
+    <T> Result<T> instanceOf(Class<T> type );
 
     /**
      * Load the instance of the given {@code type}.
@@ -77,8 +81,8 @@ public interface ImplementationLoader {
      * @param <T> same type as {@code type}
      * @return an {@link Optional} instance containing or not the found instance.
      */
-    default <T> Lang.Result<T> anyInstanceOf(Class<T> type ) {
-        return Lang.Result.of( instanceOf( type )
+    default <T> Result<T> anyInstanceOf(Class<T> type ) {
+        return Result.of( instanceOf( type )
             .orElseGet( () -> {
                 val found = instancesExposedAs( type ).iterator();
                 if ( found.hasNext() )
@@ -96,11 +100,93 @@ public interface ImplementationLoader {
         }
 
         @Override
-        public <T> Lang.Result<T> instanceOf(Class<T> interfaceType) {
+        public <T> Result<T> instanceOf(Class<T> interfaceType) {
             if (interfaceType.isInterface())
                 return Lang.first(instancesExposedAs(interfaceType));
             val instance = Lang.instantiate(interfaceType);
-            return Lang.Result.of(instance);
+            return Result.of(instance);
+        }
+    }
+
+    /**
+     * Customized optional result. It was created so developers might experience optimal
+     * experience when using the {@link ImplementationLoader}.
+     * @param <T>
+     */
+    @RequiredArgsConstructor
+    @EqualsAndHashCode
+    @Accessors(fluent = true)
+    class Result<T> {
+        
+        final RuntimeException cause;
+        final T data;
+        
+        public boolean isEmpty(){
+            return data == null;
+        }
+
+        public boolean isPresent(){
+            return !isEmpty();
+        }
+        
+        public boolean failed(){
+            return cause != null;
+        }
+        
+        public T get(){
+            return data;
+        }
+
+        public <E extends RuntimeException> T orElseThrow(Supplier<E> cause) {
+            if (isEmpty())
+                throw cause.get();
+            return data;
+        }
+
+        public T orElse(T other){
+            if (isEmpty())
+                return other;
+            return data;
+        }
+
+        public T orElseGet(Supplier<T> other) {
+            if (isEmpty())
+                return other.get();
+            return data;
+        }
+
+        public T orElseGet(Function<RuntimeException,T> other) {
+            if (isEmpty())
+                return other.apply(cause);
+            return data;
+        }
+
+        public <R> Result<R> map(Function<T, R> mapper) {
+            if (isEmpty())
+                return empty();
+            return of(mapper.apply(data));
+        }
+
+        @Override
+        public String toString() {
+            if (cause == null && data == null)
+                return "Result{empty=true}";
+            return "Result{" +
+                    "cause=" + cause +
+                    ", data=" + data +
+                    '}';
+        }
+
+        public static <T, E extends RuntimeException> Result<T> failure(E cause){
+            return new Result<>(cause, null);
+        }
+
+        public static <T> Result<T> of(T value){
+            return new Result<>(null, value);
+        }
+
+        public static <T> Result<T> empty(){
+            return new Result<>(null, null);
         }
     }
 }
