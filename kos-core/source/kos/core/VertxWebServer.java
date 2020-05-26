@@ -16,12 +16,12 @@
 
 package kos.core;
 
-import injector.*;
 import io.vertx.core.*;
 import io.vertx.core.http.*;
 import io.vertx.core.json.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
+import kos.api.KosConfiguration;
 import kos.api.WebServerEventListener;
 import lombok.*;
 import lombok.experimental.*;
@@ -33,15 +33,36 @@ import lombok.experimental.*;
  * This class was either designed to be compatible with Vert.x Verticle
  * mechanism or to be run as standalone Java application.
  */
-@Singleton
 @Setter @Getter
 @Accessors(fluent = true)
 public class VertxWebServer extends AbstractVerticle {
 
-    static private final Logger log = Kos.logger(VertxWebServer.class);
+    private final Logger log;
+    private final KosConfiguration kosConfiguration;
 
     @NonNull
     private SimplifiedRouter router;
+
+    public VertxWebServer(KosConfiguration kosConfiguration){
+        this(kosConfiguration, true);
+    }
+
+    /**
+     * Constructs VertxWebServer.
+     * 
+     * @param kosConfiguration - Kos Configuration
+     * @param autoConfigOptionals - true if should automatically config all optionals
+     */
+    public VertxWebServer(KosConfiguration kosConfiguration, boolean autoConfigOptionals) {
+        this.kosConfiguration = kosConfiguration;
+        this.log = kosConfiguration.createLoggerFor(getClass());
+
+        val defaultRouter = Router.router(vertx);
+        if (autoConfigOptionals)
+            defaultRouter.route().handler(new DefaultContextAttributesMemorizer());
+
+        this.router = SimplifiedRouter.wrapWithAutoBodyReader(kosConfiguration, defaultRouter);
+    }
 
     @Override
     public void start() {
@@ -61,11 +82,9 @@ public class VertxWebServer extends AbstractVerticle {
     }
 
     private void startServer( Promise<Void> startFuture ) {
-        val httpServerOptions = loadServerOptions();
+        notifyWebServerDeploymentListeners();
 
-        notifyWebServerDeploymentListeners(httpServerOptions);
-
-        vertx.createHttpServer( httpServerOptions )
+        vertx.createHttpServer( kosConfiguration.getHttpServerOptions() )
             .requestHandler( router() )
                 .listen( as -> {
                     if ( as.failed() )
@@ -78,31 +97,9 @@ public class VertxWebServer extends AbstractVerticle {
                 });
     }
 
-    /**
-     * Loads the {@link HttpServerOptions} from the Class Path. Developers
-     * are encouraged to override this method whenever needed.
-     *
-     * @return the found or created HttpServerOptions object.
-     */
-    protected HttpServerOptions loadServerOptions() {
-        return Kos.implementationLoader
-            .instanceOf( HttpServerOptions.class )
-            .orElseGet( this::createServerOptions );
-    }
-
-    /**
-     * The default server configuration. It will be triggered
-     * when the auto-discovery mechanism failed to find one in the classpath.
-     */
-    private HttpServerOptions createServerOptions(){
-        val options = new HttpServerOptions( this.config() );
-        log.debug( "Loading default HttpServerOptions: " + Json.encodePrettily(options) );
-        return options;
-    }
-
-    private void notifyWebServerDeploymentListeners(HttpServerOptions httpServerOptions) {
-        val deploymentListenerContext = new WebServerEventListener.BeforeDeployEvent(
-            vertx, httpServerOptions, router(), this.config()
+    private void notifyWebServerDeploymentListeners() {
+        val deploymentListenerContext = new WebServerEventListener.BeforeDeployWebServerEvent(
+            vertx, router(), this.config(), kosConfiguration
         );
 
         Kos.implementationLoader
@@ -125,18 +122,5 @@ public class VertxWebServer extends AbstractVerticle {
      */
     protected void afterStart(HttpServer server) {
         log.info("Server started at " + server.actualPort() + " port");
-    }
-
-    /**
-     * Retrieves the current configured router. If none is defined, it
-     * will lazily instantiate the default {@link SimplifiedRouter} configuration.
-     */
-    public SimplifiedRouter router(){
-        if ( router == null ) {
-            val defaultRouter = Router.router(vertx);
-            defaultRouter.route().handler(new DefaultContextAttributesMemorizer());
-            router = SimplifiedRouter.wrapWithAutoBodyReader(defaultRouter);
-        }
-        return router;
     }
 }

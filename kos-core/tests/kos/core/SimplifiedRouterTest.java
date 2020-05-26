@@ -20,6 +20,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import kos.api.MutableKosConfiguration;
 import kos.api.RequestHandler;
 import kos.api.RequestInterceptor;
 import lombok.val;
@@ -34,8 +35,7 @@ import static org.mockito.Mockito.*;
 
 class SimplifiedRouterTest {
 
-    @Mock
-    RequestHandler requestHandler;
+    @Mock RequestHandler requestHandler;
     @Mock HttpServerRequest request;
     @Mock HttpServerResponse response;
 
@@ -48,7 +48,7 @@ class SimplifiedRouterTest {
         doReturn(response).when(request).response();
 
         val router = Router.router(Kos.defaultVertx.get());
-        simplifiedRouter = SimplifiedRouter.wrapWithAutoBodyReader(router);
+        simplifiedRouter = SimplifiedRouter.wrapWithAutoBodyReader(new MutableKosConfiguration(), router);
     }
 
     @DisplayName("Interceptors SHOULD be able to interrupt executions avoiding handlers for being called")

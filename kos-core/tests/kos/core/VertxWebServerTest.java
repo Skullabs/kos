@@ -17,8 +17,8 @@
 package kos.core;
 
 import io.vertx.core.Context;
-import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
+import kos.api.MutableKosConfiguration;
 import kos.api.PayloadSerializationStrategy;
 import kos.api.Response;
 import lombok.SneakyThrows;
@@ -36,20 +36,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static io.vertx.core.http.HttpMethod.GET;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 
 @DisplayName("VertxWebServer: serve requests")
 class VertxWebServerTest {
 
-    final VertxWebServer server = new VertxWebServer() {
-
-        @Override
-        protected HttpServerOptions loadServerOptions() {
-            return new HttpServerOptions().setPort(8080);
-        }
-    };
+    final MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
+    final VertxWebServer server = new VertxWebServer(kosConfiguration);
 
     @Mock Context verticleContext;
     @Mock JsonObject config;
@@ -63,14 +57,12 @@ class VertxWebServerTest {
 
     @SneakyThrows
     @Test void canReceiveRequests(){
-        server.router().route(GET, "/hello", ctx -> {
-            Response.send(ctx, "World");
-        });
+        server.router().route(GET, "/hello", ctx -> Response.send(ctx, "World"));
 
         server.start();
         Thread.sleep(500);
 
-        val response = sendGET("http://localhost:8080/hello");
+        val response = sendGET("http://localhost:9000/hello");
         assertEquals("World", response);
     }
 

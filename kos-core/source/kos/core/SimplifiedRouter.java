@@ -21,6 +21,7 @@ import io.vertx.core.http.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
 import io.vertx.ext.web.handler.*;
+import kos.api.KosConfiguration;
 import kos.api.RequestHandler;
 import kos.api.RequestInterceptor;
 import kos.api.Response;
@@ -28,6 +29,8 @@ import lombok.*;
 import lombok.experimental.*;
 
 import java.util.*;
+
+import static kos.core.Lang.mapOf;
 
 /**
  * Small layer over {@link Router} that aims to simplify a few common
@@ -37,20 +40,20 @@ import java.util.*;
 @Accessors(fluent = true)
 public class SimplifiedRouter implements Handler<HttpServerRequest> {
 
-    private static final Logger log = Kos.logger(SimplifiedRouter.class);
-
+    private final Logger log;
     private final Router router;
     private final RequestInterceptorHandler interceptorHandler;
     private final Map<HttpMethod, Boolean> httpMethodsThatMayReadBody;
 
-    public SimplifiedRouter(Router router, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
-        this(router, new RequestInterceptorHandler(router), httpMethodsThatMayReadBody);
+    public SimplifiedRouter(KosConfiguration kosConfiguration, Router router, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
+        this(kosConfiguration, router, new RequestInterceptorHandler(router), httpMethodsThatMayReadBody);
     }
 
-    private SimplifiedRouter(Router router, RequestInterceptorHandler interceptor, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
+    private SimplifiedRouter(KosConfiguration kosConfiguration, Router router, RequestInterceptorHandler interceptor, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
         this.interceptorHandler = interceptor;
         this.router = router;
         this.httpMethodsThatMayReadBody = httpMethodsThatMayReadBody;
+        this.log = kosConfiguration.createLoggerFor(getClass());
     }
 
     /**
@@ -109,15 +112,15 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
      * @param router the router instance that will be wrapped
      * @return An instance of {@link SimplifiedRouter}
      */
-    public static SimplifiedRouter wrapWithAutoBodyReader( Router router ){
+    public static SimplifiedRouter wrapWithAutoBodyReader( KosConfiguration kosConfiguration, Router router ){
         val methodsThatWillReadBodyBeforeExec =
-            Lang.mapOf( HttpMethod.POST, false )
+            mapOf( HttpMethod.POST, false )
              .and( HttpMethod.PUT, false )
              .and( HttpMethod.PATCH, false )
                 .build();
 
         return new SimplifiedRouter(
-            router,
+            kosConfiguration, router,
             methodsThatWillReadBodyBeforeExec
         );
     }
@@ -130,8 +133,8 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
      * @param router the router instance that will be wrapped
      * @return An instance of {@link SimplifiedRouter}
      */
-    public static SimplifiedRouter wrapWithNoAuthBodyReader( Router router ) {
-        return new SimplifiedRouter( router, Collections.emptyMap() );
+    public static SimplifiedRouter wrapWithNoAuthBodyReader( KosConfiguration kosConfiguration, Router router ) {
+        return new SimplifiedRouter( kosConfiguration, router, Collections.emptyMap() );
     }
 
     @Override
