@@ -33,8 +33,8 @@ public class InjectorJobRunner implements WebServerEventListener {
     }
 
     @Override
-    public void on(BeforeDeployEvent event) {
-        val exitOnJobFailure = event.config().getBoolean("exit-on-job-failure", true);
+    public void on(BeforeDeployWebServerEvent event) {
+        val exitOnJobFailure = event.applicationConfig().getBoolean("exit-on-job-failure", true);
         val jobs = injector.instancesExposedAs( Job.class );
 
         for (val job : jobs) {

@@ -17,7 +17,6 @@
 package kos.api;
 
 import io.vertx.core.*;
-import io.vertx.core.http.*;
 import io.vertx.core.json.*;
 import kos.core.SimplifiedRouter;
 import kos.core.VertxWebServer;
@@ -35,16 +34,16 @@ public interface WebServerEventListener {
      * Called before deploy {@link VertxWebServer} verticle.
      * @param event
      */
-    void on( BeforeDeployEvent event );
+    void on( BeforeDeployWebServerEvent event );
 
     /**
      * Data available before deploy the web server.
      */
     @Accessors(fluent = true)
-    @Value class BeforeDeployEvent {
+    @Value class BeforeDeployWebServerEvent {
         Vertx vertx;
-        HttpServerOptions options;
         SimplifiedRouter router;
-        JsonObject config;
+        JsonObject applicationConfig;
+        KosConfiguration kosConfiguration;
     }
 }
