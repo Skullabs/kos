@@ -19,19 +19,15 @@ package kos.api;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
 import io.vertx.core.logging.JULLogDelegateFactory;
+import io.vertx.core.logging.Logger;
 import io.vertx.core.spi.logging.LogDelegateFactory;
-import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-
-import static io.vertx.core.logging.LoggerFactory.LOGGER_DELEGATE_FACTORY_CLASS_NAME;
 
 @RequiredArgsConstructor
 @Getter @Setter
@@ -67,9 +63,15 @@ public class KosConfiguration {
         private final Map<String, RestClientSerializer> restClientSerializers = loadRestClientSerializers();
         private final Map<String, Serializer> serializers = loadSerializers();
 
+        public Logger createLoggerFor(Class type) {
+            return new Logger(
+                getLogDelegateFactory().createDelegate(type.getCanonicalName())
+            );
+        }
+
         public ImplementationLoader getImplementationLoader(){
             if (implementationLoader == null)
-                implementationLoader = spi.anyInstanceOf(ImplementationLoader.class).orElse(spi);
+                implementationLoader = spi;
             return implementationLoader;
         }
 
@@ -93,30 +95,25 @@ public class KosConfiguration {
 
         public LogDelegateFactory getLogDelegateFactory() {
             if (logDelegateFactory == null)
-                setLogDelegateFactory(loadLogDelegateFactory());
+                setLogDelegateFactory(new JULLogDelegateFactory());
             return logDelegateFactory;
         }
 
         public Vertx getDefaultVertx() {
-            if (defaultVertx == null) {
-                val vertxOptions = getImplementationLoader().anyInstanceOf(VertxOptions.class);
-                defaultVertx = vertxOptions.isPresent() ? Vertx.vertx(vertxOptions.get()) : Vertx.vertx();
-            }
+            if (defaultVertx == null)
+                defaultVertx = Vertx.vertx();
             return defaultVertx;
         }
 
         public StringConverter getStringConverter() {
             if (stringConverter == null)
-                stringConverter = getImplementationLoader().anyInstanceOf(StringConverter.class)
-                        .orElseGet(StringConverter.DefaultStringConverter::new);
+                stringConverter = new StringConverter.DefaultStringConverter();
             return stringConverter;
         }
 
         public ExceptionHandler getExceptionHandler() {
             if (exceptionHandler == null)
-                exceptionHandler = getImplementationLoader()
-                        .anyInstanceOf(ExceptionHandler.class)
-                        .orElseGet(ExceptionHandler.DefaultExceptionHandler::new);
+                exceptionHandler = new ExceptionHandler.DefaultExceptionHandler();
             return exceptionHandler;
         }
 
@@ -135,8 +132,6 @@ public class KosConfiguration {
             val plainText = new Serializer.PlainTextSerializer();
             serializers.put(plainText.contentType(), plainText);
 
-            getImplementationLoader().instancesExposedAs(Serializer.class)
-                    .forEach(s -> serializers.put(s.contentType(), s));
             return serializers;
         }
 
@@ -145,48 +140,12 @@ public class KosConfiguration {
 
             val json = new RestClientSerializer.JsonRestClientSerializer();
             serializers.put(json.contentType(), json);
-
-            getImplementationLoader().instancesExposedAs(RestClientSerializer.class)
-                    .forEach(s -> serializers.put(s.contentType(), s));
             return serializers;
         }
 
-        private LogDelegateFactory loadLogDelegateFactory() {
-            val commandLineLogger = System.getProperty(LOGGER_DELEGATE_FACTORY_CLASS_NAME);
-            if (commandLineLogger != null)
-                return loadLogDelegateFactory(commandLineLogger);
-
-            val factory = getImplementationLoader()
-                    .anyInstanceOf(LogDelegateFactory.class)
-                    .orElseGet(JULLogDelegateFactory::new);
-
-            System.setProperty(LOGGER_DELEGATE_FACTORY_CLASS_NAME, factory.getClass().getCanonicalName());
-
-            return factory;
-        }
-
-        private LogDelegateFactory loadLogDelegateFactory(String canonicalName) {
-            val loader = Thread.currentThread().getContextClassLoader();
-            try {
-                val clz = loader.loadClass(canonicalName);
-                return (LogDelegateFactory) clz.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Error instantiating transformer class \"" + canonicalName + "\"", e);
-            }
-        }
-
         private ConfigRetriever loadConfigRetriever() {
-            val factories = Lang.sorted(
-                getImplementationLoader().instancesExposedAs(ConfigStoreOptionsFactory.class),
-                Comparator.comparingInt(ConfigStoreOptionsFactory::priority)
-            );
-
             val retrieverOptions = new ConfigRetrieverOptions();
-            factories.forEach(factory -> retrieverOptions.addStore(factory.create()));
-
-            return getImplementationLoader()
-                .anyInstanceOf(ConfigRetriever.class)
-                .orElseGet(() -> ConfigRetriever.create(getDefaultVertx(), retrieverOptions));
+            return ConfigRetriever.create(getDefaultVertx(), retrieverOptions);
         }
     }
 }

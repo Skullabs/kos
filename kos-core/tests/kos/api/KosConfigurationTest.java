@@ -17,8 +17,10 @@
 package kos.api;
 
 import io.vertx.config.ConfigRetriever;
+import io.vertx.config.impl.ConfigRetrieverImpl;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
+import io.vertx.core.logging.JULLogDelegateFactory;
 import io.vertx.core.spi.logging.LogDelegateFactory;
 import kos.core.Lang.Result;
 import kos.core.client.RestClientSerializer;
@@ -44,7 +46,7 @@ class KosConfigurationTest {
     @BeforeEach void setUpMocks(){
         doReturn(Result.empty()).when(spi).anyInstanceOf( eq(ImplementationLoader.class) );
     }
-    
+
     @DisplayName("Scenario: Serializers")
     @Nested class SerializersScenario {
 
@@ -120,13 +122,10 @@ class KosConfigurationTest {
     @DisplayName("Scenario: LogDelegateFactory")
     @Nested class LogDelegateFactoryScenario {
 
-        @DisplayName("Should discover a LogDelegateFactory from SPI WHEN no object was defined via setter")
+        @DisplayName("Should return default value WHEN no object was defined via setter")
         @Test void scenario1() {
-            val discovered = mock(LogDelegateFactory.class);
-            doReturn(Result.of(discovered)).when(spi).anyInstanceOf(eq(LogDelegateFactory.class));
-            
             val result = conf.build();
-            assertEquals(discovered, result.getLogDelegateFactory());
+            assertTrue(result.getLogDelegateFactory() instanceof JULLogDelegateFactory);
         }
 
         @DisplayName("Should the object that was defined via setter")
@@ -163,13 +162,10 @@ class KosConfigurationTest {
     @DisplayName("Scenario: StringConverter")
     @Nested class StringConverterScenario {
 
-        @DisplayName("Should discover a StringConverter from SPI WHEN no object was defined via setter")
+        @DisplayName("Should return default value WHEN no object was defined via setter")
         @Test void scenario1() {
-            val discovered = mock(StringConverter.class);
-            doReturn(Result.of(discovered)).when(spi).anyInstanceOf(eq(StringConverter.class));
-            
             val result = conf.build();
-            assertEquals(discovered, result.getStringConverter());
+            assertTrue(result.getStringConverter() instanceof StringConverter.DefaultStringConverter);
         }
 
         @DisplayName("Should the object that was defined via setter")
@@ -185,13 +181,10 @@ class KosConfigurationTest {
     @DisplayName("Scenario: ExceptionHandler")
     @Nested class ExceptionHandlerScenario {
 
-        @DisplayName("Should discover a ExceptionHandler from SPI WHEN no object was defined via setter")
+        @DisplayName("Should return default value WHEN no object was defined via setter")
         @Test void scenario1() {
-            val discovered = mock(ExceptionHandler.class);
-            doReturn(Result.of(discovered)).when(spi).anyInstanceOf(eq(ExceptionHandler.class));
-            
             val result = conf.build();
-            assertEquals(discovered, result.getExceptionHandler());
+            assertTrue(result.getExceptionHandler() instanceof ExceptionHandler.DefaultExceptionHandler);
         }
 
         @DisplayName("Should the object that was defined via setter")
@@ -207,13 +200,10 @@ class KosConfigurationTest {
     @DisplayName("Scenario: ConfigRetriever")
     @Nested class ConfigRetrieverScenario {
 
-        @DisplayName("Should discover a ConfigRetriever from SPI WHEN no object was defined via setter")
+        @DisplayName("Should return default value WHEN no object was defined via setter")
         @Test void scenario1() {
-            val discovered = mock(ConfigRetriever.class);
-            doReturn(Result.of(discovered)).when(spi).anyInstanceOf(eq(ConfigRetriever.class));
-            
             val result = conf.build();
-            assertEquals(discovered, result.getConfigRetriever());
+            assertTrue(result.getConfigRetriever() instanceof ConfigRetrieverImpl);
         }
 
         @DisplayName("Should the object that was defined via setter")
