@@ -56,7 +56,7 @@ public class Launcher {
     }
 
     private void configureKos() {
-        val plugins = conf.getSpi().instancesExposedAs(Plugin.class);
+        val plugins = conf.getSpi().instancesExposedAs(ConfigurationPlugin.class);
 
         for (val plugin : plugins)
             plugin.configure(conf);

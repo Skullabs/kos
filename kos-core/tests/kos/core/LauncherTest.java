@@ -10,7 +10,7 @@ import kos.api.Application;
 import kos.api.ImplementationLoader;
 import kos.api.ImplementationLoader.Result;
 import kos.api.MutableKosConfiguration;
-import kos.api.Plugin;
+import kos.api.ConfigurationPlugin;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,8 +39,8 @@ class LauncherTest {
 
     @DisplayName("Should configure Kos and call plugins")
     @Test void scenario1(){
-        val plugin = mock(Plugin.class);
-        doReturn(singletonList(plugin)).when(implLoader).instancesExposedAs(eq(Plugin.class));
+        val plugin = mock(ConfigurationPlugin.class);
+        doReturn(singletonList(plugin)).when(implLoader).instancesExposedAs(eq(ConfigurationPlugin.class));
 
         launcher.run();
 
