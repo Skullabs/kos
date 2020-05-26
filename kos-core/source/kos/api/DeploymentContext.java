@@ -23,33 +23,17 @@ import io.vertx.core.json.JsonObject;
  * A Kos deployment. Nothing special here, it just wraps Vert.x mechanisms
  * and provides a normalized deployment API.
  */
-public interface Deployment {
+public interface DeploymentContext {
 
     /**
-     * Deploys a verticle.
-     * 
+     * Deploys a verticle with a custom configuration.
      * @param verticle
      */
     void deploy(Verticle verticle);
 
     /**
-     * Deploys a verticle with a custom configuration.
-     * @param verticle
-     * @param config
-     */
-    void deploy(Verticle verticle, JsonObject config);
-
-    /**
-     * Deploys a verticles.
-     *
+     * Deploys verticles with a custom configuration.
      * @param verticles
      */
     void deploy(Iterable<Verticle> verticles);
-
-    /**
-     * Deploys verticles with a custom configuration.
-     * @param verticles
-     * @param config
-     */
-    void deploy(Iterable<Verticle> verticles, JsonObject config);
 }

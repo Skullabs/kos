@@ -16,89 +16,115 @@
 
 package kos.core;
 
-import io.vertx.core.*;
-import io.vertx.core.json.*;
-import io.vertx.core.logging.*;
-import kos.api.Deployment;
-import kos.api.ImplementationLoader;
-import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Handler;
+import io.vertx.core.Verticle;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import kos.api.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 /**
  * Simplified launcher wrapping Vert.x deployment of {@link Verticle}s.
  *
  * @see ImplementationLoader Default implementation loader.
  */
+@RequiredArgsConstructor
 public class Launcher {
 
-    private final Logger log = Kos.logger(Launcher.class);
-    private final Iterable<Verticle> verticles = Kos.implementationLoader.instancesExposedAs(Verticle.class);
-    private final List<Verticle> customVerticles = new ArrayList<>();
+    private final MutableKosConfiguration conf;
+    private Logger log;
+
+    public Launcher(){
+        this(new MutableKosConfiguration());
+    }
 
     public static void main(String[] args) {
         new Launcher().run();
     }
 
     public void run(){
-        log.debug("Launcher is initializing...");
-        log.info("Loading configuration...");
-        Kos.readConfig( conf -> {
-            val deployment = new LauncherDeployment(conf);
-            deployWebServer( deployment );
-            deployVerticlesWithConfig( deployment );
-            log.debug("Launcher has finished!");
+        configureKos();
+        loadLogger();
+        readDeploymentConfig( deploymentConf -> {
+            deployCustomApplication(deploymentConf);
+            deployWebServer( deploymentConf );
+            deployVerticles( deploymentConf );
         });
     }
 
-    /**
-     * Configure a custom Kos application. 
-     */
-    public void configureApp() {}
+    private void configureKos() {
+        val plugins = conf.getSpi().instancesExposedAs(Plugin.class);
 
-    private void deployWebServer(LauncherDeployment deployment) {
-        if (deployment.config.getBoolean( "kos.auto", true )) {
-            val server = Kos.implementationLoader.instanceOfOrFail(VertxWebServer.class);
-            deployment.deploy(server);
+        for (val plugin : plugins)
+            plugin.configure(conf);
+    }
+
+    void loadLogger() {
+        log = conf.createLoggerFor(getClass());
+    }
+
+    void readDeploymentConfig(Handler<DeploymentContext> handler) {
+        log.info("Reading deployment configuration...");
+        conf.getConfigRetriever().getConfig( res -> {
+            if (res.succeeded()) {
+                val deploymentConf = new DeploymentContext(conf, res.result());
+                handler.handle(deploymentConf);
+            } else
+                throw new KosException("Failed to read configuration", res.cause());
+        });
+    }
+
+    void deployCustomApplication(DeploymentContext deploymentContextConf) {
+        val application = deploymentContextConf.instanceOf(Application.class);
+        if (application.isPresent()) {
+            val customApp = application.get();
+            log.info("Configuring custom application " + customApp.getClass().getCanonicalName() + "...");
+            customApp.configure(deploymentContextConf);
         }
     }
 
-    private void deployVerticlesWithConfig(LauncherDeployment deployment) {
+    void deployWebServer(DeploymentContext deploymentContext) {
+        if (deploymentContext.getApplicationConfig().getBoolean( "kos.auto", true )) {
+            log.info("Deploying Vert.x WebServer...");
+            val server = new VertxWebServer(deploymentContext.kosConfiguration);
+            deploymentContext.deploy(server);
+        }
+    }
+
+    void deployVerticles(DeploymentContext deploymentContext) {
         log.info("Looking for verticles...");
-        deployment.deploy(verticles);
 
-        if (!customVerticles.isEmpty())
-            deployment.deploy(customVerticles);
+        val verticles = deploymentContext.instancesExposedAs(Verticle.class);
+        deploymentContext.deploy(verticles);
     }
 
+    @Getter
     @RequiredArgsConstructor
-    private class LauncherDeployment implements Deployment {
+    class DeploymentContext implements kos.api.DeploymentContext {
 
-        final Vertx vertx = Kos.defaultVertx.get();
-        final JsonObject config;
+        final KosConfiguration kosConfiguration;
+        final JsonObject applicationConfig;
 
-        @Override
+        <T> Iterable<T> instancesExposedAs(Class<T> targetClass) {
+            return kosConfiguration.getImplementationLoader().instancesExposedAs(targetClass);
+        }
+
+        <T> ImplementationLoader.Result<T> instanceOf(Class<T> targetClass) {
+            return kosConfiguration.getImplementationLoader().instanceOf(targetClass);
+        }
+
         public void deploy(Iterable<Verticle> verticles) {
-            deploy(verticles, config);
-        }
-
-        @Override
-        public void deploy(Verticle verticle) {
-            deploy(verticle, config);
-        }
-
-        @Override
-        public void deploy(Iterable<Verticle> verticles, JsonObject config) {
             for (val verticle : verticles)
-                deploy(verticle, config);
+                deploy(verticle);
         }
 
-        @Override
-        public void deploy(Verticle verticle, JsonObject config) {
-            val options = new DeploymentOptions().setConfig(config);
+        public void deploy(Verticle verticle) {
+            val options = new DeploymentOptions().setConfig(applicationConfig);
             log.info("Deploying " + verticle.getClass().getCanonicalName() + "...");
-            vertx.deployVerticle(verticle, options);
+            kosConfiguration.getDefaultVertx().deployVerticle(verticle, options);
         }
     }
 }

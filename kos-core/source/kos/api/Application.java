@@ -18,9 +18,10 @@ package kos.api;
 
 /**
  * Configures a custom Kos application. It can be used to deploy
- * custom Vert.x as well as change Kos' sensitive defaults.
+ * manually crafted Vert.x Verticles. To have your application automatically
+ * discovered, ensure that you have it properly exposed.
  */
 public interface Application {
 
-    void configure(Deployment deployment);
+    void configure(DeploymentContext deploymentContext);
 }
