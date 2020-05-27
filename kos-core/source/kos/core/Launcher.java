@@ -60,6 +60,8 @@ public class Launcher {
 
         for (val plugin : plugins)
             plugin.configure(conf);
+
+        conf.getImplementationLoader().register(KosConfiguration.class, conf);
     }
 
     void loadLogger() {
@@ -87,7 +89,7 @@ public class Launcher {
     }
 
     void deployWebServer(DeploymentContext deploymentContext) {
-        if (deploymentContext.getApplicationConfig().getBoolean( "kos.auto", true )) {
+        if (deploymentContext.getApplicationConfig().getBoolean( "auto-config", true )) {
             log.info("Deploying Vert.x WebServer...");
             val server = new VertxWebServer(deploymentContext.kosConfiguration);
             deploymentContext.deploy(server);
@@ -102,11 +104,17 @@ public class Launcher {
     }
 
     @Getter
-    @RequiredArgsConstructor
-    class DeploymentContext implements kos.api.DeploymentContext {
+    static class DeploymentContext implements kos.api.DeploymentContext {
 
         final KosConfiguration kosConfiguration;
         final JsonObject applicationConfig;
+        final Logger log;
+
+        DeploymentContext(KosConfiguration kosConfiguration, JsonObject applicationConfig) {
+            this.kosConfiguration = kosConfiguration;
+            this.applicationConfig = applicationConfig;
+            this.log = kosConfiguration.createLoggerFor(getClass());
+        }
 
         <T> Iterable<T> instancesExposedAs(Class<T> targetClass) {
             return kosConfiguration.getImplementationLoader().instancesExposedAs(targetClass);

@@ -1,5 +1,6 @@
 package {{packageName}};
 
+import kos.api.*;
 import kos.core.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -10,14 +11,42 @@ import io.vertx.ext.web.RoutingContext;
 /**
  * Auto generated server configuration for {@link {{packageName}}.{{simpleName}}}.
  */
+@SuppressWarnings("all")
 @injector.Singleton
 @{{jdkGeneratedAnnotation}}("kos.apt.RestApiProcessor")
 public class {{className}} implements WebServerEventListener {
 
-    private final {{simpleName}} handler = Kos.implementationLoader
-            .instanceOfOrFail({{simpleName}}.class);
+    {{#methods}}
+    {{#containsResponseType}}
+    /**
+     * Response Handler for {{httpMethod}} requests received by {@link {{simpleName}}.{{name}}}.
+     */
+    private static class ResponseTypeHandlerFor${{uniqueName}} implements Handler<AsyncResult<{{{unwrappedResponseType}}}>> {
+    
+        private final KosConfiguration kosConfiguration;
+        private final RoutingContext event;
+    
+        ResponseTypeHandlerFor${{uniqueName}}(KosConfiguration kosConfiguration, RoutingContext event) {
+            this.event = event;
+            this.kosConfiguration = kosConfiguration;
+        }
 
-    public void on(WebServerEventListener.BeforeDeployEvent event) {
+        public void handle( AsyncResult<{{{unwrappedResponseType}}}> as ) {
+            if (as.succeeded())
+                Response.send(kosConfiguration, event, as.result());
+            else
+                Response.sendError(kosConfiguration, event, as.cause());
+        }
+    }
+
+    {{/containsResponseType}}
+    {{/methods}}
+
+    public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
+        final KosConfiguration kosConfiguration = event.getKosConfiguration();
+        final {{simpleName}} handler = kosConfiguration.getImplementationLoader()
+                    .instanceOfOrFail({{simpleName}}.class);
+
         {{#methods}}
         {{#httpPath}}
         event.router().route( HttpMethod.{{httpMethod}}, "{{.}}", new Handler<RoutingContext>() {
@@ -25,7 +54,7 @@ public class {{className}} implements WebServerEventListener {
             /**
              * Auto generated wrapper for {@link {{packageName}}.{{simpleName}}#{{name}}}.
              */
-            public void handle(final RoutingContext event) {
+            public void handle(final RoutingContext routingContext) {
                 try {
                     /* Call original handler */
             {{#responseType}}
@@ -33,24 +62,17 @@ public class {{className}} implements WebServerEventListener {
             {{/responseType}}
                     handler.{{name}}(
                         /* Read request parameters */{{#parameters}}{{^first}},{{/first}}
-                        Request.read{{data.annotation}}( event, "{{data.name}}", {{data.type}}.class ){{/parameters}}
+                        Request.read{{data.annotation}}( kosConfiguration, routingContext, "{{data.name}}", {{data.type}}.class ){{/parameters}}
                     );
             {{#containsResponseType}}
                     /* Wraps response as Future */
-                    Lang.asFuture(response).setHandler(new Handler<AsyncResult<{{{unwrappedResponseType}}}>>() {
-                        public void handle( AsyncResult<{{{unwrappedResponseType}}}> as ) {
-                            if (as.succeeded())
-                                Response.send(event, as.result());
-                            else
-                                Response.sendError(event, as.cause());
-                        }
-                    });
+                    Lang.asFuture(response).setHandler(new ResponseTypeHandlerFor${{uniqueName}}(kosConfiguration, event));
             {{/containsResponseType}}{{^containsResponseType}}
                     /* Sends the default response for "no content". */
-                    Response.sendDefaultNoContent( event );
+                    Response.sendDefaultNoContent( kosConfiguration, routingContext );
             {{/containsResponseType}}
                 } catch (Throwable cause){
-                    Response.sendError(event, cause);
+                    Response.sendError(kosConfiguration, routingContext, cause);
                 }
             }
         });

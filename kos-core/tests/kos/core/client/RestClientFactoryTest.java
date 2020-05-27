@@ -16,14 +16,14 @@
 
 package kos.core.client;
 
+import kos.api.KosConfiguration;
+import kos.api.MutableKosConfiguration;
+import kos.core.Lang;
 import kos.core.client.sample.WhatsMyIpClient;
-import lombok.Value;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-import java.util.regex.Pattern;
-
-import static kos.core.Lang.await;
+import static kos.core.Lang.waitFor;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,11 +32,12 @@ import static org.mockito.Mockito.mock;
 
 class RestClientFactoryTest {
 
-    final RestClientFactory factory = new RestClientFactory();
+    final KosConfiguration kosConfiguration = new MutableKosConfiguration();
+    final RestClientFactory factory = new RestClientFactory(kosConfiguration, kosConfiguration.createLoggerFor(getClass()));
 
     @Test void loadPreviouslyExposedClient(){
         val client = factory.instantiate(RestClientConfiguration.EMPTY, WhatsMyIpClient.class);
-        val response = await(client.myIp());
+        val response = Lang.waitFor(client.myIp());
 
         val validIpRegEx = "[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}";
         assertTrue(response.getIp().matches(validIpRegEx));

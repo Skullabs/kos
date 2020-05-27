@@ -49,26 +49,26 @@ class VertxWebServerTest {
     @Mock JsonObject config;
 
     @BeforeEach void simulateVerticleDeployment(){
-        Kos.payloadSerializationStrategy = PayloadSerializationStrategy.useSerializer("text/plain");
+        kosConfiguration.getHttpServerOptions().setPort(9001);
+        kosConfiguration.getAvailablePayloadStrategies().useSerializerForContentType("text/plain");
         MockitoAnnotations.initMocks(this);
         doReturn(config).when(verticleContext).config();
-        server.init(Kos.defaultVertx.get(), verticleContext);
+        server.init(kosConfiguration.getDefaultVertx(), verticleContext);
     }
 
     @SneakyThrows
     @Test void canReceiveRequests(){
-        server.router().route(GET, "/hello", ctx -> Response.send(ctx, "World"));
+        server.router().route(GET, "/hello", ctx -> Response.send(kosConfiguration, ctx, "World"));
 
         server.start();
         Thread.sleep(500);
 
-        val response = sendGET("http://localhost:9000/hello");
+        val response = sendGET("http://localhost:9001/hello");
         assertEquals("World", response);
     }
 
     @SneakyThrows
     @AfterEach void stopServer(){
-        Kos.payloadSerializationStrategy = PayloadSerializationStrategy.useDefaultSerializer();
         server.stop();
     }
 

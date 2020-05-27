@@ -18,10 +18,16 @@ package kos.api;
 
 import io.vertx.core.buffer.*;
 import io.vertx.core.json.*;
-import kos.core.Kos;
+import kos.core.KosException;
 import lombok.*;
 
+import java.util.function.Function;
+
 public interface Serializer {
+
+    Function<String, Serializer> INVALID_SERIALIZER = s -> {
+        throw new KosException("No serializer available for '" + s + "'");
+    };
 
     Buffer serialize(Object target);
 
@@ -47,7 +53,10 @@ public interface Serializer {
         }
     }
 
+    @RequiredArgsConstructor
     class PlainTextSerializer implements Serializer {
+        
+        final KosConfiguration kosConfiguration;
 
         @Override
         public Buffer serialize(@NonNull Object target) {
@@ -57,8 +66,7 @@ public interface Serializer {
         @Override
         public <T> T deserialize(Buffer buffer, Class<T> type) {
             val string = buffer.toString();
-            return Kos.stringConverter.get()
-                  .convertTo( type, string );
+            return kosConfiguration.getStringConverter().convertTo( type, string );
         }
 
         @Override

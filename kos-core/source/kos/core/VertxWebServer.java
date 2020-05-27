@@ -102,7 +102,7 @@ public class VertxWebServer extends AbstractVerticle {
             vertx, router(), this.config(), kosConfiguration
         );
 
-        Kos.implementationLoader
+        kosConfiguration.getImplementationLoader()
             .instancesExposedAs( WebServerEventListener.class )
             .forEach( cnf -> cnf.on(deploymentListenerContext) );
     }

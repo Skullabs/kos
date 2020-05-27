@@ -17,7 +17,8 @@
 package kos.injector;
 
 import io.vertx.core.json.JsonObject;
-import kos.core.Kos;
+import kos.api.KosConfiguration;
+import kos.api.MutableKosConfiguration;
 import kos.core.KosException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,8 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class LazyJsonObjectTest {
-    
+
+    MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
     @Mock JsonObject delegatedJsonObject;
     
     @BeforeEach
@@ -45,9 +47,9 @@ class LazyJsonObjectTest {
     @Test void canDelegate()
     {
         doReturn("World").when(delegatedJsonObject).getString("Hello");
-        Kos.config.set(delegatedJsonObject);
+        kosConfiguration.setApplicationConfig(delegatedJsonObject);
         
-        val lazy = new LazyJsonObject(Kos.config::get);
+        val lazy = new LazyJsonObject(kosConfiguration::readApplicationConfig);
         assertEquals("World", lazy.getString("Hello"));
         verify(delegatedJsonObject).getString(eq("Hello"));
     }
@@ -56,19 +58,11 @@ class LazyJsonObjectTest {
     @Test void canDelegate1()
     {
         doReturn("World").when(delegatedJsonObject).getString("Hello");
-        val lazy = new LazyJsonObject(Kos.config::get);
-        Kos.config.set(delegatedJsonObject);
+
+        val lazy = new LazyJsonObject(kosConfiguration::readApplicationConfig);
+        kosConfiguration.setApplicationConfig(delegatedJsonObject);
 
         assertEquals("World", lazy.getString("Hello"));
         verify(delegatedJsonObject).getString(eq("Hello"));
-    }
-
-    @DisplayName("SHOULD FAIL to delegate to a lazy loaded config that was never defined")
-    @Test void cannotDelegate()
-    {
-        val lazy = new LazyJsonObject(Kos.config::get);
-        Kos.config.set(null);
-
-        assertThrows(KosException.class, () -> lazy.getString("Hello"));
     }
 }

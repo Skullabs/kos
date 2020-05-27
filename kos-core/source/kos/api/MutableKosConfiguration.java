@@ -18,22 +18,34 @@ package kos.api;
 
 import io.vertx.config.ConfigRetriever;
 import io.vertx.config.ConfigRetrieverOptions;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.JULLogDelegateFactory;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.spi.logging.LogDelegateFactory;
+import io.vertx.ext.web.client.WebClient;
+import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.val;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static kos.api.Serializer.INVALID_SERIALIZER;
+
 @Getter @Setter
 @Accessors(chain = true)
+@SuppressWarnings("all")
 public class MutableKosConfiguration implements KosConfiguration {
+
+    private final AvailablePayloadStrategies availablePayloadStrategies = new AvailablePayloadStrategies();
 
     private final Map<String, Serializer> serializers;
     private final Map<String, RestClientSerializer> restClientSerializers;
@@ -48,9 +60,11 @@ public class MutableKosConfiguration implements KosConfiguration {
     private Serializer defaultSerializer;
     private RestClientSerializer defaultRestClientSerializer;
     private Vertx defaultVertx;
+    private WebClient defaultVertxWebClient;
     private StringConverter stringConverter;
     private ExceptionHandler exceptionHandler;
     private ConfigRetriever configRetriever;
+    private JsonObject applicationConfig;
 
     public MutableKosConfiguration(){
         this(new ImplementationLoader.SPIImplementationLoader());
@@ -61,12 +75,12 @@ public class MutableKosConfiguration implements KosConfiguration {
         this.restClientSerializers = loadRestClientSerializers();
         this.serializers = loadSerializers();
         this.implementationLoader = spi;
+        this.defaultSerializer = getSerializers().get("application/json");
         this.payloadSerializationStrategy = new SingleSerializerStrategy(getDefaultSerializer());
         this.httpServerOptions = new HttpServerOptions().setPort(9000);
         this.logDelegateFactory = new JULLogDelegateFactory();
-        this.exceptionHandler = new ExceptionHandler.DefaultExceptionHandler();
+        this.exceptionHandler = new ExceptionHandler.DefaultExceptionHandler(this);
         this.stringConverter = new StringConverter.DefaultStringConverter();
-        this.defaultSerializer = getSerializers().get("application/json");
         this.defaultRestClientSerializer = getRestClientSerializers().get("application/json");
     }
 
@@ -87,13 +101,19 @@ public class MutableKosConfiguration implements KosConfiguration {
         return defaultVertx;
     }
 
+    public WebClient getDefaultVertxWebClient() {
+        if (defaultVertxWebClient == null)
+            defaultVertxWebClient = WebClient.create(getDefaultVertx());
+        return defaultVertxWebClient;
+    }
+
     private Map<String, Serializer> loadSerializers() {
         val serializers = new HashMap<String, Serializer>();
 
         val json = new Serializer.JsonSerializer();
         serializers.put(json.contentType(), json);
 
-        val plainText = new Serializer.PlainTextSerializer();
+        val plainText = new Serializer.PlainTextSerializer(this);
         serializers.put(plainText.contentType(), plainText);
 
         return serializers;
@@ -111,5 +131,49 @@ public class MutableKosConfiguration implements KosConfiguration {
         return new Logger(
             getLogDelegateFactory().createDelegate(type.getCanonicalName())
         );
+    }
+
+    public Serializer getSerializerForContentType(String contentType){
+        return getSerializers().computeIfAbsent(contentType, INVALID_SERIALIZER);
+    }
+
+    public JsonObject readApplicationConfig() {
+        if (applicationConfig != null) return applicationConfig;
+
+        val future = Future.future(getConfigRetriever()::getConfig);
+        return Lang.waitFor(future);
+    }
+
+    public class AvailablePayloadStrategies {
+
+        /**
+         * Creates an strategy based on the default serializer (usually Json).
+         */
+        public void useDefaultSerializer() {
+            val strategy = new SingleSerializerStrategy(getDefaultSerializer());
+            setPayloadSerializationStrategy(strategy);
+        }
+
+        /**
+         * Creates an strategy based on the default serializer (usually Json).
+         */
+        public void useSerializerForContentType(String defaultContentType) {
+            val computed = getSerializerForContentType(defaultContentType);
+            val strategy = new SingleSerializerStrategy(computed);
+            setPayloadSerializationStrategy(strategy);
+        }
+
+        /**
+         * Creates an strategy that reads uses the defined response Content-Type
+         * to pick an serializer and perform the serialization. If no Content-Type
+         * was defined it will pick the one defined by {@code defaultContentType}.
+         * The serialization strategy will throw {@link IllegalArgumentException}
+         * if no serializer was found for the computed Content-Type.
+         */
+        public void inferSerializerFromHttpHeader(String defaultContentType) {
+            val kosConfiguration = MutableKosConfiguration.this;
+            val strategy = new HeaderParserStrategy(kosConfiguration, HttpHeaders.CONTENT_TYPE, defaultContentType);
+            setPayloadSerializationStrategy(strategy);
+        }
     }
 }

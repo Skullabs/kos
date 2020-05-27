@@ -1,10 +1,10 @@
 package kos.api;
 
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
+import io.vertx.ext.web.client.WebClient;
 import lombok.NonNull;
-import lombok.val;
 
 /**
  * While Vert.x provides Json-based configuration out-of-box, it is not suitable
@@ -27,6 +27,8 @@ public interface KosConfiguration {
 
     @NonNull io.vertx.core.Vertx getDefaultVertx();
 
+    @NonNull WebClient getDefaultVertxWebClient();
+
     @NonNull StringConverter getStringConverter();
 
     @NonNull ExceptionHandler getExceptionHandler();
@@ -35,9 +37,15 @@ public interface KosConfiguration {
 
     @NonNull Logger createLoggerFor(Class type);
 
+    @NonNull JsonObject readApplicationConfig();
+
+    @NonNull Serializer getSerializerForContentType(String contentType);
+
     /**
      * The default server configuration. It will be triggered
      * when the auto-discovery mechanism failed to find one in the classpath.
      */
     @NonNull HttpServerOptions getHttpServerOptions();
+
+    @NonNull ImplementationLoader getSpi();
 }

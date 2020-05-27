@@ -44,6 +44,7 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
     private final Router router;
     private final RequestInterceptorHandler interceptorHandler;
     private final Map<HttpMethod, Boolean> httpMethodsThatMayReadBody;
+    private KosConfiguration kosConfiguration;
 
     public SimplifiedRouter(KosConfiguration kosConfiguration, Router router, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
         this(kosConfiguration, router, new RequestInterceptorHandler(router), httpMethodsThatMayReadBody);
@@ -54,6 +55,7 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
         this.router = router;
         this.httpMethodsThatMayReadBody = httpMethodsThatMayReadBody;
         this.log = kosConfiguration.createLoggerFor(getClass());
+        this.kosConfiguration = kosConfiguration;
     }
 
     /**
@@ -100,7 +102,7 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
             router.route().method(method).handler( BodyHandler.create() );
 
         router.route( method, path )
-            .handler( SafeRoutingContextHandler.wrap(handler) );
+            .handler( SafeRoutingContextHandler.wrap(handler, kosConfiguration) );
 
         log.debug( "Registered " + handler.getClass() );
     }
@@ -127,13 +129,13 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
 
     /**
      * Creates a basic instance of {@link SimplifiedRouter}. Developers that use
-     * routers created by this method should configure themselves how to read the
+     * instances created by this method should configure themselves how to read the
      * request body payload.
      *
      * @param router the router instance that will be wrapped
      * @return An instance of {@link SimplifiedRouter}
      */
-    public static SimplifiedRouter wrapWithNoAuthBodyReader( KosConfiguration kosConfiguration, Router router ) {
+    public static SimplifiedRouter wrapWithNoAutoBodyReader( KosConfiguration kosConfiguration, Router router ) {
         return new SimplifiedRouter( kosConfiguration, router, Collections.emptyMap() );
     }
 
@@ -146,13 +148,14 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
     private static class SafeRoutingContextHandler implements Handler<RoutingContext> {
 
         final Handler<RoutingContext> handler;
+        final KosConfiguration kosConfiguration;
 
         @Override
         public void handle(RoutingContext event) {
             try {
                 handler.handle(event);
             } catch ( Throwable cause ) {
-                Response.sendError( event, cause );
+                Response.sendError( kosConfiguration, event, cause );
             }
         }
     }

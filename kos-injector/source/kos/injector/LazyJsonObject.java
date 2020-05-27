@@ -17,7 +17,6 @@
 package kos.injector;
 
 import io.vertx.core.json.JsonObject;
-import kos.core.Kos;
 import kos.core.Lang;
 import lombok.experimental.Delegate;
 

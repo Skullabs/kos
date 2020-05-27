@@ -105,7 +105,7 @@ class LangTest {
             }
         });
 
-        assertEquals(waitTime, (int)Lang.await(promise.future()));
+        assertEquals(waitTime, (int)Lang.waitFor(promise.future()));
     }
 
     @DisplayName("sorted(Iterable,Comparator) SHOULD sort according to the order defined by the Comparator")

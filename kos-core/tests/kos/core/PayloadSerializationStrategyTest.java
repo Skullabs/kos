@@ -19,6 +19,8 @@ package kos.core;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import kos.api.KosConfiguration;
+import kos.api.MutableKosConfiguration;
 import kos.api.PayloadSerializationStrategy;
 import kos.api.Serializer;
 import lombok.val;
@@ -32,10 +34,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
+@DisplayName("Behavior: Payload Serialization Strategy")
 class PayloadSerializationStrategyTest {
 
     final static String PLAIN_TEXT = "text/plain";
     final static MultiMap HEADERS = MultiMap.caseInsensitiveMultiMap().add("Content-Type", PLAIN_TEXT);
+    
+    final MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
 
     @Mock HttpServerRequest request;
     @Mock HttpServerResponse response;
@@ -49,17 +54,17 @@ class PayloadSerializationStrategyTest {
     @DisplayName("useSerializer SHOULD throw exception WHEN loading Serializer for unknown Content-Type")
     @Test void useSerializerFailsUnknown(){
         assertThrows(KosException.class,
-            () -> PayloadSerializationStrategy.useSerializer("image/png") );
+            () -> kosConfiguration.getAvailablePayloadStrategies().useSerializerForContentType("image/png") );
     }
 
     @DisplayName(
-        "useSerializer SHOULD load Serializers only based on pre-defined Content-Type " +
+        "useSerializerForContentType SHOULD load Serializers only based on pre-defined Content-Type " +
         "WHEN asking for a Serializer for a given HttpServerRequest"
     )
     @Test void useSerializerPlainTextHttpServerRequest(){
-        val strategy = PayloadSerializationStrategy.useSerializer(PLAIN_TEXT);
+        kosConfiguration.getAvailablePayloadStrategies().useSerializerForContentType(PLAIN_TEXT);
 
-        val serializer = strategy.serializerFor(request);
+        val serializer = kosConfiguration.getPayloadSerializationStrategy().serializerFor(request);
         assertTrue(serializer instanceof Serializer.PlainTextSerializer);
     }
 
@@ -68,9 +73,9 @@ class PayloadSerializationStrategyTest {
         "WHEN asking for a Serializer for a given HttpServerResponse"
     )
     @Test void useSerializerPlainTextHttpServerResponse(){
-        val strategy = PayloadSerializationStrategy.useSerializer(PLAIN_TEXT);
+        kosConfiguration.getAvailablePayloadStrategies().useSerializerForContentType(PLAIN_TEXT);
 
-        val serializer = strategy.serializerFor(response);
+        val serializer = kosConfiguration.getPayloadSerializationStrategy().serializerFor(response);
         assertTrue(serializer instanceof Serializer.PlainTextSerializer);
     }
 
@@ -78,9 +83,9 @@ class PayloadSerializationStrategyTest {
         "basedOnHttpHeader SHOULD load Serializers only based on HTTP Header defined in HttpServerRequest"
     )
     @Test void basedOnHttpHeaderPlainTextHttpServerRequest(){
-        val strategy = PayloadSerializationStrategy.basedOnHttpHeader(PLAIN_TEXT);
+        kosConfiguration.getAvailablePayloadStrategies().inferSerializerFromHttpHeader(PLAIN_TEXT);
 
-        val serializer = strategy.serializerFor(request);
+        val serializer = kosConfiguration.getPayloadSerializationStrategy().serializerFor(request);
         assertTrue(serializer instanceof Serializer.PlainTextSerializer);
     }
 
@@ -88,9 +93,9 @@ class PayloadSerializationStrategyTest {
         "basedOnHttpHeader SHOULD load Serializers only based on HTTP Header defined in HttpServerResponse"
     )
     @Test void basedOnHttpHeaderPlainTextHttpServerResponse(){
-        val strategy = PayloadSerializationStrategy.basedOnHttpHeader(PLAIN_TEXT);
+        kosConfiguration.getAvailablePayloadStrategies().inferSerializerFromHttpHeader(PLAIN_TEXT);
 
-        val serializer = strategy.serializerFor(response);
+        val serializer = kosConfiguration.getPayloadSerializationStrategy().serializerFor(response);
         assertTrue(serializer instanceof Serializer.PlainTextSerializer);
     }
 }

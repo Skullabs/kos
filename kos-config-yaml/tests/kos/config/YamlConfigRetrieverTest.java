@@ -18,19 +18,25 @@ package kos.config;
 
 import io.vertx.config.*;
 import io.vertx.core.json.*;
+import kos.api.KosConfiguration;
 import kos.api.MutableKosConfiguration;
-import kos.core.*;
 import lombok.*;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.atomic.*;
-import java.util.concurrent.locks.*;
 
+import static kos.core.Lang.waitFor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class YamlConfigStoreOptionsFactoryTest {
+class YamlConfigRetrieverTest {
     
-    LazyConfigRetriever retriever = new LazyConfigRetriever(new MutableKosConfiguration());
+    MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
+    YamlConfigRetriever retriever = new YamlConfigRetriever(kosConfiguration);
+    
+    @BeforeEach
+    void setup(){
+        kosConfiguration.setConfigRetriever(retriever);
+    }
 
     @DisplayName("Can read prod yml file")
     @Test void canReadFile(){
@@ -38,10 +44,10 @@ class YamlConfigStoreOptionsFactoryTest {
         options.addStore( retriever.createStoreForProduction() );
 
         val configRef = new AtomicReference<JsonObject>();
-        ConfigRetriever.create( Kos.defaultVertx.get(), options )
+        ConfigRetriever.create( kosConfiguration.getDefaultVertx(), options )
                 .getConfig( res -> configRef.set( res.result() ));
 
-        val config = awaitFor( configRef );
+        val config = waitFor( configRef );
         val expected = new JsonObject().put("http",
             new JsonObject().put("port", 9000).put("host", "0.0.0.0"));
         assertEquals( expected, config );
@@ -53,10 +59,10 @@ class YamlConfigStoreOptionsFactoryTest {
         options.addStore( retriever.createStoreForTest() );
 
         val configRef = new AtomicReference<JsonObject>();
-        ConfigRetriever.create( Kos.defaultVertx.get(), options )
+        ConfigRetriever.create( kosConfiguration.getDefaultVertx(), options )
                 .getConfig( res -> configRef.set( res.result() ));
 
-        val config = awaitFor( configRef );
+        val config = waitFor( configRef );
         val expected = new JsonObject()
             .put("http",new JsonObject().put("port", 9999))
             .put("https",new JsonObject().put("port", 8443));
@@ -65,21 +71,11 @@ class YamlConfigStoreOptionsFactoryTest {
 
     @DisplayName("Can merge yml files correctly")
     @Test void canMergeYmlCorrectly(){
-        val configRef = new AtomicReference<JsonObject>();
-        retriever.getConfig( res -> configRef.set(res.result()) );
-
-        val config = awaitFor( configRef );
+        val config = kosConfiguration.readApplicationConfig();
         val expected = new JsonObject()
             .put("https",new JsonObject().put("port", 8443))
             .put("http",new JsonObject().put("port", 9999).put("host","0.0.0.0"))
         ;
         assertEquals( expected, config );
-    }
-
-    <T> T awaitFor(AtomicReference<T> reference ) {
-        T result = null;
-        while ( (result = reference.get()) == null )
-            LockSupport.parkNanos(1L);
-        return result;
     }
 }

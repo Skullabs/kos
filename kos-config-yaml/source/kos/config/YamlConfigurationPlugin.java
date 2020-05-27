@@ -10,7 +10,7 @@ public class YamlConfigurationPlugin implements ConfigurationPlugin {
 
     @Override
     public void configure(MutableKosConfiguration kosConfiguration) {
-        val retriever = new LazyConfigRetriever(kosConfiguration);
+        val retriever = new YamlConfigRetriever(kosConfiguration);
         kosConfiguration.setConfigRetriever(retriever);
     }
 }

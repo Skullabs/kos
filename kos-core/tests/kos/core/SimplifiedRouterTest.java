@@ -17,6 +17,7 @@
 package kos.core;
 
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -47,7 +48,7 @@ class SimplifiedRouterTest {
         doReturn(GET).when(request).method();
         doReturn(response).when(request).response();
 
-        val router = Router.router(Kos.defaultVertx.get());
+        val router = Router.router(Vertx.vertx());
         simplifiedRouter = SimplifiedRouter.wrapWithAutoBodyReader(new MutableKosConfiguration(), router);
     }
 

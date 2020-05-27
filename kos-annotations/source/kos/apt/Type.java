@@ -22,9 +22,9 @@ import kos.core.Lang;
 import kos.rest.*;
 import lombok.Value;
 import lombok.val;
-import lombok.var;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -99,6 +99,11 @@ import static kos.core.Lang.*;
     final List<ReplaceablePathParam> replaceablePathParams;
     final List<MethodDefinedHeaders> definedHeaders;
     final boolean containsDefinedHeaders;
+
+    public String getUniqueName(){
+        long hashCode = Integer.MAX_VALUE + hashCode();
+        return Character.toUpperCase(getName().charAt(0)) + getName().substring(1) + "$" + httpMethod + hashCode;
+    }
 
     static Method from(Iterable<String> rootPath, SimplifiedAST.Method method) {
         val methodAnn = first( method.getAnnotations(), TypeUtils::isRouteAnn ).get();

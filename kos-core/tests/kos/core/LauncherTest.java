@@ -29,8 +29,8 @@ class LauncherTest {
     final ImplementationLoader implLoader = spy(new ImplementationLoader.SPIImplementationLoader());
     final MutableKosConfiguration kosConf = spy(new MutableKosConfiguration(implLoader));
     final Launcher launcher = spy(new Launcher(kosConf));
-    final Launcher.DeploymentContext deploymentContext = mock(Launcher.DeploymentContext.class);
-    
+    final Launcher.DeploymentContext deploymentContext = spy(new Launcher.DeploymentContext(kosConf, new JsonObject()));
+
     @BeforeEach void configLog(){
         val logger = mock(Logger.class);
         doReturn(logger).when(kosConf).createLoggerFor(any());
@@ -77,18 +77,18 @@ class LauncherTest {
             doReturn(appConf).when(deploymentContext).getApplicationConfig();
         }
 
-        @DisplayName("Should deploy web server WHEN kos.auto flag is true")
+        @DisplayName("Should deploy web server WHEN auto-config flag is true")
         @Test void scenario1(){
-            doReturn(true).when(appConf).getBoolean(eq("kos.auto"), anyBoolean());
+            doReturn(true).when(appConf).getBoolean(eq("auto-config"), anyBoolean());
 
             launcher.deployWebServer(deploymentContext);
 
             verify(deploymentContext).deploy(any(VertxWebServer.class));
         }
 
-        @DisplayName("Should not deploy web server WHEN kos.auto flag is false")
+        @DisplayName("Should not deploy web server WHEN auto-config flag is false")
         @Test void scenario2(){
-            doReturn(false).when(appConf).getBoolean(eq("kos.auto"), anyBoolean());
+            doReturn(false).when(appConf).getBoolean(eq("auto-config"), anyBoolean());
 
             launcher.deployWebServer(deploymentContext);
 

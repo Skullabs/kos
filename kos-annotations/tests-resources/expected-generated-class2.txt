@@ -1,5 +1,6 @@
 package kos.rest.sample;
 
+import kos.api.*;
 import kos.core.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -10,20 +11,44 @@ import io.vertx.ext.web.RoutingContext;
 /**
  * Auto generated server configuration for {@link kos.rest.sample.ApiWithNoPath}.
  */
+@SuppressWarnings("all")
 @injector.Singleton
 @javax.annotation.processing.Generated("kos.apt.RestApiProcessor")
 public class ApiWithNoPathRoutingContextHandler implements WebServerEventListener {
 
-    private final ApiWithNoPath handler = Kos.implementationLoader
-            .instanceOfOrFail(ApiWithNoPath.class);
+    /**
+     * Response Handler for GET requests received by {@link ApiWithNoPath.retrieveLocation}.
+     */
+    private static class ResponseTypeHandlerFor$RetrieveLocation$GET968871131 implements Handler<AsyncResult<java.lang.String>> {
+    
+        private final KosConfiguration kosConfiguration;
+        private final RoutingContext event;
+    
+        ResponseTypeHandlerFor$RetrieveLocation$GET968871131(KosConfiguration kosConfiguration, RoutingContext event) {
+            this.event = event;
+            this.kosConfiguration = kosConfiguration;
+        }
 
-    public void on(WebServerEventListener.BeforeDeployEvent event) {
+        public void handle( AsyncResult<java.lang.String> as ) {
+            if (as.succeeded())
+                Response.send(kosConfiguration, event, as.result());
+            else
+                Response.sendError(kosConfiguration, event, as.cause());
+        }
+    }
+
+
+    public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
+        final KosConfiguration kosConfiguration = event.getKosConfiguration();
+        final ApiWithNoPath handler = kosConfiguration.getImplementationLoader()
+                    .instanceOfOrFail(ApiWithNoPath.class);
+
         event.router().route( HttpMethod.GET, "/location", new Handler<RoutingContext>() {
 
             /**
              * Auto generated wrapper for {@link kos.rest.sample.ApiWithNoPath#retrieveLocation}.
              */
-            public void handle(final RoutingContext event) {
+            public void handle(final RoutingContext routingContext) {
                 try {
                     /* Call original handler */
                     final java.lang.String response =
@@ -31,16 +56,9 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    Lang.asFuture(response).setHandler(new Handler<AsyncResult<java.lang.String>>() {
-                        public void handle( AsyncResult<java.lang.String> as ) {
-                            if (as.succeeded())
-                                Response.send(event, as.result());
-                            else
-                                Response.sendError(event, as.cause());
-                        }
-                    });
+                    Lang.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveLocation$GET968871131(kosConfiguration, event));
                 } catch (Throwable cause){
-                    Response.sendError(event, cause);
+                    Response.sendError(kosConfiguration, routingContext, cause);
                 }
             }
         });

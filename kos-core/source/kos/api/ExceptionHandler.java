@@ -19,7 +19,7 @@ package kos.api;
 import io.vertx.core.buffer.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
-import kos.core.Kos;
+import kos.core.Lang;
 import lombok.*;
 
 import java.io.*;
@@ -44,13 +44,17 @@ public interface ExceptionHandler {
 
     class DefaultExceptionHandler implements ExceptionHandler {
 
-        private final Logger log = Kos.logger(DefaultExceptionHandler.class);
+        private final Lang.Lazy<Logger> log;
+        
+        public DefaultExceptionHandler(KosConfiguration kosConfiguration) {
+            log = Lang.Lazy.by( () -> kosConfiguration.createLoggerFor(DefaultExceptionHandler.class) );
+        }
 
         @Override
         public Response handle( RoutingContext request, Throwable cause ) {
             val msg = String.format( "Failed to handle request: %s - %s",
                 request.request().method(), request.request().uri() );
-            log.error( msg, cause );
+            log.get().error( msg, cause );
 
             val stackTrace = new StringWriter();
             cause.printStackTrace(new PrintWriter(stackTrace));

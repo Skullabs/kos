@@ -41,6 +41,12 @@ class KosConfigurationTest {
         doReturn(ImplementationLoader.Result.empty()).when(spi).anyInstanceOf( eq(ImplementationLoader.class) );
     }
 
+    @DisplayName("Should be able to instantiate Vert.x Logger")
+    @Test void scenario1(){
+        val logger = conf.createLoggerFor(getClass());
+        assertNotNull(logger);
+    }
+
     @DisplayName("Scenario: Serializers")
     @Nested class SerializersScenario {
 

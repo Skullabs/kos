@@ -22,6 +22,7 @@ import lombok.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -53,6 +54,14 @@ public final class Lang {
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new KosException( e );
         }
+    }
+
+    public static <T> T firstNotNull( T...args ){
+        for ( T arg : args ) {
+            if (arg != null)
+                return arg;
+        }
+        return null;
     }
 
     public static <T> ImplementationLoader.Result<T> first(Iterable<T> data ) {
@@ -122,7 +131,7 @@ public final class Lang {
      * It should avoided by developers as it is quite dangerous and
      * might introduce slowness into the system.
      */
-    public static <T> T await(Future<T> future) {
+    public static <T> T waitFor(Future<T> future) {
         val parent = Thread.currentThread().getStackTrace()[1];
         if (!parent.getClassName().startsWith("kos."))
             throw new UnsupportedOperationException("Await was not designed for production usage");
@@ -134,6 +143,13 @@ public final class Lang {
             return future.result();
         else
             throw new KosException(future.cause().getMessage(), future.cause());
+    }
+
+    public static <T> T waitFor(AtomicReference<T> reference ) {
+        T result = null;
+        while ( (result = reference.get()) == null )
+            LockSupport.parkNanos(1L);
+        return result;
     }
 
     /**

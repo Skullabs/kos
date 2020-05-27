@@ -92,7 +92,12 @@ public interface ImplementationLoader {
         );
     }
 
+    <T> void register(Class<T> type, T instance);
+
+    @SuppressWarnings("unchecked")
     class SPIImplementationLoader implements ImplementationLoader {
+        
+        final Map<Class, Object> instances = new HashMap<>();
 
         @Override
         public <T> Iterable<T> instancesExposedAs(Class<T> interfaceType) {
@@ -100,11 +105,19 @@ public interface ImplementationLoader {
         }
 
         @Override
-        public <T> Result<T> instanceOf(Class<T> interfaceType) {
-            if (interfaceType.isInterface())
-                return Lang.first(instancesExposedAs(interfaceType));
-            val instance = Lang.instantiate(interfaceType);
+        public <T> Result<T> instanceOf(Class<T> type) {
+            T found = (T) instances.get(type);
+            if (found != null)
+                return Result.of(found);
+            if (type.isInterface())
+                return Lang.first(instancesExposedAs(type));
+            val instance = Lang.instantiate(type);
             return Result.of(instance);
+        }
+
+        @Override
+        public <T> void register(Class<T> type, T instance) {
+            instances.put(type, instance);
         }
     }
 
