@@ -6,10 +6,12 @@ parent:
   version: "0.4.0"
   relativePath: "../pom.yml"
 
-artifactId: kos-logging-slf4j
+artifactId: kos-webapp
 packaging: jar
 
 dependencies:
 - { groupId: io.skullabs.kos, artifactId: kos-core }
-- { groupId: org.slf4j, artifactId: slf4j-api }
-- { groupId: io.skullabs.injector, artifactId: injector-processor }
+- { groupId: io.skullabs.kos, artifactId: kos-injector }
+- { groupId: io.skullabs.kos, artifactId: kos-config-yaml }
+- { groupId: io.skullabs.kos, artifactId: kos-logging-slf4j }
+

@@ -22,6 +22,7 @@ import lombok.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Function;
@@ -120,6 +121,10 @@ public final class Lang {
 
     public static <T> Future<T> asFuture(Future<T> value) {
         return value;
+    }
+    
+    public static <T> Future<T> asFuture(CompletableFuture<T> value) {
+        value.
     }
 
     public static <T> Future<T> asFuture(T value) {

@@ -7,7 +7,7 @@ parent:
 
 groupId: io.skullabs.kos
 artifactId: kos-parent
-version: 0.3.0
+version: "0.4.0"
 packaging: pom
 
 properties:
@@ -35,6 +35,7 @@ modules:
   - kos-annotations
   - kos-logging-slf4j
   - kos-bom
+  - kos-webapp
   - report 
 
 # Pre-configured dependencies
@@ -45,6 +46,7 @@ dependencyManagement:
     - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-config-yaml }
     - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-injector }
     - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-logging-slf4j }
+    - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-webapp }
 
     # Mockito
     - { groupId: org.mockito,version: "${version.mockito}", scope: test, artifactId: mockito-core }
