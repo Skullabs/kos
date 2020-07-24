@@ -16,6 +16,12 @@ import io.vertx.ext.web.RoutingContext;
 @javax.annotation.processing.Generated("kos.apt.RestApiProcessor")
 public class ApiWithNoPathRoutingContextHandler implements WebServerEventListener {
 
+    private final VertxFutures futures;
+
+    public ApiWithNoPathRoutingContextHandler(VertxFutures futures) {
+        this.futures = futures;
+    }
+
     /**
      * Response Handler for GET requests received by {@link ApiWithNoPath.retrieveLocation}.
      */
@@ -56,7 +62,7 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    Lang.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveLocation$GET968871131(kosConfiguration, event));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveLocation$GET968871131(kosConfiguration, event));
                 } catch (Throwable cause){
                     Response.sendError(kosConfiguration, routingContext, cause);
                 }

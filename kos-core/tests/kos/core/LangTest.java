@@ -32,24 +32,6 @@ import static org.mockito.Mockito.mock;
 
 class LangTest {
 
-    @DisplayName("future(Future) SHOULD return itself")
-    @Test void future()
-    {
-        val future = mock(Future.class);
-        val found = Lang.asFuture(future);
-        assertSame(future, found);
-    }
-
-    @DisplayName("future(Object) SHOULD return a completed future wrapping the object")
-    @Test void futureObject()
-    {
-        val object = new Object();
-        val future = Lang.asFuture(object);
-
-        assertTrue(future.succeeded());
-        assertSame(object, future.result());
-    }
-
     @DisplayName("instantiate(String) SHOULD instantiate a class with default constructor")
     @Test void instantiateString()
     {

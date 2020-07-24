@@ -16,6 +16,12 @@ import io.vertx.ext.web.RoutingContext;
 @javax.annotation.processing.Generated("kos.apt.RestApiProcessor")
 public class SimpleApiRoutingContextHandler implements WebServerEventListener {
 
+    private final VertxFutures futures;
+
+    public SimpleApiRoutingContextHandler(VertxFutures futures) {
+        this.futures = futures;
+    }
+
     /**
      * Response Handler for PATCH requests received by {@link SimpleApi.patchUser}.
      */
@@ -101,7 +107,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         Request.readBody( kosConfiguration, routingContext, "user", kos.rest.sample.User.class )
                     );
                     /* Wraps response as Future */
-                    Lang.asFuture(response).setHandler(new ResponseTypeHandlerFor$PatchUser$PATCH1051884863(kosConfiguration, event));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$PatchUser$PATCH1051884863(kosConfiguration, event));
                 } catch (Throwable cause){
                     Response.sendError(kosConfiguration, routingContext, cause);
                 }
@@ -121,7 +127,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    Lang.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosConfiguration, event));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosConfiguration, event));
                 } catch (Throwable cause){
                     Response.sendError(kosConfiguration, routingContext, cause);
                 }
@@ -141,7 +147,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    Lang.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosConfiguration, event));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosConfiguration, event));
                 } catch (Throwable cause){
                     Response.sendError(kosConfiguration, routingContext, cause);
                 }

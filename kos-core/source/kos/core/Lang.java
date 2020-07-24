@@ -17,6 +17,7 @@
 package kos.core;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import kos.api.ImplementationLoader;
 import lombok.*;
 
@@ -117,18 +118,6 @@ public final class Lang {
         data.forEach( buffered::add );
         buffered.sort( comparator );
         return buffered;
-    }
-
-    public static <T> Future<T> asFuture(Future<T> value) {
-        return value;
-    }
-    
-    public static <T> Future<T> asFuture(CompletableFuture<T> value) {
-        value.
-    }
-
-    public static <T> Future<T> asFuture(T value) {
-        return Future.succeededFuture(value);
     }
 
     /**

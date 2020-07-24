@@ -16,6 +16,12 @@ import io.vertx.ext.web.RoutingContext;
 @{{jdkGeneratedAnnotation}}("kos.apt.RestApiProcessor")
 public class {{className}} implements WebServerEventListener {
 
+    private final VertxFutures futures;
+
+    public {{className}}(VertxFutures futures) {
+        this.futures = futures;
+    }
+
     {{#methods}}
     {{#containsResponseType}}
     /**
@@ -66,7 +72,7 @@ public class {{className}} implements WebServerEventListener {
                     );
             {{#containsResponseType}}
                     /* Wraps response as Future */
-                    Lang.asFuture(response).setHandler(new ResponseTypeHandlerFor${{uniqueName}}(kosConfiguration, event));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor${{uniqueName}}(kosConfiguration, event));
             {{/containsResponseType}}{{^containsResponseType}}
                     /* Sends the default response for "no content". */
                     Response.sendDefaultNoContent( kosConfiguration, routingContext );
