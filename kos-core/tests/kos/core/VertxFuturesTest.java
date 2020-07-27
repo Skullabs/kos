@@ -19,6 +19,7 @@ package kos.core;
 
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
+import kos.api.MutableKosConfiguration;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,10 @@ import static org.mockito.Mockito.mock;
 
 class VertxFuturesTest {
 
-    final VertxFutures futures = new VertxFutures(Vertx.vertx());
+    final MutableKosConfiguration configuration =
+        new MutableKosConfiguration().setDefaultVertx(Vertx.vertx());
+
+    final VertxFutures futures = new VertxFutures(configuration);
 
     @DisplayName("asFuture(CompletableFuture) SHOULD return a Vertx Future")
     @Test void futureCompletable()
@@ -56,6 +60,19 @@ class VertxFuturesTest {
         val future = mock(Future.class);
         val found = futures.asFuture(future);
         assertSame(future, found);
+    }
+
+    @DisplayName("asFuture(JDK Future) SHOULD return a Vertx Future")
+    @Test void jdkFuture()
+    {
+        val expectedIntValue = Integer.valueOf(2120);
+        val jdkFuture = Executors.newSingleThreadExecutor().submit( () -> {
+            sleep(100);
+            return expectedIntValue;
+        });
+        val future = futures.asFuture(jdkFuture);
+        val value = Lang.waitFor(future);
+        assertEquals(expectedIntValue, value);
     }
 
     @DisplayName("asFuture(Object) SHOULD return a completed future wrapping the object")

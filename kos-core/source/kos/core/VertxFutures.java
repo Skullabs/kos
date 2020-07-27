@@ -17,21 +17,27 @@
  */
 package kos.core;
 
+import injector.Singleton;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
-import lombok.RequiredArgsConstructor;
+import kos.api.KosConfiguration;
 import lombok.val;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  *
  */
-@RequiredArgsConstructor
+@Singleton
 public class VertxFutures {
 
     final Vertx vertx;
+
+    public VertxFutures(KosConfiguration configuration) {
+        this.vertx = configuration.getDefaultVertx();
+    }
 
     public <T> Future<T> asFuture(Future<T> value) {
         return value;
@@ -46,6 +52,19 @@ public class VertxFutures {
                 promise.fail(cause);
             return null;
         }, vertx.nettyEventLoopGroup());
+        return promise.future();
+    }
+
+    public <T> Future<T> asFuture(java.util.concurrent.Future<T> value) {
+        val promise = Promise.<T>promise();
+        vertx.executeBlocking(future -> {
+            try {
+                val result = value.get();
+                future.complete(result);
+            } catch (Throwable cause) {
+                future.fail(cause);
+            }
+        }, promise);
         return promise.future();
     }
 
