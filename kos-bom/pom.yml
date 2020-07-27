@@ -16,3 +16,8 @@ dependencies:
 - { groupId: "io.skullabs.kos", artifactId: kos-logging-slf4j }
 - { groupId: "io.skullabs.kos", artifactId: kos-injector }
 - { groupId: "io.skullabs.kos", artifactId: kos-webapp }
+
+- { groupId: io.skullabs.injector, artifactId: injector-core }
+- { groupId: io.skullabs.injector, artifactId: injector-processor }
+
+- { groupId: org.slf4j, artifactId: slf4j-api }
