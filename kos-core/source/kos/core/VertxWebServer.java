@@ -22,6 +22,7 @@ import io.vertx.core.json.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
 import kos.api.KosConfiguration;
+import kos.api.RequestInterceptor;
 import kos.api.WebServerEventListener;
 import lombok.*;
 import lombok.experimental.*;
@@ -43,6 +44,12 @@ public class VertxWebServer extends AbstractVerticle {
     @NonNull
     private SimplifiedRouter router;
 
+    /**
+     * Constructs a VertxWebServer. This constructor will automatically
+     * run and configure all option flags.
+     *
+     * @param kosConfiguration Kos Configuration
+     */
     public VertxWebServer(KosConfiguration kosConfiguration){
         this(kosConfiguration, true);
     }
@@ -54,14 +61,36 @@ public class VertxWebServer extends AbstractVerticle {
      * @param autoConfigOptionals - true if should automatically config all optionals
      */
     public VertxWebServer(KosConfiguration kosConfiguration, boolean autoConfigOptionals) {
-        this.kosConfiguration = kosConfiguration;
-        this.log = kosConfiguration.createLoggerFor(getClass());
+        this(kosConfiguration, loadDefaultRouter(kosConfiguration, autoConfigOptionals));
+    }
 
-        val defaultRouter = Router.router(vertx);
-        if (autoConfigOptionals)
+    private static SimplifiedRouter loadDefaultRouter(
+        KosConfiguration kosConfiguration, boolean autoConfigOptionals)
+    {
+        val defaultRouter = Router.router(kosConfiguration.getDefaultVertx());
+        val simplified = SimplifiedRouter.wrapWithAutoBodyReader(kosConfiguration, defaultRouter);
+
+        if (autoConfigOptionals) {
             defaultRouter.route().handler(new DefaultContextAttributesMemorizer());
 
-        this.router = SimplifiedRouter.wrapWithAutoBodyReader(kosConfiguration, defaultRouter);
+            kosConfiguration.getImplementationLoader()
+                .instancesExposedAs(RequestInterceptor.class)
+                .forEach(simplified::intercept);
+        }
+
+        return simplified;
+    }
+
+    /**
+     * Constructs a VertxWebServer.
+     *
+     * @param kosConfiguration a valid configuration
+     * @param router a pre-configured Simplified Router.
+     */
+    public VertxWebServer(KosConfiguration kosConfiguration, SimplifiedRouter router) {
+        this.log = kosConfiguration.createLoggerFor(getClass());
+        this.kosConfiguration = kosConfiguration;
+        this.router = router;
     }
 
     @Override

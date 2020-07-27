@@ -44,7 +44,7 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
     private final Router router;
     private final RequestInterceptorHandler interceptorHandler;
     private final Map<HttpMethod, Boolean> httpMethodsThatMayReadBody;
-    private KosConfiguration kosConfiguration;
+    private final KosConfiguration kosConfiguration;
 
     public SimplifiedRouter(KosConfiguration kosConfiguration, Router router, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
         this(kosConfiguration, router, new RequestInterceptorHandler(router), httpMethodsThatMayReadBody);
@@ -72,7 +72,23 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
      * @param interceptor the interceptor handler.
      */
     public void intercept( RequestInterceptor interceptor ) {
+        intercept(interceptor, true);
+    }
+
+    /**
+     * Registers a {@link Handler} to intercept all requests.
+     *
+     * @param tryHandleExceptions if set true, it will wrap the interceptor and try to handle possible
+     *                            exceptions that might be thrown. It won't be capable to handle
+     *                            those that might happen on a different thread though.
+     * @param interceptor the interceptor handler.
+     */
+    public void intercept( RequestInterceptor interceptor, boolean tryHandleExceptions ) {
         log.info("Registering interceptor " + interceptor.getClass().getCanonicalName() );
+
+        if (tryHandleExceptions)
+            interceptor = SafeRequestInterceptor.wrap(interceptor, kosConfiguration);
+
         interceptorHandler.register( interceptor );
     }
 
@@ -155,7 +171,22 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
             try {
                 handler.handle(event);
             } catch ( Throwable cause ) {
-                Response.sendError( kosConfiguration, event, cause );
+                Response.sendError(kosConfiguration, event, cause);
+            }
+        }
+    }
+
+    @RequiredArgsConstructor( staticName = "wrap" )
+    private static class SafeRequestInterceptor implements RequestInterceptor {
+
+        final RequestInterceptor interceptor;
+        final KosConfiguration kosConfiguration;
+
+        @Override public void handle(HttpServerRequest request, Handler<HttpServerRequest> next) {
+            try {
+                interceptor.handle(request, next);
+            } catch (Throwable cause) {
+                Response.sendError(kosConfiguration, request, cause);
             }
         }
     }
