@@ -16,32 +16,26 @@ import io.vertx.ext.web.RoutingContext;
 @{{jdkGeneratedAnnotation}}("kos.apt.RestApiProcessor")
 public class {{className}} implements WebServerEventListener {
 
-    private final VertxFutures futures;
-
-    public {{className}}(VertxFutures futures) {
-        this.futures = futures;
-    }
-
     {{#methods}}
     {{#containsResponseType}}
     /**
      * Response Handler for {{httpMethod}} requests received by {@link {{simpleName}}.{{name}}}.
      */
     private static class ResponseTypeHandlerFor${{uniqueName}} implements Handler<AsyncResult<{{{unwrappedResponseType}}}>> {
-    
+
         private final KosConfiguration kosConfiguration;
-        private final RoutingContext event;
-    
-        ResponseTypeHandlerFor${{uniqueName}}(KosConfiguration kosConfiguration, RoutingContext event) {
-            this.event = event;
+        private final RoutingContext routingContext;
+
+        ResponseTypeHandlerFor${{uniqueName}}(KosConfiguration kosConfiguration, RoutingContext routingContext) {
+            this.routingContext = routingContext;
             this.kosConfiguration = kosConfiguration;
         }
 
         public void handle( AsyncResult<{{{unwrappedResponseType}}}> as ) {
             if (as.succeeded())
-                Response.send(kosConfiguration, event, as.result());
+                Response.send(kosConfiguration, routingContext, as.result());
             else
-                Response.sendError(kosConfiguration, event, as.cause());
+                Response.sendError(kosConfiguration, routingContext, as.cause());
         }
     }
 
@@ -50,12 +44,15 @@ public class {{className}} implements WebServerEventListener {
 
     public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
         final KosConfiguration kosConfiguration = event.getKosConfiguration();
+        final VertxFutures futures = kosConfiguration.getImplementationLoader()
+                    .instanceOfOrFail(VertxFutures.class);
+
         final {{simpleName}} handler = kosConfiguration.getImplementationLoader()
                     .instanceOfOrFail({{simpleName}}.class);
 
         {{#methods}}
         {{#httpPath}}
-        event.router().route( HttpMethod.{{httpMethod}}, "{{.}}", new Handler<RoutingContext>() {
+        event.getRouter().route( HttpMethod.{{httpMethod}}, "{{.}}", new Handler<RoutingContext>() {
 
             /**
              * Auto generated wrapper for {@link {{packageName}}.{{simpleName}}#{{name}}}.
@@ -72,7 +69,7 @@ public class {{className}} implements WebServerEventListener {
                     );
             {{#containsResponseType}}
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor${{uniqueName}}(kosConfiguration, event));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor${{uniqueName}}(kosConfiguration, routingContext));
             {{/containsResponseType}}{{^containsResponseType}}
                     /* Sends the default response for "no content". */
                     Response.sendDefaultNoContent( kosConfiguration, routingContext );

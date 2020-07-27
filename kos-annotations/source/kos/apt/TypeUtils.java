@@ -38,7 +38,10 @@ import static kos.core.Lang.nonEmptySetOfString;
 class TypeUtils {
 
     private SimplerRegexPattern
-        futureWrapper = new SimplerRegexPattern("io.vertx.core.Future<(.+)>"),
+        futureWrapper = new SimplerRegexPattern(
+            "(io.vertx.core.Future|" +
+            "java.util.concurrent.Future|" +
+            "java.util.concurrent.CompletableFuture)<(.+)>"),
         rawClass = new SimplerRegexPattern("([^<]+)<.*>")
     ;
 
@@ -113,7 +116,7 @@ class TypeUtils {
     }
 
     String unwrapFutureGenericType(String responseType) {
-        return futureWrapper.matchedGroup(responseType).orElse(responseType);
+        return futureWrapper.matchedGroup(responseType, 2).orElse(responseType);
     }
 
     boolean isVertxFuture( String type ){
@@ -121,7 +124,7 @@ class TypeUtils {
     }
 
     Optional<String> rawType(String wrapped) {
-        return rawClass.matchedGroup(wrapped);
+        return rawClass.matchedGroup(wrapped, 1);
     }
 
     static class SimplerRegexPattern{
@@ -131,10 +134,10 @@ class TypeUtils {
             this.pattern = Pattern.compile(pattern);
         }
 
-        Optional<String> matchedGroup(String target) {
+        Optional<String> matchedGroup(String target, int group) {
             val matcher = pattern.matcher(target);
             if (matcher.matches())
-                return Optional.of(matcher.group(1));
+                return Optional.of(matcher.group(group));
             return Optional.empty();
         }
     }

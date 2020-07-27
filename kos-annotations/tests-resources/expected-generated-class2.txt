@@ -16,40 +16,37 @@ import io.vertx.ext.web.RoutingContext;
 @javax.annotation.processing.Generated("kos.apt.RestApiProcessor")
 public class ApiWithNoPathRoutingContextHandler implements WebServerEventListener {
 
-    private final VertxFutures futures;
-
-    public ApiWithNoPathRoutingContextHandler(VertxFutures futures) {
-        this.futures = futures;
-    }
-
     /**
      * Response Handler for GET requests received by {@link ApiWithNoPath.retrieveLocation}.
      */
     private static class ResponseTypeHandlerFor$RetrieveLocation$GET968871131 implements Handler<AsyncResult<java.lang.String>> {
-    
+
         private final KosConfiguration kosConfiguration;
-        private final RoutingContext event;
-    
-        ResponseTypeHandlerFor$RetrieveLocation$GET968871131(KosConfiguration kosConfiguration, RoutingContext event) {
-            this.event = event;
+        private final RoutingContext routingContext;
+
+        ResponseTypeHandlerFor$RetrieveLocation$GET968871131(KosConfiguration kosConfiguration, RoutingContext routingContext) {
+            this.routingContext = routingContext;
             this.kosConfiguration = kosConfiguration;
         }
 
         public void handle( AsyncResult<java.lang.String> as ) {
             if (as.succeeded())
-                Response.send(kosConfiguration, event, as.result());
+                Response.send(kosConfiguration, routingContext, as.result());
             else
-                Response.sendError(kosConfiguration, event, as.cause());
+                Response.sendError(kosConfiguration, routingContext, as.cause());
         }
     }
 
 
     public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
         final KosConfiguration kosConfiguration = event.getKosConfiguration();
+        final VertxFutures futures = kosConfiguration.getImplementationLoader()
+                    .instanceOfOrFail(VertxFutures.class);
+
         final ApiWithNoPath handler = kosConfiguration.getImplementationLoader()
                     .instanceOfOrFail(ApiWithNoPath.class);
 
-        event.router().route( HttpMethod.GET, "/location", new Handler<RoutingContext>() {
+        event.getRouter().route( HttpMethod.GET, "/location", new Handler<RoutingContext>() {
 
             /**
              * Auto generated wrapper for {@link kos.rest.sample.ApiWithNoPath#retrieveLocation}.
@@ -62,7 +59,7 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveLocation$GET968871131(kosConfiguration, event));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveLocation$GET968871131(kosConfiguration, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosConfiguration, routingContext, cause);
                 }
