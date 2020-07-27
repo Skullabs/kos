@@ -17,6 +17,8 @@
 package kos.api;
 
 import io.vertx.core.buffer.*;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
 import kos.core.Lang;
@@ -26,6 +28,7 @@ import java.io.*;
 import java.util.*;
 
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
+import static java.lang.String.format;
 
 /**
  * Versatile exception handler abstraction.
@@ -37,31 +40,9 @@ public interface ExceptionHandler {
      * will be send as http response to the client.
      *
      * @param request current request context
+     * @param response object representing current response
      * @param cause error cause
      * @return object that will be send as http response to the client
      */
-    Response handle( RoutingContext request, Throwable cause );
-
-    class DefaultExceptionHandler implements ExceptionHandler {
-
-        private final Lang.Lazy<Logger> log;
-        
-        public DefaultExceptionHandler(KosConfiguration kosConfiguration) {
-            log = Lang.Lazy.by( () -> kosConfiguration.createLoggerFor(DefaultExceptionHandler.class) );
-        }
-
-        @Override
-        public Response handle( RoutingContext request, Throwable cause ) {
-            val msg = String.format( "Failed to handle request: %s - %s",
-                request.request().method(), request.request().uri() );
-            log.get().error( msg, cause );
-
-            val stackTrace = new StringWriter();
-            cause.printStackTrace(new PrintWriter(stackTrace));
-
-            val serialized = Buffer.buffer(stackTrace.toString());
-            val headers = Collections.singletonMap(CONTENT_TYPE, "text/plain");
-            return Response.wrap(serialized).statusCode(500).headers(headers);
-        }
-    }
+    Response handle(HttpServerRequest request, HttpServerResponse response, Throwable cause);
 }
