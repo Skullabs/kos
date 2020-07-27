@@ -172,7 +172,7 @@ class KosConfigurationTest {
 
         @DisplayName("Should return default value WHEN no object was defined via setter")
         @Test void scenario1() {
-            assertTrue(conf.getExceptionHandler() instanceof ExceptionHandler.DefaultExceptionHandler);
+            assertTrue(conf.getExceptionHandler() instanceof DefaultExceptionHandler);
         }
 
         @DisplayName("Should the object that was defined via setter")

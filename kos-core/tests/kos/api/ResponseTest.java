@@ -45,6 +45,7 @@ class ResponseTest {
         MockitoAnnotations.initMocks(this);
 
         doReturn(serverResponse).when(routingContext).response();
+        doReturn(serverResponse).when(serverRequest).response();
         doReturn(serverRequest).when(routingContext).request();
 
         doReturn(GET).when(serverRequest).method();

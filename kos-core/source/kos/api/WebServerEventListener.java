@@ -39,7 +39,7 @@ public interface WebServerEventListener {
     /**
      * Data available before deploy the web server.
      */
-    @Accessors(fluent = true)
+    @Accessors(chain = true)
     @Value class BeforeDeployWebServerEvent {
         Vertx vertx;
         SimplifiedRouter router;

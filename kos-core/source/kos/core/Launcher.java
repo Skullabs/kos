@@ -131,7 +131,7 @@ public class Launcher {
 
         public void deploy(Verticle verticle) {
             val options = new DeploymentOptions().setConfig(applicationConfig);
-            log.info("Deploying " + verticle.getClass().getCanonicalName() + "...");
+            log.debug("Deploying " + verticle.getClass().getCanonicalName() + "...");
             kosConfiguration.getDefaultVertx().deployVerticle(verticle, options);
         }
     }

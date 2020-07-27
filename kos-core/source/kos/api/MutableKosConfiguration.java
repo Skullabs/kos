@@ -29,7 +29,6 @@ import io.vertx.core.spi.logging.LogDelegateFactory;
 import io.vertx.ext.web.client.WebClient;
 import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -79,7 +78,7 @@ public class MutableKosConfiguration implements KosConfiguration {
         this.payloadSerializationStrategy = new SingleSerializerStrategy(getDefaultSerializer());
         this.httpServerOptions = new HttpServerOptions().setPort(9000);
         this.logDelegateFactory = new JULLogDelegateFactory();
-        this.exceptionHandler = new ExceptionHandler.DefaultExceptionHandler(this);
+        this.exceptionHandler = new DefaultExceptionHandler(this);
         this.stringConverter = new StringConverter.DefaultStringConverter();
         this.defaultRestClientSerializer = getRestClientSerializers().get("application/json");
     }

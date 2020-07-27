@@ -75,7 +75,7 @@ public class InjectorImplementationLoader implements ImplementationLoader {
 
         @Override
         public T create(Injector injector, Class aClass) {
-            return null;
+            return instance;
         }
     }
 }

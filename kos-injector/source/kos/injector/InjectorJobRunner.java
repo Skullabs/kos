@@ -30,13 +30,16 @@ public class InjectorJobRunner implements WebServerEventListener {
     private final Injector injector;
 
     public InjectorJobRunner(KosConfiguration kosConfiguration, Injector injector){
+        if (kosConfiguration == null)
+            throw new IllegalArgumentException("kosConfiguration is null");
+
         this.injector = injector;
         this.logger = kosConfiguration.createLoggerFor(getClass());
     }
 
     @Override
     public void on(BeforeDeployWebServerEvent event) {
-        val exitOnJobFailure = event.applicationConfig().getBoolean("exit-on-job-failure", true);
+        val exitOnJobFailure = event.getApplicationConfig().getBoolean("exit-on-job-failure", true);
         val jobs = injector.instancesExposedAs( Job.class );
 
         for (val job : jobs)

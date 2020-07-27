@@ -37,16 +37,16 @@ public class RequestInterceptorHandler implements Handler<HttpServerRequest> {
     public void handle(HttpServerRequest request) {
         currentHandler.handle(request);
     }
-}
 
-@RequiredArgsConstructor
-class InterceptorWrapper implements Handler<HttpServerRequest> {
+    @RequiredArgsConstructor
+    private static class InterceptorWrapper implements Handler<HttpServerRequest> {
 
-    final RequestInterceptor interceptor;
-    final Handler<HttpServerRequest> next;
+        final RequestInterceptor interceptor;
+        final Handler<HttpServerRequest> next;
 
-    @Override
-    public void handle(HttpServerRequest request) {
-        this.interceptor.handle(request, this.next);
+        @Override
+        public void handle(HttpServerRequest request) {
+            this.interceptor.handle(request, this.next);
+        }
     }
 }

@@ -17,6 +17,7 @@
 package kos.api;
 
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 import lombok.Data;
@@ -107,6 +108,16 @@ public interface Response {
      */
     static void send(KosConfiguration kosConfiguration, RoutingContext context, Object payload) {
         val httpResponse = context.response();
+        send(kosConfiguration, httpResponse, payload);
+    }
+
+    /**
+     * Sends a response to the client. Internally it serializes the {@code payload}
+     * object using a previously defined {@link PayloadSerializationStrategy}. Although this method
+     * is a semantically-equivalent to {@link Response#send(KosConfiguration,HttpServerResponse)}
+     * it was designed to be called directly by the generated routes.
+     */
+    static void send(KosConfiguration kosConfiguration, HttpServerResponse httpResponse, Object payload) {
         val serializer = kosConfiguration.getPayloadSerializationStrategy().serializerFor(httpResponse);
         val buffer = serializer.serialize(payload);
         httpResponse.setStatusCode(200);
@@ -122,6 +133,20 @@ public interface Response {
      */
     static void send(KosConfiguration kosConfiguration, RoutingContext context, Response response) {
         val serverResponse = context.response();
+        send(kosConfiguration, serverResponse, response);
+    }
+
+    /**
+     * Sends a response to the client. It will ensure that the defined statusCode
+     * and headers are send to the client. It also uses {@link Response#send(KosConfiguration, HttpServerResponse)}
+     * to perform the serialization, allowing developers to design custom and powerful
+     * serialization mechanisms.
+     */
+    static void send(
+        KosConfiguration kosConfiguration,
+        HttpServerResponse serverResponse,
+        Response response)
+    {
         serverResponse.setStatusCode(response.statusCode());
         for ( val header : response.headers().entrySet() )
             serverResponse.putHeader(header.getKey(), header.getValue());
@@ -134,8 +159,19 @@ public interface Response {
      * handle the failure and generate the response object.
      */
     static void sendError(KosConfiguration kosConfiguration, RoutingContext context, Throwable cause) {
-        val handledResponse = kosConfiguration.getExceptionHandler().handle(context, cause);
-        send(kosConfiguration, context, handledResponse);
+        sendError(kosConfiguration, context.request(), cause);
+    }
+
+    /**
+     * Serializes a {@link Throwable} and sends as a response to the client.
+     * Internally it will use the appropriate {@link ExceptionHandler} to
+     * handle the failure and generate the response object.
+     */
+    static void sendError(KosConfiguration kosConfiguration, HttpServerRequest request, Throwable cause) {
+        val httpResponse = request.response();
+        val handledResponse = kosConfiguration.getExceptionHandler()
+            .handle(request, httpResponse, cause);
+        send(kosConfiguration, httpResponse, handledResponse);
     }
 
     /**
