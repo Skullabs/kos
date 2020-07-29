@@ -11,6 +11,10 @@ build(){
   ./mvnw clean package
 }
 
+sonar(){
+  ./mvnw sonar:sonar -Dsonar.login=${SONAR_TOKEN}
+}
+
 deploy_local(){
   ./mvnw clean install -DskipTests=true
 }
@@ -28,7 +32,7 @@ bump_version(){
     println "Please use semantic version."
     exit 2
   fi
-  
+
   POM_FILES=$(find . -name 'pom.yml')
 
   sed -i -e "s/version: \"$CURRENT_VERSION\"/version: \"$VERSION\"/" $POM_FILES

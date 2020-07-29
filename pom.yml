@@ -27,6 +27,8 @@ properties:
   sonar.jacoco.reportPaths: "${project.basedir}/../report/output/aggregated.exec"
   sonar.language: java
   sonar.java.coveragePlugin: jacoco
+  sonar.host.url: https://sonarcloud.io/
+  sonar.organization: skullabs
 
 modules:
   - kos-core

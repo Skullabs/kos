@@ -33,3 +33,6 @@ jobs:
 
       - name: Build with Maven
         run: ./builder.sh build
+
+      - name: Generate Sonar Report
+        run: ./builder.sh sonar
