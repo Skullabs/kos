@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -70,26 +71,26 @@ public final class Lang {
         return first( data, i -> true );
     }
 
-    public static <T> boolean matches(Iterable<T> data, Function<T, Boolean> matcher ){
+    public static <T> boolean matches(Iterable<T> data, Predicate<T> matcher ){
         for (val item: data){
-            if ( matcher.apply(item) )
+            if ( matcher.test(item) )
                 return true;
         }
         return false;
     }
 
-    public static <T> ImplementationLoader.Result<T> first(Iterable<T> data, Function<T, Boolean> matcher ) {
+    public static <T> ImplementationLoader.Result<T> first(Iterable<T> data, Predicate<T> matcher ) {
         for (val item: data){
-            if ( matcher.apply(item) )
+            if ( matcher.test(item) )
                 return ImplementationLoader.Result.of( item );
         }
         return ImplementationLoader.Result.empty();
     }
 
-    public static <T> List<T> filter( Collection<T> data, Function<T, Boolean> matcher ) {
+    public static <T> List<T> filter( Collection<T> data, Predicate<T> matcher ) {
         val buffer = new ArrayList<T>();
         for ( val item : data )
-            if (matcher.apply(item))
+            if (matcher.test(item))
                 buffer.add(item);
         return buffer;
     }
@@ -177,19 +178,24 @@ public final class Lang {
     public static class Lazy<T> implements Supplier<T> {
 
         private final Supplier<T> supplier;
-        private T data;
+        private volatile T data;
 
         public T get(){
-            if ( data == null )
+            T localData = data;
+            if ( localData == null ) {
+                localData = data;
                 synchronized (this) {
-                    if ( data == null )
-                        data = supplier.get();
+                    if ( localData == null )
+                        data = localData = supplier.get();
                 }
-            return data;
+            }
+            return localData;
         }
 
-        public synchronized void set( T newData ) {
-            this.data = newData;
+        public void set( T newData ) {
+            synchronized (this){
+                this.data = newData;
+            }
         }
 
         public static <T> Lazy<T> by( Supplier<T> supplier ) {

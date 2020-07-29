@@ -106,7 +106,7 @@ import static kos.core.Lang.*;
     String uniqueName = computeUniqueName();
 
     private String computeUniqueName(){
-        long hashCode = Integer.MAX_VALUE + hashCode();
+        long hashCode = (long)(Integer.MAX_VALUE + hashCode());
         return Character.toUpperCase(getName().charAt(0)) + getName().substring(1) + "$" + httpMethod + hashCode;
     }
 

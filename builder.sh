@@ -74,6 +74,7 @@ EOF
 case $1 in
   "bump") bump_version ;;
   "build") build ;;
+  "sonar") sonar ;;
   "deploy_local"|"local") deploy_local ;;
   "deploy"|"remote") deploy_remote ;;
   "config_maven") config_maven ;;
@@ -84,6 +85,7 @@ case $1 in
 
       Where OPTION is one of the following:
       - build
+      - sonar - runs sonar analysis
       - bump - bumps the version
       - local - deploys generated artifacts locally
       - remote - deploys generated artifacts into Maven Central
