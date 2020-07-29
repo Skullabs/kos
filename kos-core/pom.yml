@@ -28,5 +28,5 @@ build:
       artifactId: jacoco-maven-plugin
       executions:
         - id: check
-          goals: [ "check" ]
+          goals: [ "check", "report", "report-aggregate" ]
           phase: package

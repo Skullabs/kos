@@ -17,3 +17,12 @@ dependencies:
 - { groupId: org.junit.jupiter, artifactId: junit-jupiter-engine }
 - { groupId: org.mockito, artifactId: mockito-core }
 - { groupId: org.mockito, artifactId: mockito-junit-jupiter }
+
+build:
+  plugins:
+    - groupId: org.jacoco
+      artifactId: jacoco-maven-plugin
+      executions:
+        - id: check
+          goals: [ "report", "report-aggregate" ]
+          phase: package

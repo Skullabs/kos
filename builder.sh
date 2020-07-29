@@ -57,7 +57,7 @@ config_maven(){
 
   fi
 
-  cat <<EOF> ~/.m2/settings.xml
+  cat <<EOF > ~/.m2/settings.xml
 <settings>
   <servers>
     <server>

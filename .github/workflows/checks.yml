@@ -36,3 +36,5 @@ jobs:
 
       - name: Generate Sonar Report
         run: ./builder.sh sonar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -29,6 +29,8 @@ properties:
   sonar.java.coveragePlugin: jacoco
   sonar.host.url: https://sonarcloud.io/
   sonar.organization: skullabs
+  sonar.coverage.jacoco.xmlReportPaths: "${project.basedir}/../report/output/site/jacoco-aggregate/jacoco.xml"
+  sonar.junit.reportsPath: "output/surefire-reports/TEST-*.xml"
 
 modules:
   - kos-core
@@ -82,6 +84,21 @@ build:
       - groupId: org.jacoco
         version: "${version.jacoco}"
         artifactId: jacoco-maven-plugin
+        executions:
+            - id: prepare-agent
+              phase: validate
+              goals: ["prepare-agent"]
+              configuration:
+                append: true
+        configuration:
+          rules:
+            - element: BUNDLE
+              excludes: [ "*Test" ]
+              limits:
+                - { counter: COMPLEXITY, value: COVEREDRATIO, minimum: "61%" }
+                - { counter: LINE, value: COVEREDRATIO, minimum: "70%" }
+          #dataFile: "${sonar.jacoco.reportPaths}"
+          destFile: "${sonar.jacoco.reportPaths}"
 
       - artifactId: maven-javadoc-plugin
         version: 3.1.0
@@ -102,18 +119,3 @@ build:
 
     - groupId: org.jacoco
       artifactId: jacoco-maven-plugin
-      executions:
-        - id: prepare-agent
-          phase: validate
-          goals: ["prepare-agent"]
-          configuration:
-            append: true
-      configuration:
-        rules:
-          - element: BUNDLE
-            excludes: [ "*Test" ]
-            limits:
-              - { counter: COMPLEXITY, value: COVEREDRATIO, minimum: "61%" }
-              - { counter: LINE, value: COVEREDRATIO, minimum: "70%" }
-        #dataFile: "${sonar.jacoco.reportPaths}"
-        destFile: "${sonar.jacoco.reportPaths}"
