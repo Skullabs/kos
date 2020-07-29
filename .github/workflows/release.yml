@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - "feature/[0-9]+*"
+      - "hotfix/[0-9]+*"
+      - "bugfix/[0-9]+*"
+      - "enhancement/[0-9]+*"
+      - "version/*"
+  pull_request:
+    types: [closed]
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+
+      - name: Configure JDK 11
+        uses: actions/setup-java@v1.3.0
+        with:
+          java-version: 11
+
+      - name: Configuring Maven Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Configure Maven Credentials and GPG Key
+        run: ./builder.sh config_maven
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+
+      - name: Configure GPG Key
+        run: ./builder.sh config_gpg
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+
+      - name: Publish to Sonatype Staging Repository
+        run: ./builder.sh remote
