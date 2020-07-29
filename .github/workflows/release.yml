@@ -55,18 +55,21 @@ jobs:
 #        run: ./builder.sh remote
 
       - name: Debug
+        env:
+          CHANGE_LOG: ${{ steps.vars.outputs.CHANGE_LOG }}
         run: |
           echo ${CHANGE_LOG}
           echo ${RELEASE_VERSION}
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ RELEASE_VERSION }}
-          release_name: v${{ RELEASE_VERSION }}
-          body: ${{ CHANGE_LOG }}
-          draft: true
-          prerelease: false
+#      - name: Create Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          CHANGE_LOG: ${{ steps.vars.outputs.CHANGE_LOG }}
+#        with:
+#          tag_name: ${{ env.RELEASE_VERSION }}
+#          release_name: v${{ env.RELEASE_VERSION }}
+#          body: ${{ env.CHANGE_LOG }}
+#          draft: true
+#          prerelease: false
