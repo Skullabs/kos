@@ -56,7 +56,7 @@ jobs:
 
       - name: Debug
         env:
-          CHANGE_LOG: ${{ steps.vars.outputs.CHANGE_LOG }}
+          CHANGE_LOG: ${{ env.CHANGE_LOG }}
         run: |
           echo ${CHANGE_LOG}
           echo ${RELEASE_VERSION}
