@@ -1,13 +1,6 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - "feature/[0-9]+*"
-      - "hotfix/[0-9]+*"
-      - "bugfix/[0-9]+*"
-      - "enhancement/[0-9]+*"
-      - "version/*"
   pull_request:
     types: [closed]
     branches: [ "master" ]
@@ -63,5 +56,5 @@ jobs:
           tag_name: ${{ env.RELEASE_VERSION }}
           release_name: v${{ env.RELEASE_VERSION }}
           body: ${{ env.CHANGE_LOG }}
-          draft: true
+          draft: false
           prerelease: false
