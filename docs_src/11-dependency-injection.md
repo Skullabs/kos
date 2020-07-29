@@ -46,8 +46,8 @@ either `injector.Singleton` or `injector.New`.
 Below you can find a _Custom Exception Handler_ implementation.
 ```java
 import injector.ExposedAs;
-import kos.core.ExceptionHandler;
-import kos.core.Response;
+import kos.api.ExceptionHandler;
+import kos.api.Response;
 
 @ExposedAs(ExceptionHandler.class)
 public class CustomExceptionHandler implements ExceptionHandler {
@@ -88,8 +88,8 @@ compile("io.skullabs.kos:kos-injector")
 ### Custom Dependency Injection Mechanism
 As mentioned before Kos dependency injection mechanism is quite simple and doesn't
 enforce you to stick with a single implementation. To provide your own Implementaion Loader
-you need to implement the `kos.core.ImplementationLoader` interface. Once you've
+you need to implement the `kos.api.ImplementationLoader` interface. Once you've
 implemented you need to register it as the default Implementation Loader by exposing
 it as Service Provider implementation. You can do so by creating a
-`META-INF/services/kos.core.ImplementationLoader` file with the canonical name of
+`META-INF/services/kos.api.ImplementationLoader` file with the canonical name of
 your just created class inside of it.

@@ -17,14 +17,17 @@
 package kos.core;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
+import kos.api.ImplementationLoader;
 import lombok.*;
-import lombok.experimental.Accessors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
-import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -56,30 +59,38 @@ public final class Lang {
         }
     }
 
-    public static <T> Lang.Result<T> first(Iterable<T> data ) {
+    public static <T> T firstNotNull( T...args ){
+        for ( T arg : args ) {
+            if (arg != null)
+                return arg;
+        }
+        return null;
+    }
+
+    public static <T> ImplementationLoader.Result<T> first(Iterable<T> data ) {
         return first( data, i -> true );
     }
 
-    public static <T> boolean matches(Iterable<T> data, Function<T, Boolean> matcher ){
+    public static <T> boolean matches(Iterable<T> data, Predicate<T> matcher ){
         for (val item: data){
-            if ( matcher.apply(item) )
+            if ( matcher.test(item) )
                 return true;
         }
         return false;
     }
 
-    public static <T> Lang.Result<T> first( Iterable<T> data, Function<T, Boolean> matcher ) {
+    public static <T> ImplementationLoader.Result<T> first(Iterable<T> data, Predicate<T> matcher ) {
         for (val item: data){
-            if ( matcher.apply(item) )
-                return Lang.Result.of( item );
+            if ( matcher.test(item) )
+                return ImplementationLoader.Result.of( item );
         }
-        return Lang.Result.empty();
+        return ImplementationLoader.Result.empty();
     }
 
-    public static <T> List<T> filter( Collection<T> data, Function<T, Boolean> matcher ) {
+    public static <T> List<T> filter( Collection<T> data, Predicate<T> matcher ) {
         val buffer = new ArrayList<T>();
         for ( val item : data )
-            if (matcher.apply(item))
+            if (matcher.test(item))
                 buffer.add(item);
         return buffer;
     }
@@ -110,20 +121,12 @@ public final class Lang {
         return buffered;
     }
 
-    public static <T> Future<T> asFuture(Future<T> value) {
-        return value;
-    }
-
-    public static <T> Future<T> asFuture(T value) {
-        return Future.succeededFuture(value);
-    }
-
     /**
      * This method has been place here for the sake of convenience.
      * It should avoided by developers as it is quite dangerous and
      * might introduce slowness into the system.
      */
-    public static <T> T await(Future<T> future) {
+    public static <T> T waitFor(Future<T> future) {
         val parent = Thread.currentThread().getStackTrace()[1];
         if (!parent.getClassName().startsWith("kos."))
             throw new UnsupportedOperationException("Await was not designed for production usage");
@@ -135,6 +138,13 @@ public final class Lang {
             return future.result();
         else
             throw new KosException(future.cause().getMessage(), future.cause());
+    }
+
+    public static <T> T waitFor(AtomicReference<T> reference ) {
+        T result = null;
+        while ( (result = reference.get()) == null )
+            LockSupport.parkNanos(1L);
+        return result;
     }
 
     /**
@@ -168,90 +178,29 @@ public final class Lang {
     public static class Lazy<T> implements Supplier<T> {
 
         private final Supplier<T> supplier;
-        private T data;
+        private volatile T data;
 
         public T get(){
-            if ( data == null )
+            T localData = data;
+            if ( localData == null ) {
+                localData = data;
                 synchronized (this) {
-                    if ( data == null )
-                        data = supplier.get();
+                    if ( localData == null )
+                        data = localData = supplier.get();
                 }
-            return data;
+            }
+            return localData;
         }
 
-        public synchronized void set( T newData ) {
-            this.data = newData;
+        public void set( T newData ) {
+            synchronized (this){
+                this.data = newData;
+            }
         }
 
         public static <T> Lazy<T> by( Supplier<T> supplier ) {
             return new Lazy<>( supplier );
         }
     }
-    
-    @RequiredArgsConstructor
-    @EqualsAndHashCode
-    @Accessors(fluent = true)
-    public static class Result<T> {
-        
-        final RuntimeException cause;
-        final T data;
-        
-        public boolean isEmpty(){
-            return data == null;
-        }
 
-        public boolean isPresent(){
-            return !isEmpty();
-        }
-        
-        public boolean failed(){
-            return cause != null;
-        }
-        
-        public T get(){
-            return data;
-        }
-
-        public <E extends RuntimeException> T orElseThrow(Supplier<E> cause) {
-            if (isEmpty())
-                throw cause.get();
-            return data;
-        }
-
-        public T orElse(T other){
-            if (isEmpty())
-                return other;
-            return data;
-        }
-
-        public T orElseGet(Supplier<T> other) {
-            if (isEmpty())
-                return other.get();
-            return data;
-        }
-
-        public T orElseGet(Function<RuntimeException,T> other) {
-            if (isEmpty())
-                return other.apply(cause);
-            return data;
-        }
-
-        public <R> Result<R> map(Function<T, R> mapper) {
-            if (isEmpty())
-                return empty();
-            return of(mapper.apply(data));
-        }
-
-        public static <T, E extends RuntimeException> Result<T> failure(E cause){
-            return new Result<>(cause, null);
-        }
-
-        public static <T> Result<T> of(T value){
-            return new Result<>(null, value);
-        }
-
-        public static <T> Result<T> empty(){
-            return new Result<>(null, null);
-        }
-    }
 }

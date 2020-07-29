@@ -18,9 +18,8 @@ package kos.core;
 
 import io.vertx.core.*;
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.ext.web.*;
+import kos.api.RequestInterceptor;
 import lombok.*;
-import lombok.experimental.Delegate;
 
 /**
  *
@@ -38,16 +37,16 @@ public class RequestInterceptorHandler implements Handler<HttpServerRequest> {
     public void handle(HttpServerRequest request) {
         currentHandler.handle(request);
     }
-}
 
-@RequiredArgsConstructor
-class InterceptorWrapper implements Handler<HttpServerRequest> {
+    @RequiredArgsConstructor
+    private static class InterceptorWrapper implements Handler<HttpServerRequest> {
 
-    final RequestInterceptor interceptor;
-    final Handler<HttpServerRequest> next;
+        final RequestInterceptor interceptor;
+        final Handler<HttpServerRequest> next;
 
-    @Override
-    public void handle(HttpServerRequest request) {
-        this.interceptor.handle(request, this.next);
+        @Override
+        public void handle(HttpServerRequest request) {
+            this.interceptor.handle(request, this.next);
+        }
     }
 }

@@ -3,7 +3,7 @@ modelVersion: 4.0.0
 parent:
   groupId: io.skullabs.kos
   artifactId: kos-parent
-  version: 0.3.0
+  version: "0.4.0"
   relativePath: "../pom.yml"
 
 artifactId: kos-annotations
@@ -26,7 +26,7 @@ build:
       artifactId: jacoco-maven-plugin
       executions:
         - id: check
-          goals: [ "check" ]
+          goals: [ "check", "report", "report-aggregate" ]
           phase: package
 
     - groupId: org.apache.maven.plugins

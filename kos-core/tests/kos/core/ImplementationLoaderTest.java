@@ -16,6 +16,7 @@
 
 package kos.core;
 
+import kos.api.ImplementationLoader;
 import kos.core.sample.ExposedService;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;

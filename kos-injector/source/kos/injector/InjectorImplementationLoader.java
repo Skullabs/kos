@@ -16,47 +16,66 @@
 
 package kos.injector;
 
+import injector.Factory;
 import injector.Injector;
 import io.vertx.core.logging.Logger;
-import kos.core.ImplementationLoader;
-import kos.core.Kos;
+import kos.api.ImplementationLoader;
+import kos.api.KosConfiguration;
 import kos.core.Lang.Lazy;
-import kos.core.Lang.Result;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.val;
-
-import java.util.function.Consumer;
 
 public class InjectorImplementationLoader implements ImplementationLoader {
 
-    private static final ImplementationLoader spi = new SPIImplementationLoader();
-    private final Lazy<Injector> injector = Lazy.by( this::createInjector );
-    private final Logger logger = Kos.logger(this.getClass());
+    private final Injector injector;
+    private final KosConfiguration kosConfiguration;
+    private final Logger logger;
+
+    public InjectorImplementationLoader(KosConfiguration kosConfiguration) {
+        this.kosConfiguration = kosConfiguration;
+        this.logger = kosConfiguration.createLoggerFor(getClass());
+        this.injector = createInjector();
+    }
 
     private Injector createInjector() {
-        val injectorLogger = Kos.logger(Injector.class);
-        return Injector.create(false).setLogger(new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                injectorLogger.debug(s);
-            }
-        });
+        val injectorLogger = kosConfiguration.createLoggerFor(Injector.class);
+        return Injector.create(false).setLogger(injectorLogger::debug);
     }
 
     @Override
     public <T> Iterable<T> instancesExposedAs(Class<T> interfaceType) {
-        val found = injector.get().instancesExposedAs(interfaceType);
+        val found = injector.instancesExposedAs(interfaceType);
         if ( found.iterator().hasNext() )
             return found;
-        return spi.instancesExposedAs(interfaceType);
+        return kosConfiguration.getSpi().instancesExposedAs(interfaceType);
     }
 
     @Override
     public <T> Result<T> instanceOf(Class<T> type) {
         try {
-            return Result.of(injector.get().instanceOf(type));
+            return Result.of(injector.instanceOf(type));
         } catch ( IllegalArgumentException cause ) {
             logger.debug("Could not get instance of " + type.getCanonicalName(), cause);
             return Result.failure(cause);
+        }
+    }
+
+    @Override
+    public <T> void register(Class<T> type, T instance) {
+        injector.registerFactoryOf(type, new StaticFactory<>(type, instance));
+    }
+
+    @Value
+    private static class StaticFactory<T> implements Factory<T> {
+
+        Class<T> exposedType;
+        T instance;
+
+        @Override
+        public T create(Injector injector, Class aClass) {
+            return instance;
         }
     }
 }

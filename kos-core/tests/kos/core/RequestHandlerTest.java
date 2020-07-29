@@ -18,6 +18,7 @@ package kos.core;
 
 import io.vertx.core.http.*;
 import io.vertx.ext.web.*;
+import kos.api.RequestHandler;
 import lombok.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.DisabledOnJre;

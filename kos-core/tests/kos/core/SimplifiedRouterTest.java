@@ -17,9 +17,13 @@
 package kos.core;
 
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import kos.api.MutableKosConfiguration;
+import kos.api.RequestHandler;
+import kos.api.RequestInterceptor;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,8 +48,8 @@ class SimplifiedRouterTest {
         doReturn(GET).when(request).method();
         doReturn(response).when(request).response();
 
-        val router = Router.router(Kos.defaultVertx.get());
-        simplifiedRouter = SimplifiedRouter.wrapWithAutoBodyReader(router);
+        val router = Router.router(Vertx.vertx());
+        simplifiedRouter = SimplifiedRouter.wrapWithAutoBodyReader(new MutableKosConfiguration(), router);
     }
 
     @DisplayName("Interceptors SHOULD be able to interrupt executions avoiding handlers for being called")

@@ -17,11 +17,8 @@
 package kos.core.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.client.HttpResponse;
-import kos.core.KosException;
-import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.Value;
 import lombok.val;
@@ -44,7 +41,7 @@ import static org.mockito.Mockito.doReturn;
 class ResponseHandlerTest {
 
     Buffer buffer = readResourceFile("tests-resources/response-handler-scenario-01.json");
-    Serializer serializer = new Serializer.JsonSerializer();
+    RestClientSerializer restClientSerializer = new RestClientSerializer.JsonRestClientSerializer();
     UUID expectedUserId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     @Mock HttpResponse<Buffer> response;
@@ -57,7 +54,7 @@ class ResponseHandlerTest {
     @DisplayName("SHOULD be able to deserialize into Map")
     @Test void mapSerialization(){
         val mapType = new TypeReference<Map<String, Object>>(){};
-        val mapResponseHandler = ResponseHandler.create(serializer, mapType);
+        val mapResponseHandler = ResponseHandler.create(restClientSerializer, mapType);
 
         val user = mapResponseHandler.deserialize(response);
         assertEquals(expectedUserId.toString(), user.get("id"));
@@ -65,7 +62,7 @@ class ResponseHandlerTest {
 
     @DisplayName("SHOULD be able to deserialize into User class")
     @Test void classSerialization(){
-        val classResponseHandler = ResponseHandler.create(serializer, User.class);
+        val classResponseHandler = ResponseHandler.create(restClientSerializer, User.class);
         val user = classResponseHandler.deserialize(response);
         assertEquals(expectedUserId, user.getId());
     }

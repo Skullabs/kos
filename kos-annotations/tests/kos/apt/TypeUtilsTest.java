@@ -42,6 +42,20 @@ class TypeUtilsTest {
         assertEquals( expected, TypeUtils.unwrapFutureGenericType(wrapped) );
     }
 
+    @Test @DisplayName("SHOULD return object unwrapped (inside JDK Future generic)")
+    void unwrapFutureGenericType2(){
+        val wrapped = "java.util.concurrent.Future<java.client.List<java.lang.String>>";
+        val expected = "java.client.List<java.lang.String>";
+        assertEquals( expected, TypeUtils.unwrapFutureGenericType(wrapped) );
+    }
+
+    @Test @DisplayName("SHOULD return object unwrapped (inside CompletableFuture generic)")
+    void unwrapFutureGenericType3(){
+        val wrapped = "java.util.concurrent.CompletableFuture<java.client.List<java.lang.String>>";
+        val expected = "java.client.List<java.lang.String>";
+        assertEquals( expected, TypeUtils.unwrapFutureGenericType(wrapped) );
+    }
+
     @Test @DisplayName("SHOULD return origin class when is not inside Future generic")
     void unwrapFutureGenericType1(){
         val wrapped = "java.client.List<java.lang.String>";

@@ -20,9 +20,10 @@ import generator.apt.SimplifiedAST;
 import kos.core.KosException;
 import kos.core.Lang;
 import kos.rest.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Value;
 import lombok.val;
-import lombok.var;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -84,21 +85,30 @@ import static kos.core.Lang.*;
     }
 }
 
+@EqualsAndHashCode(exclude = "uniqueName")
 @Value class Method {
 
-    final String httpMethod;
-    final Iterable<String> httpPath;
-    final String name;
-    final Boolean containsResponseType;
-    final Boolean containsRequestPayload;
-    final String variableWithRequestPayload;
-    final String responseType;
-    final String unwrappedResponseType;
-    final SimplifiedAST.WrappedDataIterable parameters;
-    final TypeReference typeReference;
-    final List<ReplaceablePathParam> replaceablePathParams;
-    final List<MethodDefinedHeaders> definedHeaders;
-    final boolean containsDefinedHeaders;
+    String httpMethod;
+    Iterable<String> httpPath;
+    String name;
+    Boolean containsResponseType;
+    Boolean containsRequestPayload;
+    String variableWithRequestPayload;
+    String responseType;
+    String unwrappedResponseType;
+    SimplifiedAST.WrappedDataIterable parameters;
+    TypeReference typeReference;
+    List<ReplaceablePathParam> replaceablePathParams;
+    List<MethodDefinedHeaders> definedHeaders;
+    boolean containsDefinedHeaders;
+
+    @Getter(lazy = true)
+    String uniqueName = computeUniqueName();
+
+    private String computeUniqueName(){
+        long hashCode = (long)(Integer.MAX_VALUE + hashCode());
+        return Character.toUpperCase(getName().charAt(0)) + getName().substring(1) + "$" + httpMethod + hashCode;
+    }
 
     static Method from(Iterable<String> rootPath, SimplifiedAST.Method method) {
         val methodAnn = first( method.getAnnotations(), TypeUtils::isRouteAnn ).get();

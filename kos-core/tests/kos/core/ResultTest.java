@@ -16,6 +16,7 @@
 
 package kos.core;
 
+import kos.api.ImplementationLoader;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,14 +27,14 @@ class ResultTest {
     
     @DisplayName("SHOULD be able to create empty Result")
     @Test void empty(){
-        val result = Lang.Result.empty();
+        val result = ImplementationLoader.Result.empty();
         assertTrue(result.isEmpty());
         assertFalse(result.failed());
     }
 
     @DisplayName("SHOULD be able to create a Result with data")
     @Test void of(){
-        val result = Lang.Result.of("Hello");
+        val result = ImplementationLoader.Result.of("Hello");
         assertFalse(result.failed());
         assertFalse(result.isEmpty());
         assertEquals("Hello", result.get());
@@ -41,7 +42,7 @@ class ResultTest {
 
     @DisplayName("SHOULD be able to create a Result with a failure")
     @Test void failure(){
-        val result = Lang.Result.failure(new KosException("Unknown Error"));
+        val result = ImplementationLoader.Result.failure(new KosException("Unknown Error"));
         assertTrue(result.failed());
         assertTrue(result.isEmpty());
     }

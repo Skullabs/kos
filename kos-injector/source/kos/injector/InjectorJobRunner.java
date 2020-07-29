@@ -18,33 +18,38 @@ package kos.injector;
 
 import injector.*;
 import io.vertx.core.logging.*;
+import kos.api.KosConfiguration;
+import kos.api.WebServerEventListener;
 import kos.core.*;
 import lombok.*;
 
 @ExposedAs(WebServerEventListener.class)
 public class InjectorJobRunner implements WebServerEventListener {
 
-    private final Logger logger = Kos.logger(this.getClass());
+    private final Logger logger;
     private final Injector injector;
 
-    public InjectorJobRunner(Injector injector){
+    public InjectorJobRunner(KosConfiguration kosConfiguration, Injector injector){
+        if (kosConfiguration == null)
+            throw new IllegalArgumentException("kosConfiguration is null");
+
         this.injector = injector;
+        this.logger = kosConfiguration.createLoggerFor(getClass());
     }
 
     @Override
-    public void on(BeforeDeployEvent event) {
-        val exitOnJobFailure = event.config().getBoolean("exit-on-job-failure", true);
+    public void on(BeforeDeployWebServerEvent event) {
+        val exitOnJobFailure = event.getApplicationConfig().getBoolean("exit-on-job-failure", true);
         val jobs = injector.instancesExposedAs( Job.class );
 
-        for (val job : jobs) {
+        for (val job : jobs)
             try {
                 logger.debug("Starting job " + job);
                 job.execute();
             } catch (Exception e) {
                 logger.fatal("Failed to start job " + job, e);
-                if ( exitOnJobFailure )
+                if (exitOnJobFailure)
                     System.exit(1);
             }
-        }
     }
 }

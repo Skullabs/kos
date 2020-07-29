@@ -17,7 +17,7 @@
 package kos.injector;
 
 import io.vertx.core.json.JsonObject;
-import kos.core.Kos;
+import kos.api.MutableKosConfiguration;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,17 +32,18 @@ import static org.mockito.Mockito.doReturn;
 @ExtendWith(MockitoExtension.class)
 class JsonObjectProducerTest {
 
+    MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
     @Mock JsonObject delegatedJsonObject;
 
     @BeforeEach
     void setupMocks(){
         doReturn("World").when(delegatedJsonObject).getString("Hello");
-        Kos.config.set(delegatedJsonObject);
+        kosConfiguration.setApplicationConfig(delegatedJsonObject);
     }
 
     @DisplayName("SHOULD delegate to the created Kos configuration")
     @Test void produce() {
-        val producer = new JsonObjectProducer();
+        val producer = new JsonObjectProducer(kosConfiguration);
         val jsonObject = producer.produce();
         assertEquals("World", jsonObject.getString("Hello"));
     }

@@ -18,13 +18,16 @@ package kos.core.client;
 
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.client.WebClient;
-import kos.core.Kos;
+import kos.api.KosConfiguration;
 import kos.core.KosException;
-import kos.core.StringConverter;
+import kos.api.StringConverter;
 import lombok.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
+
+import static kos.core.Lang.firstNotNull;
 
 @Value
 @Builder(
@@ -38,9 +41,27 @@ public class RestClientConfiguration {
 
     @NonNull final URL url;
     @Builder.Default @NonNull final MultiMap headers = MultiMap.caseInsensitiveMultiMap();
-    @Builder.Default @NonNull final Serializer serializer = Kos.defaultRestClientSerializer;
-    @Builder.Default @NonNull final WebClient client = Kos.webClient.get();
-    @Builder.Default @NonNull final StringConverter stringConverter = Kos.stringConverter.get();
+    final RestClientSerializer restClientSerializer;
+    final WebClient client;
+    final StringConverter stringConverter;
+
+    public boolean isEmpty() {
+        return url == null
+            || restClientSerializer == null
+            || client == null
+            || stringConverter == null;
+    }
+
+    public RestClientConfiguration useDefaultsForNullProperties(KosConfiguration kosConfiguration) {
+        if (!isEmpty()) return this;
+
+        return new RestClientConfiguration(
+            url, headers,
+            firstNotNull(restClientSerializer, kosConfiguration.getDefaultRestClientSerializer()),
+            firstNotNull(client, kosConfiguration.getDefaultVertxWebClient()),
+            firstNotNull(stringConverter, kosConfiguration.getStringConverter())
+        );
+    }
 
     @Getter(lazy = true)
     private final boolean isHttps = getUrl().getProtocol().equals("https");

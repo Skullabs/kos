@@ -19,11 +19,9 @@ package kos.core;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import lombok.val;
-import lombok.var;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
@@ -33,24 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class LangTest {
-
-    @DisplayName("future(Future) SHOULD return itself")
-    @Test void future()
-    {
-        val future = mock(Future.class);
-        val found = Lang.asFuture(future);
-        assertSame(future, found);
-    }
-
-    @DisplayName("future(Object) SHOULD return a completed future wrapping the object")
-    @Test void futureObject()
-    {
-        val object = new Object();
-        val future = Lang.asFuture(object);
-
-        assertTrue(future.succeeded());
-        assertSame(object, future.result());
-    }
 
     @DisplayName("instantiate(String) SHOULD instantiate a class with default constructor")
     @Test void instantiateString()
@@ -107,7 +87,7 @@ class LangTest {
             }
         });
 
-        assertEquals(waitTime, (int)Lang.await(promise.future()));
+        assertEquals(waitTime, (int)Lang.waitFor(promise.future()));
     }
 
     @DisplayName("sorted(Iterable,Comparator) SHOULD sort according to the order defined by the Comparator")

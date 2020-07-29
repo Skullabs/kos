@@ -21,10 +21,16 @@ import io.vertx.core.http.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
 import io.vertx.ext.web.handler.*;
+import kos.api.KosConfiguration;
+import kos.api.RequestHandler;
+import kos.api.RequestInterceptor;
+import kos.api.Response;
 import lombok.*;
 import lombok.experimental.*;
 
 import java.util.*;
+
+import static kos.core.Lang.mapOf;
 
 /**
  * Small layer over {@link Router} that aims to simplify a few common
@@ -34,20 +40,22 @@ import java.util.*;
 @Accessors(fluent = true)
 public class SimplifiedRouter implements Handler<HttpServerRequest> {
 
-    private static final Logger log = Kos.logger(SimplifiedRouter.class);
-
+    private final Logger log;
     private final Router router;
     private final RequestInterceptorHandler interceptorHandler;
     private final Map<HttpMethod, Boolean> httpMethodsThatMayReadBody;
+    private final KosConfiguration kosConfiguration;
 
-    public SimplifiedRouter(Router router, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
-        this(router, new RequestInterceptorHandler(router), httpMethodsThatMayReadBody);
+    public SimplifiedRouter(KosConfiguration kosConfiguration, Router router, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
+        this(kosConfiguration, router, new RequestInterceptorHandler(router), httpMethodsThatMayReadBody);
     }
 
-    private SimplifiedRouter(Router router, RequestInterceptorHandler interceptor, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
+    private SimplifiedRouter(KosConfiguration kosConfiguration, Router router, RequestInterceptorHandler interceptor, Map<HttpMethod, Boolean> httpMethodsThatMayReadBody) {
         this.interceptorHandler = interceptor;
         this.router = router;
         this.httpMethodsThatMayReadBody = httpMethodsThatMayReadBody;
+        this.log = kosConfiguration.createLoggerFor(getClass());
+        this.kosConfiguration = kosConfiguration;
     }
 
     /**
@@ -64,7 +72,23 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
      * @param interceptor the interceptor handler.
      */
     public void intercept( RequestInterceptor interceptor ) {
+        intercept(interceptor, true);
+    }
+
+    /**
+     * Registers a {@link Handler} to intercept all requests.
+     *
+     * @param tryHandleExceptions if set true, it will wrap the interceptor and try to handle possible
+     *                            exceptions that might be thrown. It won't be capable to handle
+     *                            those that might happen on a different thread though.
+     * @param interceptor the interceptor handler.
+     */
+    public void intercept( RequestInterceptor interceptor, boolean tryHandleExceptions ) {
         log.info("Registering interceptor " + interceptor.getClass().getCanonicalName() );
+
+        if (tryHandleExceptions)
+            interceptor = SafeRequestInterceptor.wrap(interceptor, kosConfiguration);
+
         interceptorHandler.register( interceptor );
     }
 
@@ -94,7 +118,7 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
             router.route().method(method).handler( BodyHandler.create() );
 
         router.route( method, path )
-            .handler( SafeRoutingContextHandler.wrap(handler) );
+            .handler( SafeRoutingContextHandler.wrap(handler, kosConfiguration) );
 
         log.debug( "Registered " + handler.getClass() );
     }
@@ -106,29 +130,29 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
      * @param router the router instance that will be wrapped
      * @return An instance of {@link SimplifiedRouter}
      */
-    public static SimplifiedRouter wrapWithAutoBodyReader( Router router ){
+    public static SimplifiedRouter wrapWithAutoBodyReader( KosConfiguration kosConfiguration, Router router ){
         val methodsThatWillReadBodyBeforeExec =
-            Lang.mapOf( HttpMethod.POST, false )
+            mapOf( HttpMethod.POST, false )
              .and( HttpMethod.PUT, false )
              .and( HttpMethod.PATCH, false )
                 .build();
 
         return new SimplifiedRouter(
-            router,
+            kosConfiguration, router,
             methodsThatWillReadBodyBeforeExec
         );
     }
 
     /**
      * Creates a basic instance of {@link SimplifiedRouter}. Developers that use
-     * routers created by this method should configure themselves how to read the
+     * instances created by this method should configure themselves how to read the
      * request body payload.
      *
      * @param router the router instance that will be wrapped
      * @return An instance of {@link SimplifiedRouter}
      */
-    public static SimplifiedRouter wrapWithNoAuthBodyReader( Router router ) {
-        return new SimplifiedRouter( router, Collections.emptyMap() );
+    public static SimplifiedRouter wrapWithNoAutoBodyReader( KosConfiguration kosConfiguration, Router router ) {
+        return new SimplifiedRouter( kosConfiguration, router, Collections.emptyMap() );
     }
 
     @Override
@@ -140,13 +164,29 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
     private static class SafeRoutingContextHandler implements Handler<RoutingContext> {
 
         final Handler<RoutingContext> handler;
+        final KosConfiguration kosConfiguration;
 
         @Override
         public void handle(RoutingContext event) {
             try {
                 handler.handle(event);
             } catch ( Throwable cause ) {
-                Response.sendError( event, cause );
+                Response.sendError(kosConfiguration, event, cause);
+            }
+        }
+    }
+
+    @RequiredArgsConstructor( staticName = "wrap" )
+    private static class SafeRequestInterceptor implements RequestInterceptor {
+
+        final RequestInterceptor interceptor;
+        final KosConfiguration kosConfiguration;
+
+        @Override public void handle(HttpServerRequest request, Handler<HttpServerRequest> next) {
+            try {
+                interceptor.handle(request, next);
+            } catch (Throwable cause) {
+                Response.sendError(kosConfiguration, request, cause);
             }
         }
     }

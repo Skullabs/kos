@@ -16,74 +16,123 @@
 
 package kos.core;
 
-import io.vertx.core.*;
-import io.vertx.core.json.*;
-import io.vertx.core.logging.*;
-import lombok.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Handler;
+import io.vertx.core.Verticle;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import kos.api.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 /**
  * Simplified launcher wrapping Vert.x deployment of {@link Verticle}s.
  *
  * @see ImplementationLoader Default implementation loader.
  */
+@RequiredArgsConstructor
 public class Launcher {
 
-    private final Logger log = Kos.logger(Launcher.class);
-    private final Iterable<Verticle> verticles = Kos.implementationLoader.instancesExposedAs(Verticle.class);
-    private final List<Verticle> customVerticles = new ArrayList<>();
+    private final MutableKosConfiguration conf;
+    private Logger log;
+
+    public Launcher(){
+        this(new MutableKosConfiguration());
+    }
 
     public static void main(String[] args) {
         new Launcher().run();
     }
 
     public void run(){
-        configureApp();
-
-        log.info("Loading configuration...");
-        Kos.readConfig( res -> {
-            deployVerticlesWithConfig( res );
+        configureKos();
+        loadLogger();
+        readDeploymentConfig( deploymentConf -> {
+            deployCustomApplication(deploymentConf);
+            deployWebServer( deploymentConf );
+            deployVerticles( deploymentConf );
         });
     }
 
-    /**
-     * Configure a Kos application. This method will be called before sensible
-     * default configuration has been loaded. It is the ideal place for developers
-     * to overwrite {@link Kos} defaults that would be applied widely in the
-     * application.
-     */
-    public void configureApp() {}
+    private void configureKos() {
+        val plugins = conf.getSpi().instancesExposedAs(ConfigurationPlugin.class);
 
-    /**
-     * Manually deploy the following verticles using the discovered configuration
-     * loaded by {@link Kos}.
-     *
-     * @param verticles verticles to be deployed.
-     */
-    public void deploy(Verticle...verticles) {
-        Collections.addAll(customVerticles, verticles);
+        for (val plugin : plugins)
+            plugin.configure(conf);
+
+        conf.getImplementationLoader().register(KosConfiguration.class, conf);
     }
 
-    private void deployVerticlesWithConfig(JsonObject config) {
-        log.info("Looking for verticles to be deployed...");
-        deployVerticlesWithConfig(config, verticles);
-
-        if (!customVerticles.isEmpty())
-            deployVerticlesWithConfig(config, customVerticles);
-
-        log.debug("Deployment finished");
+    void loadLogger() {
+        log = conf.createLoggerFor(getClass());
     }
 
-    private void deployVerticlesWithConfig(JsonObject config, Iterable<Verticle> verticles) {
-        val vertx = Kos.defaultVertx.get();
+    void readDeploymentConfig(Handler<DeploymentContext> handler) {
+        log.info("Reading deployment configuration...");
+        conf.getConfigRetriever().getConfig( res -> {
+            if (res.succeeded()) {
+                val deploymentConf = new DeploymentContext(conf, res.result());
+                handler.handle(deploymentConf);
+            } else
+                throw new KosException("Failed to read configuration", res.cause());
+        });
+    }
 
-        for (val verticle : verticles) {
-            val options = new DeploymentOptions().setConfig(config);
-            log.info("Deploying " + verticle.getClass().getCanonicalName() + "...");
-            vertx.deployVerticle(verticle, options);
+    void deployCustomApplication(DeploymentContext deploymentContextConf) {
+        val application = deploymentContextConf.instanceOf(Application.class);
+        if (application.isPresent()) {
+            val customApp = application.get();
+            log.info("Configuring custom application " + customApp.getClass().getCanonicalName() + "...");
+            customApp.configure(deploymentContextConf);
+        }
+    }
+
+    void deployWebServer(DeploymentContext deploymentContext) {
+        if (deploymentContext.getApplicationConfig().getBoolean( "auto-config", true )) {
+            log.info("Deploying Vert.x WebServer...");
+            val server = new VertxWebServer(deploymentContext.kosConfiguration);
+            deploymentContext.deploy(server);
+        }
+    }
+
+    void deployVerticles(DeploymentContext deploymentContext) {
+        log.info("Looking for verticles...");
+
+        val verticles = deploymentContext.instancesExposedAs(Verticle.class);
+        deploymentContext.deploy(verticles);
+    }
+
+    @Getter
+    static class DeploymentContext implements kos.api.DeploymentContext {
+
+        final KosConfiguration kosConfiguration;
+        final JsonObject applicationConfig;
+        final Logger log;
+
+        DeploymentContext(KosConfiguration kosConfiguration, JsonObject applicationConfig) {
+            this.kosConfiguration = kosConfiguration;
+            this.applicationConfig = applicationConfig;
+            this.log = kosConfiguration.createLoggerFor(getClass());
+        }
+
+        <T> Iterable<T> instancesExposedAs(Class<T> targetClass) {
+            return kosConfiguration.getImplementationLoader().instancesExposedAs(targetClass);
+        }
+
+        <T> ImplementationLoader.Result<T> instanceOf(Class<T> targetClass) {
+            return kosConfiguration.getImplementationLoader().instanceOf(targetClass);
+        }
+
+        public void deploy(Iterable<Verticle> verticles) {
+            for (val verticle : verticles)
+                deploy(verticle);
+        }
+
+        public void deploy(Verticle verticle) {
+            val options = new DeploymentOptions().setConfig(applicationConfig);
+            log.debug("Deploying " + verticle.getClass().getCanonicalName() + "...");
+            kosConfiguration.getDefaultVertx().deployVerticle(verticle, options);
         }
     }
 }
