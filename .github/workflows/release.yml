@@ -1,6 +1,13 @@
 name: Release
 
 on:
+  push:
+    branches:
+      - "feature/[0-9]+*"
+      - "hotfix/[0-9]+*"
+      - "bugfix/[0-9]+*"
+      - "enhancement/[0-9]+*"
+      - "version/*"
   pull_request:
     types: [closed]
     branches: [ "master" ]
@@ -38,5 +45,34 @@ jobs:
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 
+      - name: Compute Release Version
+        run: |
+          . builder.conf
+          echo ::set-env name=RELEASE_VERSION::${CURRENT_VERSION}
+          echo ::set-env name=CHANGE_LOG::$(git log -1 --pretty=%B)
+
       - name: Publish to Sonatype Staging Repository
         run: ./builder.sh remote
+
+      - name: Debug
+        env:
+          CHANGE_LOG: ${{ steps.vars.outputs.CHANGE_LOG }}
+          RELEASE_VERSION: ${{ steps.vars.outputs.RELEASE_VERSION }}
+        run: |
+          echo ${CHANGE_LOG}
+          echo ${RELEASE_VERSION}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ steps.vars.outputs.RELEASE_VERSION }}
+          release_name: v${{ steps.vars.outputs.RELEASE_VERSION }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
