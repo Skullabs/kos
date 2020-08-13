@@ -5,6 +5,25 @@ artifactId: kos-bom
 version: "0.5.0"
 packaging: pom
 
+name: kos-bom
+description: "Bill of Materials"
+url: "https://github.com/Skullabs/kos/"
+
+licenses:
+  - name: "The Apache Software License, Version 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.txt"
+    distribution: "repo"
+
+developers:
+  - id: miere
+    name: "Miere Liniel Teixeira"
+    email: "miere.teixeira@gmail.com"
+
+scm:
+  connection: "scm:git:git@github.com:Skullabs/kos.git/kos-parent"
+  developerConnection: "scm:git:git@github.com:Skullabs/kos.git/kos-parent"
+  url: "scm:git:git@github.com:Skullabs/kos.git/kos-parent"
+
 dependencyManagement:
   dependencies:
   - { groupId: "io.skullabs.kos", artifactId: kos-core, version: "0.5.0" }
