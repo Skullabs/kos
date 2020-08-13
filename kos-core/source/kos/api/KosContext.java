@@ -50,4 +50,14 @@ public interface KosContext
     @NonNull HttpServerOptions getHttpServerOptions();
 
     @NonNull ImplementationLoader getSpi();
+
+    Future<Void> runBlocking(RunnerThatMightFail runner);
+
+    <T> Future<T> computeBlocking(SupplierThatMightFail<T> supplier);
+
+    @FunctionalInterface
+    interface SupplierThatMightFail<T> { T get() throws Exception; }
+
+    @FunctionalInterface
+    interface RunnerThatMightFail { void run() throws Exception; }
 }

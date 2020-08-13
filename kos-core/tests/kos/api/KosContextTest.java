@@ -53,6 +53,27 @@ class KosContextTest
         assertNotNull(logger);
     }
 
+    @DisplayName("Scenario: Run Blocking")
+    @Nested class RunBlocking {
+
+        @SneakyThrows
+        @DisplayName("Should compute a value in backgroup")
+        @Test void scenario1(){
+            val future = conf.computeBlocking(() -> 123);
+            val computed = Lang.waitFor(future);
+            assertEquals(Integer.valueOf(123), computed);
+        }
+
+        @SneakyThrows
+        @DisplayName("Should run a task in background")
+        @Test void scenario2(){
+            val runJobInBg = new AtomicBoolean();
+            val future = conf.runBlocking(() -> runJobInBg.set(true));
+            Lang.waitFor(future);
+            assertTrue(runJobInBg.get());
+        }
+    }
+
     @DisplayName("Scenario: Serializers")
     @Nested class SerializersScenario {
 
