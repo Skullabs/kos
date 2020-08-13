@@ -19,7 +19,7 @@ package kos.core;
 
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
-import kos.api.MutableKosConfiguration;
+import kos.api.MutableKosContext;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -33,8 +33,8 @@ import static org.mockito.Mockito.mock;
 
 class VertxFuturesTest {
 
-    final MutableKosConfiguration configuration =
-        new MutableKosConfiguration().setDefaultVertx(Vertx.vertx());
+    final MutableKosContext configuration =
+        new MutableKosContext().setDefaultVertx(Vertx.vertx());
 
     final VertxFutures futures = new VertxFutures(configuration);
 

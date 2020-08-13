@@ -17,7 +17,7 @@
 package kos.injector;
 
 import io.vertx.core.json.JsonObject;
-import kos.api.MutableKosConfiguration;
+import kos.api.MutableKosContext;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.doReturn;
 @ExtendWith(MockitoExtension.class)
 class JsonObjectProducerTest {
 
-    MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
+    MutableKosContext kosConfiguration = new MutableKosContext();
     @Mock JsonObject delegatedJsonObject;
 
     @BeforeEach

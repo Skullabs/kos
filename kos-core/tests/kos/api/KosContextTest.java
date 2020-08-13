@@ -18,13 +18,18 @@ package kos.api;
 
 import io.vertx.config.ConfigRetriever;
 import io.vertx.config.impl.ConfigRetrieverImpl;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.logging.JULLogDelegateFactory;
 import io.vertx.core.spi.logging.LogDelegateFactory;
+import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.*;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,10 +37,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 @DisplayName("Unit: KosConfiguration")
-class KosConfigurationTest {
+class KosContextTest
+{
 
     final ImplementationLoader spi = mock( ImplementationLoader.class );
-    final MutableKosConfiguration conf = new MutableKosConfiguration(spi);
+    final MutableKosContext conf = new MutableKosContext(spi);
 
     @BeforeEach void setUpMocks(){
         doReturn(ImplementationLoader.Result.empty()).when(spi).anyInstanceOf( eq(ImplementationLoader.class) );

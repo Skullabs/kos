@@ -18,9 +18,8 @@ package kos.injector;
 
 import injector.*;
 import io.vertx.core.logging.*;
-import kos.api.KosConfiguration;
+import kos.api.KosContext;
 import kos.api.WebServerEventListener;
-import kos.core.*;
 import lombok.*;
 
 @ExposedAs(WebServerEventListener.class)
@@ -29,12 +28,12 @@ public class InjectorJobRunner implements WebServerEventListener {
     private final Logger logger;
     private final Injector injector;
 
-    public InjectorJobRunner(KosConfiguration kosConfiguration, Injector injector){
-        if (kosConfiguration == null)
+    public InjectorJobRunner(KosContext kosContext, Injector injector){
+        if (kosContext == null)
             throw new IllegalArgumentException("kosConfiguration is null");
 
         this.injector = injector;
-        this.logger = kosConfiguration.createLoggerFor(getClass());
+        this.logger = kosContext.createLoggerFor(getClass());
     }
 
     @Override

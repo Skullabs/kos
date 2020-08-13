@@ -18,8 +18,8 @@ class DefaultExceptionHandler implements ExceptionHandler
 {
     private final Lang.Lazy<Logger> log;
 
-    public DefaultExceptionHandler(KosConfiguration kosConfiguration) {
-        this.log = Lang.Lazy.by(() -> kosConfiguration.createLoggerFor(DefaultExceptionHandler.class));
+    public DefaultExceptionHandler(KosContext kosContext) {
+        this.log = Lang.Lazy.by(() -> kosContext.createLoggerFor(DefaultExceptionHandler.class));
     }
 
     @Override

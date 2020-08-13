@@ -1,5 +1,6 @@
 package kos.api;
 
+import io.vertx.core.Future;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -11,7 +12,8 @@ import lombok.NonNull;
  * to configure Vert.x internals. This object is read-only representation of all
  * sensible configuration that have been previously defined at the Kos's launch.
  */
-public interface KosConfiguration {
+public interface KosContext
+{
 
     @NonNull ImplementationLoader getImplementationLoader();
 

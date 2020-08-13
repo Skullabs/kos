@@ -18,14 +18,13 @@ package kos.core.client;
 
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.client.WebClient;
-import kos.api.KosConfiguration;
+import kos.api.KosContext;
 import kos.core.KosException;
 import kos.api.StringConverter;
 import lombok.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
 
 import static kos.core.Lang.firstNotNull;
 
@@ -52,14 +51,14 @@ public class RestClientConfiguration {
             || stringConverter == null;
     }
 
-    public RestClientConfiguration useDefaultsForNullProperties(KosConfiguration kosConfiguration) {
+    public RestClientConfiguration useDefaultsForNullProperties(KosContext kosContext) {
         if (!isEmpty()) return this;
 
         return new RestClientConfiguration(
             url, headers,
-            firstNotNull(restClientSerializer, kosConfiguration.getDefaultRestClientSerializer()),
-            firstNotNull(client, kosConfiguration.getDefaultVertxWebClient()),
-            firstNotNull(stringConverter, kosConfiguration.getStringConverter())
+            firstNotNull(restClientSerializer, kosContext.getDefaultRestClientSerializer()),
+            firstNotNull(client, kosContext.getDefaultVertxWebClient()),
+            firstNotNull(stringConverter, kosContext.getStringConverter())
         );
     }
 

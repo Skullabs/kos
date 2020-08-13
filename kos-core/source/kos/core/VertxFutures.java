@@ -21,11 +21,10 @@ import injector.Singleton;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
-import kos.api.KosConfiguration;
+import kos.api.KosContext;
 import lombok.val;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  *
@@ -35,7 +34,7 @@ public class VertxFutures {
 
     final Vertx vertx;
 
-    public VertxFutures(KosConfiguration configuration) {
+    public VertxFutures(KosContext configuration) {
         this.vertx = configuration.getDefaultVertx();
     }
 

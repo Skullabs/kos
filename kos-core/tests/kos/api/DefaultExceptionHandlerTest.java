@@ -27,7 +27,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,8 +34,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class DefaultExceptionHandlerTest
 {
-    KosConfiguration kosConfiguration = new MutableKosConfiguration();
-    DefaultExceptionHandler handler = new DefaultExceptionHandler(kosConfiguration);
+    KosContext kosContext = new MutableKosContext();
+    DefaultExceptionHandler handler = new DefaultExceptionHandler(kosContext);
 
     @Mock HttpServerResponse response;
     @Mock HttpServerRequest request;

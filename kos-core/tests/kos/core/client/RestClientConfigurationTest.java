@@ -1,16 +1,13 @@
 package kos.core.client;
 
-import io.vertx.core.MultiMap;
 import io.vertx.ext.web.client.WebClient;
-import kos.api.KosConfiguration;
-import kos.api.MutableKosConfiguration;
+import kos.api.KosContext;
+import kos.api.MutableKosContext;
 import kos.api.StringConverter;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -62,14 +59,14 @@ class RestClientConfigurationTest {
     @DisplayName("Scenario: Using default values from KosConfiguration for those undefined")
     @Nested class UsingDefaultValues {
         
-        KosConfiguration kosConfiguration = new MutableKosConfiguration();
+        KosContext kosContext = new MutableKosContext();
         
         @Test void scenario1(){
             val conf = RestClientConfiguration.withUrl(baseUrl).build();
-            val withDefaults = conf.useDefaultsForNullProperties(kosConfiguration);
-            assertEquals(withDefaults.getClient(), kosConfiguration.getDefaultVertxWebClient());
-            assertEquals(withDefaults.getRestClientSerializer(), kosConfiguration.getDefaultRestClientSerializer());
-            assertEquals(withDefaults.getStringConverter(), kosConfiguration.getStringConverter());
+            val withDefaults = conf.useDefaultsForNullProperties(kosContext);
+            assertEquals(withDefaults.getClient(), kosContext.getDefaultVertxWebClient());
+            assertEquals(withDefaults.getRestClientSerializer(), kosContext.getDefaultRestClientSerializer());
+            assertEquals(withDefaults.getStringConverter(), kosContext.getStringConverter());
         }
         
         @Test void scenario2(){
@@ -77,10 +74,10 @@ class RestClientConfigurationTest {
                     .client(mock(WebClient.class))
                     .build();
 
-            val withDefaults = conf.useDefaultsForNullProperties(kosConfiguration);
-            assertNotEquals(withDefaults.getClient(), kosConfiguration.getDefaultVertxWebClient());
-            assertEquals(withDefaults.getRestClientSerializer(), kosConfiguration.getDefaultRestClientSerializer());
-            assertEquals(withDefaults.getStringConverter(), kosConfiguration.getStringConverter());
+            val withDefaults = conf.useDefaultsForNullProperties(kosContext);
+            assertNotEquals(withDefaults.getClient(), kosContext.getDefaultVertxWebClient());
+            assertEquals(withDefaults.getRestClientSerializer(), kosContext.getDefaultRestClientSerializer());
+            assertEquals(withDefaults.getStringConverter(), kosContext.getStringConverter());
         }
         
         @Test void scenario3(){
@@ -89,10 +86,10 @@ class RestClientConfigurationTest {
                     .restClientSerializer(mock(RestClientSerializer.class))
                     .build();
 
-            val withDefaults = conf.useDefaultsForNullProperties(kosConfiguration);
-            assertNotEquals(withDefaults.getClient(), kosConfiguration.getDefaultVertxWebClient());
-            assertNotEquals(withDefaults.getRestClientSerializer(), kosConfiguration.getDefaultRestClientSerializer());
-            assertEquals(withDefaults.getStringConverter(), kosConfiguration.getStringConverter());
+            val withDefaults = conf.useDefaultsForNullProperties(kosContext);
+            assertNotEquals(withDefaults.getClient(), kosContext.getDefaultVertxWebClient());
+            assertNotEquals(withDefaults.getRestClientSerializer(), kosContext.getDefaultRestClientSerializer());
+            assertEquals(withDefaults.getStringConverter(), kosContext.getStringConverter());
         }
         
         @Test void scenario4(){
@@ -102,10 +99,10 @@ class RestClientConfigurationTest {
                     .stringConverter(mock(StringConverter.class))
                     .build();
 
-            val withDefaults = conf.useDefaultsForNullProperties(kosConfiguration);
-            assertNotEquals(withDefaults.getClient(), kosConfiguration.getDefaultVertxWebClient());
-            assertNotEquals(withDefaults.getRestClientSerializer(), kosConfiguration.getDefaultRestClientSerializer());
-            assertNotEquals(withDefaults.getStringConverter(), kosConfiguration.getStringConverter());
+            val withDefaults = conf.useDefaultsForNullProperties(kosContext);
+            assertNotEquals(withDefaults.getClient(), kosContext.getDefaultVertxWebClient());
+            assertNotEquals(withDefaults.getRestClientSerializer(), kosContext.getDefaultRestClientSerializer());
+            assertNotEquals(withDefaults.getStringConverter(), kosContext.getStringConverter());
         }
     }
 }

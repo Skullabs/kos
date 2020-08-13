@@ -34,11 +34,11 @@ import lombok.val;
 @RequiredArgsConstructor
 public class Launcher {
 
-    private final MutableKosConfiguration conf;
+    private final MutableKosContext conf;
     private Logger log;
 
     public Launcher(){
-        this(new MutableKosConfiguration());
+        this(new MutableKosContext());
     }
 
     public static void main(String[] args) {
@@ -61,7 +61,7 @@ public class Launcher {
         for (val plugin : plugins)
             plugin.configure(conf);
 
-        conf.getImplementationLoader().register(KosConfiguration.class, conf);
+        conf.getImplementationLoader().register(KosContext.class, conf);
     }
 
     void loadLogger() {
@@ -91,7 +91,7 @@ public class Launcher {
     void deployWebServer(DeploymentContext deploymentContext) {
         if (deploymentContext.getApplicationConfig().getBoolean( "auto-config", true )) {
             log.info("Deploying Vert.x WebServer...");
-            val server = new VertxWebServer(deploymentContext.kosConfiguration);
+            val server = new VertxWebServer(deploymentContext.kosContext);
             deploymentContext.deploy(server);
         }
     }
@@ -106,22 +106,22 @@ public class Launcher {
     @Getter
     static class DeploymentContext implements kos.api.DeploymentContext {
 
-        final KosConfiguration kosConfiguration;
+        final KosContext kosContext;
         final JsonObject applicationConfig;
         final Logger log;
 
-        DeploymentContext(KosConfiguration kosConfiguration, JsonObject applicationConfig) {
-            this.kosConfiguration = kosConfiguration;
+        DeploymentContext(KosContext kosContext, JsonObject applicationConfig) {
+            this.kosContext = kosContext;
             this.applicationConfig = applicationConfig;
-            this.log = kosConfiguration.createLoggerFor(getClass());
+            this.log = kosContext.createLoggerFor(getClass());
         }
 
         <T> Iterable<T> instancesExposedAs(Class<T> targetClass) {
-            return kosConfiguration.getImplementationLoader().instancesExposedAs(targetClass);
+            return kosContext.getImplementationLoader().instancesExposedAs(targetClass);
         }
 
         <T> ImplementationLoader.Result<T> instanceOf(Class<T> targetClass) {
-            return kosConfiguration.getImplementationLoader().instanceOf(targetClass);
+            return kosContext.getImplementationLoader().instanceOf(targetClass);
         }
 
         public void deploy(Iterable<Verticle> verticles) {
@@ -132,7 +132,7 @@ public class Launcher {
         public void deploy(Verticle verticle) {
             val options = new DeploymentOptions().setConfig(applicationConfig);
             log.debug("Deploying " + verticle.getClass().getCanonicalName() + "...");
-            kosConfiguration.getDefaultVertx().deployVerticle(verticle, options);
+            kosContext.getDefaultVertx().deployVerticle(verticle, options);
         }
     }
 }

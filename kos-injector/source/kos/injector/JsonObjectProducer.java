@@ -19,15 +19,15 @@ package kos.injector;
 import injector.Producer;
 import injector.Singleton;
 import io.vertx.core.json.JsonObject;
-import kos.api.KosConfiguration;
+import kos.api.KosContext;
 
 @Singleton
 public class JsonObjectProducer {
 
     final JsonObject jsonObject;
 
-    public JsonObjectProducer(KosConfiguration kosConfiguration) {
-        jsonObject = new LazyJsonObject(kosConfiguration::readApplicationConfig);
+    public JsonObjectProducer(KosContext kosContext) {
+        jsonObject = new LazyJsonObject(kosContext::readApplicationConfig);
     }
 
     @Producer

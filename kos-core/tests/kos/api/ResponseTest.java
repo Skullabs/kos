@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 
 class ResponseTest {
 
-    final KosConfiguration kosConfiguration = new MutableKosConfiguration();
+    final KosContext kosContext = new MutableKosContext();
     @Mock HttpServerRequest serverRequest;
     @Mock HttpServerResponse serverResponse;
     @Mock RoutingContext routingContext;
@@ -58,7 +58,8 @@ class ResponseTest {
         assertTrue(response instanceof EmptyResponse);
         assertEquals(200, response.statusCode());
 
-        response.send(kosConfiguration, serverResponse);
+        response.send(kosContext, serverResponse);
+        verify(serverResponse).setStatusCode(eq(200));
         verify(serverResponse).end();
         verifyNoMoreInteractions(serverResponse);
     }
@@ -69,7 +70,8 @@ class ResponseTest {
         assertTrue(response instanceof EmptyResponse);
         assertEquals(256, response.statusCode());
 
-        response.send(kosConfiguration, serverResponse);
+        response.send(kosContext, serverResponse);
+        verify(serverResponse).setStatusCode(eq(256));
         verify(serverResponse).end();
         verifyNoMoreInteractions(serverResponse);
     }
@@ -81,7 +83,8 @@ class ResponseTest {
         assertTrue(response instanceof RawResponse);
         assertEquals(200, response.statusCode());
 
-        response.send(kosConfiguration, serverResponse);
+        response.send(kosContext, serverResponse);
+        verify(serverResponse).setStatusCode(eq(200));
         verify(serverResponse).end(eq(buffer));
         verifyNoMoreInteractions(serverResponse);
     }
@@ -92,7 +95,8 @@ class ResponseTest {
         assertTrue(response instanceof SerializableResponse);
         assertEquals(200, response.statusCode());
 
-        response.send(kosConfiguration, serverResponse);
+        response.send(kosContext, serverResponse);
+        verify(serverResponse).setStatusCode(eq(200));
         verify(serverResponse).putHeader(eq(CONTENT_TYPE), eq((CharSequence)"application/json"));
         verify(serverResponse).end(eq(Buffer.buffer("true")));
         verifyNoMoreInteractions(serverResponse);
@@ -108,7 +112,7 @@ class ResponseTest {
             .headers( Lang.mapOf("X-Token", "123456").build())
             .statusCode(201);
 
-        Response.send(kosConfiguration, routingContext, response);
+        Response.send(kosContext, routingContext, response);
         verify(serverResponse).setStatusCode(eq(201));
         verify(serverResponse).putHeader(eq((CharSequence)"X-Token"), eq((CharSequence)"123456"));
         verify(serverResponse).putHeader(eq(CONTENT_TYPE), eq((CharSequence)"application/json"));
@@ -122,7 +126,7 @@ class ResponseTest {
         "and serializing the response payload"
     )
     @Test void sendRoutingContextObject(){
-        Response.send(kosConfiguration, routingContext, "Hello World");
+        Response.send(kosContext, routingContext, "Hello World");
         verify(serverResponse).setStatusCode(eq(200));
         verify(serverResponse).putHeader(eq(CONTENT_TYPE), eq((CharSequence)"application/json"));
         verify(serverResponse).end(eq(Buffer.buffer("\"Hello World\"")));
@@ -135,7 +139,7 @@ class ResponseTest {
         "and serializing the exception as response payload"
     )
     @Test void sendRoutingContextThrowable(){
-        Response.sendError(kosConfiguration, routingContext, new UnhandledException());
+        Response.sendError(kosContext, routingContext, new UnhandledException());
         verify(serverResponse).setStatusCode(eq(500));
         verify(serverResponse).putHeader(eq(CONTENT_TYPE), eq((CharSequence)"text/plain"));
         verify(serverResponse).end(eq(Buffer.buffer(UnhandledException.class.getCanonicalName() + "\n")));

@@ -9,7 +9,7 @@ import io.vertx.core.logging.Logger;
 import kos.api.Application;
 import kos.api.ImplementationLoader;
 import kos.api.ImplementationLoader.Result;
-import kos.api.MutableKosConfiguration;
+import kos.api.MutableKosContext;
 import kos.api.ConfigurationPlugin;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 class LauncherTest {
 
     final ImplementationLoader implLoader = spy(new ImplementationLoader.SPIImplementationLoader());
-    final MutableKosConfiguration kosConf = spy(new MutableKosConfiguration(implLoader));
+    final MutableKosContext kosConf = spy(new MutableKosContext(implLoader));
     final Launcher launcher = spy(new Launcher(kosConf));
     final Launcher.DeploymentContext deploymentContext = spy(new Launcher.DeploymentContext(kosConf, new JsonObject()));
 
@@ -107,7 +107,7 @@ class LauncherTest {
             kosConf.setConfigRetriever(confRetriever);
 
             launcher.readDeploymentConfig(deploymentContext -> {
-                assertEquals(kosConf, deploymentContext.kosConfiguration);
+                assertEquals(kosConf, deploymentContext.kosContext);
                 assertEquals(confResult.result(), deploymentContext.applicationConfig);
             });
         }

@@ -20,27 +20,24 @@ import injector.Factory;
 import injector.Injector;
 import io.vertx.core.logging.Logger;
 import kos.api.ImplementationLoader;
-import kos.api.KosConfiguration;
-import kos.core.Lang.Lazy;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import kos.api.KosContext;
 import lombok.Value;
 import lombok.val;
 
 public class InjectorImplementationLoader implements ImplementationLoader {
 
     private final Injector injector;
-    private final KosConfiguration kosConfiguration;
+    private final KosContext kosContext;
     private final Logger logger;
 
-    public InjectorImplementationLoader(KosConfiguration kosConfiguration) {
-        this.kosConfiguration = kosConfiguration;
-        this.logger = kosConfiguration.createLoggerFor(getClass());
+    public InjectorImplementationLoader(KosContext kosContext) {
+        this.kosContext = kosContext;
+        this.logger = kosContext.createLoggerFor(getClass());
         this.injector = createInjector();
     }
 
     private Injector createInjector() {
-        val injectorLogger = kosConfiguration.createLoggerFor(Injector.class);
+        val injectorLogger = kosContext.createLoggerFor(Injector.class);
         return Injector.create(false).setLogger(injectorLogger::debug);
     }
 
@@ -49,7 +46,7 @@ public class InjectorImplementationLoader implements ImplementationLoader {
         val found = injector.instancesExposedAs(interfaceType);
         if ( found.iterator().hasNext() )
             return found;
-        return kosConfiguration.getSpi().instancesExposedAs(interfaceType);
+        return kosContext.getSpi().instancesExposedAs(interfaceType);
     }
 
     @Override

@@ -16,8 +16,8 @@
 
 package kos.core.client;
 
-import kos.api.KosConfiguration;
-import kos.api.MutableKosConfiguration;
+import kos.api.KosContext;
+import kos.api.MutableKosContext;
 import kos.core.Lang;
 import kos.core.client.sample.WhatsMyIpClient;
 import lombok.val;
@@ -32,8 +32,8 @@ import static org.mockito.Mockito.mock;
 
 class RestClientFactoryTest {
 
-    final KosConfiguration kosConfiguration = new MutableKosConfiguration();
-    final RestClientFactory factory = new RestClientFactory(kosConfiguration, kosConfiguration.createLoggerFor(getClass()));
+    final KosContext kosContext = new MutableKosContext();
+    final RestClientFactory factory = new RestClientFactory(kosContext, kosContext.createLoggerFor(getClass()));
 
     @Test void loadPreviouslyExposedClient(){
         val client = factory.instantiate(RestClientConfiguration.EMPTY, WhatsMyIpClient.class);
