@@ -1,23 +1,40 @@
 modelVersion: 4.0.0
 
-parent:
-  groupId: io.skullabs.kos
-  artifactId: kos-parent
-  version: "0.4.0"
-  relativePath: "../pom.yml"
-
+groupId: io.skullabs.kos
 artifactId: kos-bom
+version: "0.5.0"
 packaging: pom
 
-dependencies:
-- { groupId: "io.skullabs.kos", artifactId: kos-core }
-- { groupId: "io.skullabs.kos", artifactId: kos-annotations }
-- { groupId: "io.skullabs.kos", artifactId: kos-config-yaml }
-- { groupId: "io.skullabs.kos", artifactId: kos-logging-slf4j }
-- { groupId: "io.skullabs.kos", artifactId: kos-injector }
-- { groupId: "io.skullabs.kos", artifactId: kos-webapp }
+dependencyManagement:
+  dependencies:
+  - { groupId: "io.skullabs.kos", artifactId: kos-core, version: "0.5.0" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-annotations, version: "0.5.0" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-config-yaml, version: "0.5.0" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-logging-slf4j, version: "0.5.0" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-injector, version: "0.5.0" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-webapp, version: "0.5.0" }
 
-- { groupId: io.skullabs.injector, artifactId: injector-core }
-- { groupId: io.skullabs.injector, artifactId: injector-processor }
+profiles:
+  - id: use-sonatype-stagging-repo
+    distributionManagement:
+      snapshotRepository: { id: ossrh, url: "https://oss.sonatype.org/content/repositories/snapshots" }
+      repository: { id: ossrh, url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/" }
 
-- { groupId: org.slf4j, artifactId: slf4j-api }
+    build:
+      plugins:
+        - groupId: org.sonatype.plugins
+          version: 1.6.3
+          artifactId: nexus-staging-maven-plugin
+          extensions: true
+          configuration:
+            serverId: ossrh
+            nexusUrl: https://oss.sonatype.org/
+            autoReleaseAfterClose: true
+
+        - groupId: org.apache.maven.plugins
+          artifactId: maven-gpg-plugin
+          version: 1.5
+          executions:
+            - id: sign-artifacts
+              phase: verify
+              goals: ["sign"]

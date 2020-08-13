@@ -18,7 +18,7 @@ package kos.core;
 
 import io.vertx.core.buffer.*;
 import io.vertx.ext.web.*;
-import kos.api.KosConfiguration;
+import kos.api.KosContext;
 import lombok.*;
 import lombok.experimental.*;
 
@@ -32,25 +32,25 @@ import lombok.experimental.*;
 @SuppressWarnings({"unchecked", "unused"})
 public class Request {
 
-    public <T> T readParam(KosConfiguration kosConfiguration, RoutingContext context, String name, Class<T> type) {
+    public <T> T readParam(KosContext kosContext, RoutingContext context, String name, Class<T> type) {
         val param = context.request().getParam(name);
-        return kosConfiguration.getStringConverter().convertTo(type, param);
+        return kosContext.getStringConverter().convertTo(type, param);
     }
 
-    public <T> T readHeader(KosConfiguration kosConfiguration, RoutingContext context, String name, Class<T> type) {
+    public <T> T readHeader(KosContext kosContext, RoutingContext context, String name, Class<T> type) {
         val header = context.request().getHeader(name);
-        return kosConfiguration.getStringConverter().convertTo(type, header);
+        return kosContext.getStringConverter().convertTo(type, header);
     }
 
-    public <T> T readBody(KosConfiguration kosConfiguration, RoutingContext context, String name, Class<T> type) {
+    public <T> T readBody(KosContext kosContext, RoutingContext context, String name, Class<T> type) {
         val buffer = context.getBody();
         if (Buffer.class.equals(type))
             return (T) buffer;
-        val serializer = kosConfiguration.getPayloadSerializationStrategy().serializerFor(context.request());
+        val serializer = kosContext.getPayloadSerializationStrategy().serializerFor(context.request());
         return serializer.deserialize(buffer, type);
     }
 
-    public <T> T readContext(KosConfiguration kosConfiguration, RoutingContext context, String name, Class<T> type) {
+    public <T> T readContext(KosContext kosContext, RoutingContext context, String name, Class<T> type) {
         return (T) context.get(name);
     }
 }

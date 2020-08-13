@@ -7,7 +7,7 @@ parent:
 
 groupId: io.skullabs.kos
 artifactId: kos-parent
-version: "0.4.0"
+version: "0.5.0"
 packaging: pom
 
 properties:
@@ -80,6 +80,14 @@ dependencies:
 build:
   pluginManagement:
     plugins:
+      - groupId: org.sonatype.plugins
+        version: 1.6.3
+        artifactId: nexus-staging-maven-plugin
+        extensions: true
+        configuration:
+          serverId: ossrh
+          nexusUrl: https://oss.sonatype.org/
+          autoReleaseAfterClose: true
 
       - groupId: org.jacoco
         version: "${version.jacoco}"

@@ -6,5 +6,5 @@ package kos.api;
  */
 public interface ConfigurationPlugin {
 
-    void configure(MutableKosConfiguration kosConfiguration);
+    void configure(MutableKosContext kosConfiguration);
 }

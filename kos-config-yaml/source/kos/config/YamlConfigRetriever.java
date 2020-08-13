@@ -4,8 +4,7 @@ import io.vertx.config.ConfigRetriever;
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.json.JsonObject;
-import kos.api.ConfigurationPlugin;
-import kos.api.KosConfiguration;
+import kos.api.KosContext;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import lombok.val;
@@ -13,7 +12,7 @@ import lombok.val;
 @RequiredArgsConstructor
 class YamlConfigRetriever implements ConfigRetriever {
 
-    private final KosConfiguration kosConfiguration;
+    private final KosContext kosContext;
 
     private ConfigRetriever delegated;
 
@@ -29,7 +28,7 @@ class YamlConfigRetriever implements ConfigRetriever {
         retrieverOptions.addStore(createStoreForProduction());
         retrieverOptions.addStore(createStoreForTest());
 
-        return ConfigRetriever.create(kosConfiguration.getDefaultVertx(), retrieverOptions);
+        return ConfigRetriever.create(kosContext.getDefaultVertx(), retrieverOptions);
     }
 
     ConfigStoreOptions createStoreForProduction() {

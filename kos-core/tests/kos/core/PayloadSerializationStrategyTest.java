@@ -19,9 +19,7 @@ package kos.core;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import kos.api.KosConfiguration;
-import kos.api.MutableKosConfiguration;
-import kos.api.PayloadSerializationStrategy;
+import kos.api.MutableKosContext;
 import kos.api.Serializer;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +38,7 @@ class PayloadSerializationStrategyTest {
     final static String PLAIN_TEXT = "text/plain";
     final static MultiMap HEADERS = MultiMap.caseInsensitiveMultiMap().add("Content-Type", PLAIN_TEXT);
     
-    final MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
+    final MutableKosContext kosConfiguration = new MutableKosContext();
 
     @Mock HttpServerRequest request;
     @Mock HttpServerResponse response;

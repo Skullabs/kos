@@ -21,19 +21,19 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
      */
     private static class ResponseTypeHandlerFor$PatchUser$PATCH1015532780 implements Handler<AsyncResult<kos.api.Response>> {
 
-        private final KosConfiguration kosConfiguration;
+        private final KosContext kosContext;
         private final RoutingContext routingContext;
 
-        ResponseTypeHandlerFor$PatchUser$PATCH1015532780(KosConfiguration kosConfiguration, RoutingContext routingContext) {
+        ResponseTypeHandlerFor$PatchUser$PATCH1015532780(KosContext kosContext, RoutingContext routingContext) {
             this.routingContext = routingContext;
-            this.kosConfiguration = kosConfiguration;
+            this.kosContext = kosContext;
         }
 
         public void handle( AsyncResult<kos.api.Response> as ) {
             if (as.succeeded())
-                Response.send(kosConfiguration, routingContext, as.result());
+                Response.send(kosContext, routingContext, as.result());
             else
-                Response.sendError(kosConfiguration, routingContext, as.cause());
+                Response.sendError(kosContext, routingContext, as.cause());
         }
     }
 
@@ -42,29 +42,29 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
      */
     private static class ResponseTypeHandlerFor$RetrieveUser$GET579951970 implements Handler<AsyncResult<kos.rest.sample.User>> {
 
-        private final KosConfiguration kosConfiguration;
+        private final KosContext kosContext;
         private final RoutingContext routingContext;
 
-        ResponseTypeHandlerFor$RetrieveUser$GET579951970(KosConfiguration kosConfiguration, RoutingContext routingContext) {
+        ResponseTypeHandlerFor$RetrieveUser$GET579951970(KosContext kosContext, RoutingContext routingContext) {
             this.routingContext = routingContext;
-            this.kosConfiguration = kosConfiguration;
+            this.kosContext = kosContext;
         }
 
         public void handle( AsyncResult<kos.rest.sample.User> as ) {
             if (as.succeeded())
-                Response.send(kosConfiguration, routingContext, as.result());
+                Response.send(kosContext, routingContext, as.result());
             else
-                Response.sendError(kosConfiguration, routingContext, as.cause());
+                Response.sendError(kosContext, routingContext, as.cause());
         }
     }
 
 
     public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
-        final KosConfiguration kosConfiguration = event.getKosConfiguration();
-        final VertxFutures futures = kosConfiguration.getImplementationLoader()
+        final KosContext kosContext = event.getKosContext();
+        final VertxFutures futures = kosContext.getImplementationLoader()
                     .instanceOfOrFail(VertxFutures.class);
 
-        final SimpleApi handler = kosConfiguration.getImplementationLoader()
+        final SimpleApi handler = kosContext.getImplementationLoader()
                     .instanceOfOrFail(SimpleApi.class);
 
         event.getRouter().route( HttpMethod.DELETE, "/api/simple/:user_id", new Handler<RoutingContext>() {
@@ -77,13 +77,13 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                     /* Call original handler */
                     handler.deleteUser(
                         /* Read request parameters */
-                        Request.readParam( kosConfiguration, routingContext, "user_id", java.lang.String.class ),
-                        Request.readContext( kosConfiguration, routingContext, "httpServerRequest", io.vertx.core.http.HttpServerRequest.class )
+                        Request.readParam( kosContext, routingContext, "user_id", java.lang.String.class ),
+                        Request.readContext( kosContext, routingContext, "httpServerRequest", io.vertx.core.http.HttpServerRequest.class )
                     );
                     /* Sends the default response for "no content". */
-                    Response.sendDefaultNoContent( kosConfiguration, routingContext );
+                    Response.sendDefaultNoContent( kosContext, routingContext );
                 } catch (Throwable cause){
-                    Response.sendError(kosConfiguration, routingContext, cause);
+                    Response.sendError(kosContext, routingContext, cause);
                 }
             }
         });
@@ -99,14 +99,14 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                     final kos.api.Response response =
                     handler.patchUser(
                         /* Read request parameters */
-                        Request.readParam( kosConfiguration, routingContext, "user_id", java.lang.String.class ),
-                        Request.readHeader( kosConfiguration, routingContext, "Authorization", java.lang.String.class ),
-                        Request.readBody( kosConfiguration, routingContext, "user", kos.rest.sample.User.class )
+                        Request.readParam( kosContext, routingContext, "user_id", java.lang.String.class ),
+                        Request.readHeader( kosContext, routingContext, "Authorization", java.lang.String.class ),
+                        Request.readBody( kosContext, routingContext, "user", kos.rest.sample.User.class )
                     );
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$PatchUser$PATCH1015532780(kosConfiguration, routingContext));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$PatchUser$PATCH1015532780(kosContext, routingContext));
                 } catch (Throwable cause){
-                    Response.sendError(kosConfiguration, routingContext, cause);
+                    Response.sendError(kosContext, routingContext, cause);
                 }
             }
         });
@@ -124,9 +124,9 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosConfiguration, routingContext));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosContext, routingContext));
                 } catch (Throwable cause){
-                    Response.sendError(kosConfiguration, routingContext, cause);
+                    Response.sendError(kosContext, routingContext, cause);
                 }
             }
         });
@@ -144,9 +144,9 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosConfiguration, routingContext));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosContext, routingContext));
                 } catch (Throwable cause){
-                    Response.sendError(kosConfiguration, routingContext, cause);
+                    Response.sendError(kosContext, routingContext, cause);
                 }
             }
         });
@@ -161,12 +161,12 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                     /* Call original handler */
                     handler.saveUser(
                         /* Read request parameters */
-                        Request.readBody( kosConfiguration, routingContext, "user", kos.rest.sample.User.class )
+                        Request.readBody( kosContext, routingContext, "user", kos.rest.sample.User.class )
                     );
                     /* Sends the default response for "no content". */
-                    Response.sendDefaultNoContent( kosConfiguration, routingContext );
+                    Response.sendDefaultNoContent( kosContext, routingContext );
                 } catch (Throwable cause){
-                    Response.sendError(kosConfiguration, routingContext, cause);
+                    Response.sendError(kosContext, routingContext, cause);
                 }
             }
         });
@@ -181,12 +181,12 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                     /* Call original handler */
                     handler.updateUser(
                         /* Read request parameters */
-                        Request.readParam( kosConfiguration, routingContext, "id", java.lang.String.class )
+                        Request.readParam( kosContext, routingContext, "id", java.lang.String.class )
                     );
                     /* Sends the default response for "no content". */
-                    Response.sendDefaultNoContent( kosConfiguration, routingContext );
+                    Response.sendDefaultNoContent( kosContext, routingContext );
                 } catch (Throwable cause){
-                    Response.sendError(kosConfiguration, routingContext, cause);
+                    Response.sendError(kosContext, routingContext, cause);
                 }
             }
         });

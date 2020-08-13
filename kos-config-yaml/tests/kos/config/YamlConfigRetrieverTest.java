@@ -18,8 +18,7 @@ package kos.config;
 
 import io.vertx.config.*;
 import io.vertx.core.json.*;
-import kos.api.KosConfiguration;
-import kos.api.MutableKosConfiguration;
+import kos.api.MutableKosContext;
 import lombok.*;
 import org.junit.jupiter.api.*;
 
@@ -30,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class YamlConfigRetrieverTest {
     
-    MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
+    MutableKosContext kosConfiguration = new MutableKosContext();
     YamlConfigRetriever retriever = new YamlConfigRetriever(kosConfiguration);
     
     @BeforeEach

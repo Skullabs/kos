@@ -18,8 +18,7 @@ package kos.core;
 
 import io.vertx.core.Context;
 import io.vertx.core.json.JsonObject;
-import kos.api.MutableKosConfiguration;
-import kos.api.PayloadSerializationStrategy;
+import kos.api.MutableKosContext;
 import kos.api.Response;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -42,7 +41,7 @@ import static org.mockito.Mockito.doReturn;
 @DisplayName("VertxWebServer: serve requests")
 class VertxWebServerTest {
 
-    final MutableKosConfiguration kosConfiguration = new MutableKosConfiguration();
+    final MutableKosContext kosConfiguration = new MutableKosContext();
     final VertxWebServer server = new VertxWebServer(kosConfiguration);
 
     @Mock Context verticleContext;

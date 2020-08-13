@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HeaderParserStrategyTest {
 
-    KosConfiguration kosConfiguration = new MutableKosConfiguration();
-    HeaderParserStrategy strategy = new HeaderParserStrategy( kosConfiguration, HttpHeaders.CONTENT_TYPE, "application/json");
+    KosContext kosContext = new MutableKosContext();
+    HeaderParserStrategy strategy = new HeaderParserStrategy(kosContext, HttpHeaders.CONTENT_TYPE, "application/json");
 
     @Test void basedOnContentType() {
         val headers = new VertxHttpHeaders();

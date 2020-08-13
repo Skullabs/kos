@@ -18,7 +18,7 @@ package kos.logging;
 import injector.ExposedAs;
 import io.vertx.core.logging.SLF4JLogDelegateFactory;
 import kos.api.ConfigurationPlugin;
-import kos.api.MutableKosConfiguration;
+import kos.api.MutableKosContext;
 
 /**
  *
@@ -26,7 +26,7 @@ import kos.api.MutableKosConfiguration;
 @ExposedAs(ConfigurationPlugin.class)
 public class Slf4jConfigurationPlugin implements ConfigurationPlugin
 {
-    @Override public void configure(MutableKosConfiguration kosConfiguration)
+    @Override public void configure(MutableKosContext kosConfiguration)
     {
         kosConfiguration.setLogDelegateFactory(new SLF4JLogDelegateFactory());
     }

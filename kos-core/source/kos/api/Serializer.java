@@ -56,7 +56,7 @@ public interface Serializer {
     @RequiredArgsConstructor
     class PlainTextSerializer implements Serializer {
         
-        final KosConfiguration kosConfiguration;
+        final KosContext kosContext;
 
         @Override
         public Buffer serialize(@NonNull Object target) {
@@ -66,7 +66,7 @@ public interface Serializer {
         @Override
         public <T> T deserialize(Buffer buffer, Class<T> type) {
             val string = buffer.toString();
-            return kosConfiguration.getStringConverter().convertTo( type, string );
+            return kosContext.getStringConverter().convertTo( type, string );
         }
 
         @Override

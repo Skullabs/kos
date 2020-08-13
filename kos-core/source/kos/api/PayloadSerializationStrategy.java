@@ -18,11 +18,8 @@ package kos.api;
 
 import io.vertx.core.*;
 import io.vertx.core.http.*;
-import kos.core.KosException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-
-import java.util.function.*;
 
 /**
  * Defines how Kos will handle the serialization and deserialization
@@ -55,20 +52,20 @@ class SingleSerializerStrategy implements PayloadSerializationStrategy {
 @RequiredArgsConstructor
 class HeaderParserStrategy implements PayloadSerializationStrategy {
 
-    final KosConfiguration kosConfiguration;
+    final KosContext kosContext;
     final CharSequence header;
     final String defaultContentType;
 
     @Override
     public Serializer serializerFor(HttpServerResponse response) {
         val contentType = parseContentTypeHeader(response.headers());
-        return kosConfiguration.getSerializerForContentType(contentType);
+        return kosContext.getSerializerForContentType(contentType);
     }
 
     @Override
     public Serializer serializerFor(HttpServerRequest request) {
         val contentType = parseContentTypeHeader(request.headers());
-        return kosConfiguration.getSerializerForContentType(contentType);
+        return kosContext.getSerializerForContentType(contentType);
     }
 
     String parseContentTypeHeader(MultiMap headers) {

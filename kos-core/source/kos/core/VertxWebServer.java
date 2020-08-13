@@ -21,7 +21,7 @@ import io.vertx.core.http.*;
 import io.vertx.core.json.*;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
-import kos.api.KosConfiguration;
+import kos.api.KosContext;
 import kos.api.RequestInterceptor;
 import kos.api.WebServerEventListener;
 import lombok.*;
@@ -39,7 +39,7 @@ import lombok.experimental.*;
 public class VertxWebServer extends AbstractVerticle {
 
     private final Logger log;
-    private final KosConfiguration kosConfiguration;
+    private final KosContext kosContext;
 
     @NonNull
     private SimplifiedRouter router;
@@ -48,32 +48,32 @@ public class VertxWebServer extends AbstractVerticle {
      * Constructs a VertxWebServer. This constructor will automatically
      * run and configure all option flags.
      *
-     * @param kosConfiguration Kos Configuration
+     * @param kosContext Kos Configuration
      */
-    public VertxWebServer(KosConfiguration kosConfiguration){
-        this(kosConfiguration, true);
+    public VertxWebServer(KosContext kosContext){
+        this(kosContext, true);
     }
 
     /**
      * Constructs VertxWebServer.
      * 
-     * @param kosConfiguration - Kos Configuration
+     * @param kosContext - Kos Configuration
      * @param autoConfigOptionals - true if should automatically config all optionals
      */
-    public VertxWebServer(KosConfiguration kosConfiguration, boolean autoConfigOptionals) {
-        this(kosConfiguration, loadDefaultRouter(kosConfiguration, autoConfigOptionals));
+    public VertxWebServer(KosContext kosContext, boolean autoConfigOptionals) {
+        this(kosContext, loadDefaultRouter(kosContext, autoConfigOptionals));
     }
 
     private static SimplifiedRouter loadDefaultRouter(
-        KosConfiguration kosConfiguration, boolean autoConfigOptionals)
+        KosContext kosContext, boolean autoConfigOptionals)
     {
-        val defaultRouter = Router.router(kosConfiguration.getDefaultVertx());
-        val simplified = SimplifiedRouter.wrapWithAutoBodyReader(kosConfiguration, defaultRouter);
+        val defaultRouter = Router.router(kosContext.getDefaultVertx());
+        val simplified = SimplifiedRouter.wrapWithAutoBodyReader(kosContext, defaultRouter);
 
         if (autoConfigOptionals) {
             defaultRouter.route().handler(new DefaultContextAttributesMemorizer());
 
-            kosConfiguration.getImplementationLoader()
+            kosContext.getImplementationLoader()
                 .instancesExposedAs(RequestInterceptor.class)
                 .forEach(simplified::intercept);
         }
@@ -84,12 +84,12 @@ public class VertxWebServer extends AbstractVerticle {
     /**
      * Constructs a VertxWebServer.
      *
-     * @param kosConfiguration a valid configuration
+     * @param kosContext a valid configuration
      * @param router a pre-configured Simplified Router.
      */
-    public VertxWebServer(KosConfiguration kosConfiguration, SimplifiedRouter router) {
-        this.log = kosConfiguration.createLoggerFor(getClass());
-        this.kosConfiguration = kosConfiguration;
+    public VertxWebServer(KosContext kosContext, SimplifiedRouter router) {
+        this.log = kosContext.createLoggerFor(getClass());
+        this.kosContext = kosContext;
         this.router = router;
     }
 
@@ -113,7 +113,7 @@ public class VertxWebServer extends AbstractVerticle {
     private void startServer( Promise<Void> startFuture ) {
         notifyWebServerDeploymentListeners();
 
-        vertx.createHttpServer( kosConfiguration.getHttpServerOptions() )
+        vertx.createHttpServer( kosContext.getHttpServerOptions() )
             .requestHandler( router() )
                 .listen( as -> {
                     if ( as.failed() )
@@ -128,10 +128,10 @@ public class VertxWebServer extends AbstractVerticle {
 
     private void notifyWebServerDeploymentListeners() {
         val deploymentListenerContext = new WebServerEventListener.BeforeDeployWebServerEvent(
-            vertx, router(), this.config(), kosConfiguration
+            vertx, router(), this.config(), kosContext
         );
 
-        kosConfiguration.getImplementationLoader()
+        kosContext.getImplementationLoader()
             .instancesExposedAs( WebServerEventListener.class )
             .forEach( cnf -> cnf.on(deploymentListenerContext) );
     }

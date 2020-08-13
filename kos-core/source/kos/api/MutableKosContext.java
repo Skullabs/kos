@@ -19,6 +19,7 @@ package kos.api;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
@@ -42,7 +43,8 @@ import static kos.api.Serializer.INVALID_SERIALIZER;
 @Getter @Setter
 @Accessors(chain = true)
 @SuppressWarnings("all")
-public class MutableKosConfiguration implements KosConfiguration {
+public class MutableKosContext implements KosContext
+{
 
     private final AvailablePayloadStrategies availablePayloadStrategies = new AvailablePayloadStrategies();
 
@@ -65,11 +67,11 @@ public class MutableKosConfiguration implements KosConfiguration {
     private ConfigRetriever configRetriever;
     private JsonObject applicationConfig;
 
-    public MutableKosConfiguration(){
+    public MutableKosContext(){
         this(new ImplementationLoader.SPIImplementationLoader());
     }
 
-    public MutableKosConfiguration(ImplementationLoader spi) {
+    public MutableKosContext(ImplementationLoader spi) {
         this.spi = spi;
         this.restClientSerializers = loadRestClientSerializers();
         this.serializers = loadSerializers();
@@ -143,6 +145,34 @@ public class MutableKosConfiguration implements KosConfiguration {
         return Lang.waitFor(future);
     }
 
+    @Override public <T> Future<T> computeBlocking(SupplierThatMightFail<T> supplier)
+    {
+        val promise = Promise.<T>promise();
+        getDefaultVertx().executeBlocking(future -> {
+            try {
+                val result = supplier.get();
+                future.complete(result);
+            } catch (Throwable cause) {
+                future.fail(cause);
+            }
+        }, promise);
+        return promise.future();
+    }
+
+    @Override public Future<Void> runBlocking(RunnerThatMightFail runner)
+    {
+        val promise = Promise.<Void>promise();
+        getDefaultVertx().executeBlocking(future -> {
+            try {
+                runner.run();
+                future.complete();
+            } catch (Throwable cause) {
+                future.fail(cause);
+            }
+        }, promise);
+        return promise.future();
+    }
+
     public class AvailablePayloadStrategies {
 
         /**
@@ -170,7 +200,7 @@ public class MutableKosConfiguration implements KosConfiguration {
          * if no serializer was found for the computed Content-Type.
          */
         public void inferSerializerFromHttpHeader(String defaultContentType) {
-            val kosConfiguration = MutableKosConfiguration.this;
+            val kosConfiguration = MutableKosContext.this;
             val strategy = new HeaderParserStrategy(kosConfiguration, HttpHeaders.CONTENT_TYPE, defaultContentType);
             setPayloadSerializationStrategy(strategy);
         }

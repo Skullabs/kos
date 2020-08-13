@@ -23,19 +23,19 @@ public class {{className}} implements WebServerEventListener {
      */
     private static class ResponseTypeHandlerFor${{uniqueName}} implements Handler<AsyncResult<{{{unwrappedResponseType}}}>> {
 
-        private final KosConfiguration kosConfiguration;
+        private final KosContext kosContext;
         private final RoutingContext routingContext;
 
-        ResponseTypeHandlerFor${{uniqueName}}(KosConfiguration kosConfiguration, RoutingContext routingContext) {
+        ResponseTypeHandlerFor${{uniqueName}}(KosContext kosContext, RoutingContext routingContext) {
             this.routingContext = routingContext;
-            this.kosConfiguration = kosConfiguration;
+            this.kosContext = kosContext;
         }
 
         public void handle( AsyncResult<{{{unwrappedResponseType}}}> as ) {
             if (as.succeeded())
-                Response.send(kosConfiguration, routingContext, as.result());
+                Response.send(kosContext, routingContext, as.result());
             else
-                Response.sendError(kosConfiguration, routingContext, as.cause());
+                Response.sendError(kosContext, routingContext, as.cause());
         }
     }
 
@@ -43,11 +43,11 @@ public class {{className}} implements WebServerEventListener {
     {{/methods}}
 
     public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
-        final KosConfiguration kosConfiguration = event.getKosConfiguration();
-        final VertxFutures futures = kosConfiguration.getImplementationLoader()
+        final KosContext kosContext = event.getKosContext();
+        final VertxFutures futures = kosContext.getImplementationLoader()
                     .instanceOfOrFail(VertxFutures.class);
 
-        final {{simpleName}} handler = kosConfiguration.getImplementationLoader()
+        final {{simpleName}} handler = kosContext.getImplementationLoader()
                     .instanceOfOrFail({{simpleName}}.class);
 
         {{#methods}}
@@ -65,17 +65,17 @@ public class {{className}} implements WebServerEventListener {
             {{/responseType}}
                     handler.{{name}}(
                         /* Read request parameters */{{#parameters}}{{^first}},{{/first}}
-                        Request.read{{data.annotation}}( kosConfiguration, routingContext, "{{data.name}}", {{data.type}}.class ){{/parameters}}
+                        Request.read{{data.annotation}}( kosContext, routingContext, "{{data.name}}", {{data.type}}.class ){{/parameters}}
                     );
             {{#containsResponseType}}
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor${{uniqueName}}(kosConfiguration, routingContext));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor${{uniqueName}}(kosContext, routingContext));
             {{/containsResponseType}}{{^containsResponseType}}
                     /* Sends the default response for "no content". */
-                    Response.sendDefaultNoContent( kosConfiguration, routingContext );
+                    Response.sendDefaultNoContent( kosContext, routingContext );
             {{/containsResponseType}}
                 } catch (Throwable cause){
-                    Response.sendError(kosConfiguration, routingContext, cause);
+                    Response.sendError(kosContext, routingContext, cause);
                 }
             }
         });

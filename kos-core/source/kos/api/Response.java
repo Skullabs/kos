@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.val;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
@@ -41,7 +41,7 @@ public interface Response {
     Map<? extends CharSequence, ? extends CharSequence> headers();
     Response headers(Map<? extends CharSequence, ? extends CharSequence> value);
 
-    void send( KosConfiguration kosConfiguration, HttpServerResponse response );
+    void send(KosContext kosContext, HttpServerResponse response );
 
     /**
      * Creates an empty response.
@@ -103,22 +103,22 @@ public interface Response {
     /**
      * Sends a response to the client. Internally it serializes the {@code payload}
      * object using a previously defined {@link PayloadSerializationStrategy}. Although this method
-     * is a semantically-equivalent to {@link Response#send(KosConfiguration,HttpServerResponse)}
+     * is a semantically-equivalent to {@link Response#send(KosContext,HttpServerResponse)}
      * it was designed to be called directly by the generated routes.
      */
-    static void send(KosConfiguration kosConfiguration, RoutingContext context, Object payload) {
+    static void send(KosContext kosContext, RoutingContext context, Object payload) {
         val httpResponse = context.response();
-        send(kosConfiguration, httpResponse, payload);
+        send(kosContext, httpResponse, payload);
     }
 
     /**
      * Sends a response to the client. Internally it serializes the {@code payload}
      * object using a previously defined {@link PayloadSerializationStrategy}. Although this method
-     * is a semantically-equivalent to {@link Response#send(KosConfiguration,HttpServerResponse)}
+     * is a semantically-equivalent to {@link Response#send(KosContext,HttpServerResponse)}
      * it was designed to be called directly by the generated routes.
      */
-    static void send(KosConfiguration kosConfiguration, HttpServerResponse httpResponse, Object payload) {
-        val serializer = kosConfiguration.getPayloadSerializationStrategy().serializerFor(httpResponse);
+    static void send(KosContext kosContext, HttpServerResponse httpResponse, Object payload) {
+        val serializer = kosContext.getPayloadSerializationStrategy().serializerFor(httpResponse);
         val buffer = serializer.serialize(payload);
         httpResponse.setStatusCode(200);
         httpResponse.putHeader(CONTENT_TYPE, serializer.contentType());
@@ -126,31 +126,14 @@ public interface Response {
     }
 
     /**
-     * Sends a response to the client. It will ensure that the defined statusCode
-     * and headers are send to the client. It also uses {@link Response#send(KosConfiguration, HttpServerResponse)}
+     * Sends a response to the client. It will delegate to
+     * {@link Response#send(KosContext, HttpServerResponse)}
      * to perform the serialization, allowing developers to design custom and powerful
      * serialization mechanisms.
      */
-    static void send(KosConfiguration kosConfiguration, RoutingContext context, Response response) {
+    static void send(KosContext kosContext, RoutingContext context, Response response) {
         val serverResponse = context.response();
-        send(kosConfiguration, serverResponse, response);
-    }
-
-    /**
-     * Sends a response to the client. It will ensure that the defined statusCode
-     * and headers are send to the client. It also uses {@link Response#send(KosConfiguration, HttpServerResponse)}
-     * to perform the serialization, allowing developers to design custom and powerful
-     * serialization mechanisms.
-     */
-    static void send(
-        KosConfiguration kosConfiguration,
-        HttpServerResponse serverResponse,
-        Response response)
-    {
-        serverResponse.setStatusCode(response.statusCode());
-        for ( val header : response.headers().entrySet() )
-            serverResponse.putHeader(header.getKey(), header.getValue());
-        response.send(kosConfiguration, serverResponse);
+        response.send(kosContext, serverResponse);
     }
 
     /**
@@ -158,8 +141,8 @@ public interface Response {
      * Internally it will use the appropriate {@link ExceptionHandler} to
      * handle the failure and generate the response object.
      */
-    static void sendError(KosConfiguration kosConfiguration, RoutingContext context, Throwable cause) {
-        sendError(kosConfiguration, context.request(), cause);
+    static void sendError(KosContext kosContext, RoutingContext context, Throwable cause) {
+        sendError(kosContext, context.request(), cause);
     }
 
     /**
@@ -167,21 +150,21 @@ public interface Response {
      * Internally it will use the appropriate {@link ExceptionHandler} to
      * handle the failure and generate the response object.
      */
-    static void sendError(KosConfiguration kosConfiguration, HttpServerRequest request, Throwable cause) {
+    static void sendError(KosContext kosContext, HttpServerRequest request, Throwable cause) {
         val httpResponse = request.response();
-        val handledResponse = kosConfiguration.getExceptionHandler()
+        val handledResponse = kosContext.getExceptionHandler()
             .handle(request, httpResponse, cause);
-        send(kosConfiguration, httpResponse, handledResponse);
+        handledResponse.send(kosContext, httpResponse);
     }
 
     /**
      * Sends an empty response to the client.
      *
-     * @see KosConfiguration#getExceptionHandler() 
+     * @see KosContext#getExceptionHandler()
      */
-    static void sendDefaultNoContent(KosConfiguration kosConfiguration, RoutingContext context) {
+    static void sendDefaultNoContent(KosContext kosContext, RoutingContext context) {
         val serverResponse = context.response();
-        serverResponse.setStatusCode(kosConfiguration.getDefaultStatusForEmptyResponses());
+        serverResponse.setStatusCode(kosContext.getDefaultStatusForEmptyResponses());
         serverResponse.end();
     }
 }
@@ -190,12 +173,18 @@ public interface Response {
 class EmptyResponse implements Response {
 
     int statusCode = 200;
-    Map<? extends CharSequence, ? extends CharSequence> headers =
-        Collections.emptyMap();
+    Map<? extends CharSequence, ? extends CharSequence> headers = new HashMap<>();
 
     @Override
-    public void send(KosConfiguration kosConfiguration, HttpServerResponse response) {
+    public void send(KosContext kosContext, HttpServerResponse response) {
+        this.sendStatusAndHeader(response);
         response.end();
+    }
+
+    protected void sendStatusAndHeader(HttpServerResponse response) {
+        response.setStatusCode(this.statusCode);
+        for ( val header : headers().entrySet() )
+            response.putHeader(header.getKey(), header.getValue());
     }
 }
 
@@ -205,8 +194,9 @@ class RawResponse extends EmptyResponse {
     final Buffer buffer;
 
     @Override
-    public void send(KosConfiguration kosConfiguration, HttpServerResponse response) {
-        response.end(buffer);
+    public void send(KosContext kosContext, HttpServerResponse response) {
+        this.sendStatusAndHeader(response);
+        response.end(this.buffer);
     }
 }
 
@@ -216,9 +206,10 @@ class SerializableResponse<T> extends EmptyResponse {
     final T payload;
 
     @Override
-    public void send(KosConfiguration kosConfiguration, HttpServerResponse response) {
-        val serializer = kosConfiguration.getPayloadSerializationStrategy().serializerFor(response);
+    public void send(KosContext kosContext, HttpServerResponse response) {
+        val serializer = kosContext.getPayloadSerializationStrategy().serializerFor(response);
         val buffer = serializer.serialize(payload);
+        this.sendStatusAndHeader(response);
         response.putHeader(CONTENT_TYPE, serializer.contentType());
         response.end(buffer);
     }

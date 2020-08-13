@@ -44,6 +44,6 @@ public interface WebServerEventListener {
         Vertx vertx;
         SimplifiedRouter router;
         JsonObject applicationConfig;
-        KosConfiguration kosConfiguration;
+        KosContext kosContext;
     }
 }
