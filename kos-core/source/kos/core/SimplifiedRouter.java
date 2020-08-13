@@ -93,6 +93,17 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
     }
 
     /**
+     * Registers a {@link Handler} to intercept all received requests.
+     *
+     * @param interceptor The interceptor handler
+     */
+    public void intercept( Handler<RoutingContext> interceptor ) {
+        log.info("Registering router interceptor "+ interceptor.getClass().getCanonicalName() );
+        val safe = new SafeRoutingContextHandler(interceptor, kosContext);
+        router.route().handler(safe);
+    }
+
+    /**
      * Routes requests made to {@code path} to a particular handler.
      *
      * @param method Http Method used by this endpoint
