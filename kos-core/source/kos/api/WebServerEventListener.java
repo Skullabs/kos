@@ -30,6 +30,10 @@ import lombok.experimental.*;
  */
 public interface WebServerEventListener {
 
+    default int priority() {
+        return 0;
+    }
+
     /**
      * Called before deploy {@link VertxWebServer} verticle.
      * @param event
