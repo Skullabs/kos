@@ -16,6 +16,10 @@ import io.vertx.ext.web.RoutingContext;
 @javax.annotation.processing.Generated("kos.apt.RestApiProcessor")
 public class SimpleApiRoutingContextHandler implements WebServerEventListener {
 
+    public int priority() {
+        return Integer.MIN_VALUE;
+    }
+
     /**
      * Response Handler for PATCH requests received by {@link SimpleApi.patchUser}.
      */

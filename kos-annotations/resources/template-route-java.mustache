@@ -16,6 +16,10 @@ import io.vertx.ext.web.RoutingContext;
 @{{jdkGeneratedAnnotation}}("kos.apt.RestApiProcessor")
 public class {{className}} implements WebServerEventListener {
 
+    public int priority() {
+        return Integer.MIN_VALUE;
+    }
+
     {{#methods}}
     {{#containsResponseType}}
     /**

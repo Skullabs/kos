@@ -27,6 +27,8 @@ import kos.api.WebServerEventListener;
 import lombok.*;
 import lombok.experimental.*;
 
+import java.util.Comparator;
+
 /**
  * Abstracts the creation of a Vert.x web server, automating a few
  * repetitive tasks, automatically loading routes if available,
@@ -131,8 +133,10 @@ public class VertxWebServer extends AbstractVerticle {
             vertx, router(), this.config(), kosContext
         );
 
-        kosContext.getImplementationLoader()
-            .instancesExposedAs( WebServerEventListener.class )
+        val listeners = kosContext.getImplementationLoader()
+            .instancesExposedAs( WebServerEventListener.class );
+
+        Lang.sorted(listeners, Comparator.comparingInt(WebServerEventListener::priority).reversed())
             .forEach( cnf -> cnf.on(deploymentListenerContext) );
     }
 
