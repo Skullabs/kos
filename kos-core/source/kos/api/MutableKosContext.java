@@ -141,7 +141,7 @@ public class MutableKosContext implements KosContext
     public JsonObject readApplicationConfig() {
         if (applicationConfig != null) return applicationConfig;
 
-        val future = Future.future(getConfigRetriever()::getConfig);
+        Future<JsonObject> future = Future.future(getConfigRetriever()::getConfig);
         return Lang.waitFor(future);
     }
 
