@@ -14,7 +14,6 @@ dependencies:
 - { groupId: io.skullabs.kos, artifactId: kos-annotations }
 - { groupId: io.skullabs.kos, artifactId: kos-config-yaml }
 - { groupId: io.skullabs.kos, artifactId: kos-injector }
-- { groupId: io.skullabs.kos, artifactId: kos-logging-slf4j }
 
 build:
   plugins:

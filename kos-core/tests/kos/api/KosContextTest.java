@@ -18,7 +18,6 @@ package kos.api;
 
 import io.vertx.config.ConfigRetriever;
 import io.vertx.config.impl.ConfigRetrieverImpl;
-import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.logging.JULLogDelegateFactory;
@@ -27,7 +26,10 @@ import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -45,12 +47,6 @@ class KosContextTest
 
     @BeforeEach void setUpMocks(){
         doReturn(ImplementationLoader.Result.empty()).when(spi).anyInstanceOf( eq(ImplementationLoader.class) );
-    }
-
-    @DisplayName("Should be able to instantiate Vert.x Logger")
-    @Test void scenario1(){
-        val logger = conf.createLoggerFor(getClass());
-        assertNotNull(logger);
     }
 
     @DisplayName("Scenario: Run Blocking")

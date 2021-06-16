@@ -25,7 +25,6 @@ import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.JULLogDelegateFactory;
-import io.vertx.core.logging.Logger;
 import io.vertx.core.spi.logging.LogDelegateFactory;
 import io.vertx.ext.web.client.WebClient;
 import kos.core.Lang;
@@ -80,7 +79,7 @@ public class MutableKosContext implements KosContext
         this.payloadSerializationStrategy = new SingleSerializerStrategy(getDefaultSerializer());
         this.httpServerOptions = new HttpServerOptions().setPort(9000);
         this.logDelegateFactory = new JULLogDelegateFactory();
-        this.exceptionHandler = new DefaultExceptionHandler(this);
+        this.exceptionHandler = new DefaultExceptionHandler();
         this.stringConverter = new StringConverter.DefaultStringConverter();
         this.defaultRestClientSerializer = getRestClientSerializers().get("application/json");
     }
@@ -126,12 +125,6 @@ public class MutableKosContext implements KosContext
         val json = new RestClientSerializer.JsonRestClientSerializer();
         serializers.put(json.contentType(), json);
         return serializers;
-    }
-
-    public Logger createLoggerFor(Class type) {
-        return new Logger(
-            getLogDelegateFactory().createDelegate(type.getCanonicalName())
-        );
     }
 
     public Serializer getSerializerForContentType(String contentType){

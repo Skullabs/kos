@@ -26,6 +26,7 @@ import kos.api.RequestInterceptor;
 import kos.api.WebServerEventListener;
 import lombok.*;
 import lombok.experimental.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Comparator;
 
@@ -36,11 +37,11 @@ import java.util.Comparator;
  * This class was either designed to be compatible with Vert.x Verticle
  * mechanism or to be run as standalone Java application.
  */
+@Slf4j
 @Setter @Getter
 @Accessors(fluent = true)
 public class VertxWebServer extends AbstractVerticle {
 
-    private final Logger log;
     private final KosContext kosContext;
 
     @NonNull
@@ -90,7 +91,6 @@ public class VertxWebServer extends AbstractVerticle {
      * @param router a pre-configured Simplified Router.
      */
     public VertxWebServer(KosContext kosContext, SimplifiedRouter router) {
-        this.log = kosContext.createLoggerFor(getClass());
         this.kosContext = kosContext;
         this.router = router;
     }

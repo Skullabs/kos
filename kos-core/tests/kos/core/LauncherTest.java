@@ -5,7 +5,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Verticle;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
 import kos.api.Application;
 import kos.api.ImplementationLoader;
 import kos.api.ImplementationLoader.Result;
@@ -30,12 +29,6 @@ class LauncherTest {
     final MutableKosContext kosConf = spy(new MutableKosContext(implLoader));
     final Launcher launcher = spy(new Launcher(kosConf));
     final Launcher.DeploymentContext deploymentContext = spy(new Launcher.DeploymentContext(kosConf, new JsonObject()));
-
-    @BeforeEach void configLog(){
-        val logger = mock(Logger.class);
-        doReturn(logger).when(kosConf).createLoggerFor(any());
-        launcher.loadLogger();
-    }
 
     @DisplayName("Should configure Kos and call plugins")
     @Test void scenario1(){

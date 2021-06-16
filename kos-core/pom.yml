@@ -17,6 +17,7 @@ dependencies:
 - { groupId: io.vertx, artifactId: vertx-web-client }
 - { groupId: com.fasterxml.jackson.core, artifactId: jackson-core }
 - { groupId: com.fasterxml.jackson.core, artifactId: jackson-databind }
+- { groupId: org.slf4j, artifactId: slf4j-api }
 - { groupId: io.skullabs.injector, artifactId: injector-core, scope: provided }
 - { groupId: io.skullabs.injector, artifactId: injector-processor, scope: provided }
   # Test dependencies

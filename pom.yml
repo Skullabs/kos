@@ -36,7 +36,6 @@ modules:
   - kos-injector
   - kos-config-yaml
   - kos-annotations
-  - kos-logging-slf4j
   - kos-bom
   - kos-webapp
   - report 
@@ -48,7 +47,6 @@ dependencyManagement:
     - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-annotations }
     - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-config-yaml }
     - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-injector }
-    - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-logging-slf4j }
     - { groupId: "${project.groupId}", version: "${project.version}", artifactId: kos-webapp }
 
     # Mockito
