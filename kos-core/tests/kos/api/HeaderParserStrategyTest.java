@@ -29,7 +29,7 @@ class HeaderParserStrategyTest {
     HeaderParserStrategy strategy = new HeaderParserStrategy(kosContext, HttpHeaders.CONTENT_TYPE, "application/json");
 
     @Test void basedOnContentType() {
-        val headers = new VertxHttpHeaders();
+        val headers = new HeadersMultiMap();
         headers.set(HttpHeaders.CONTENT_TYPE, "text/plain; charset=us-ascii");
 
         val parsed = strategy.parseContentTypeHeader(headers);
@@ -37,7 +37,7 @@ class HeaderParserStrategyTest {
     }
 
     @Test void basedOnContentType1() {
-        val headers = new VertxHttpHeaders();
+        val headers = new HeadersMultiMap();
         headers.set(HttpHeaders.CONTENT_TYPE, "text/plain");
 
         val parsed = strategy.parseContentTypeHeader(headers);
