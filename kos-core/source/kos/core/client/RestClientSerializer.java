@@ -19,6 +19,7 @@ package kos.core.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.jackson.JacksonCodec;
 import io.vertx.ext.web.client.HttpResponse;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -50,7 +51,7 @@ public interface RestClientSerializer {
 
         @Override
         public <T> T deserialize(HttpResponse<Buffer> response, TypeReference<T> type) {
-            return Json.decodeValue(response.body(), type);
+            return JacksonCodec.decodeValue(response.body(), type);
         }
     }
 }
