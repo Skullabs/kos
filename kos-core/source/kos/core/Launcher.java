@@ -20,10 +20,10 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Handler;
 import io.vertx.core.Verticle;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
 import kos.api.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 /**
@@ -31,11 +31,11 @@ import lombok.val;
  *
  * @see ImplementationLoader Default implementation loader.
  */
+@Slf4j
 @RequiredArgsConstructor
 public class Launcher {
 
     private final MutableKosContext conf;
-    private Logger log;
 
     public Launcher(){
         this(new MutableKosContext());
@@ -47,7 +47,6 @@ public class Launcher {
 
     public void run(){
         configureKos();
-        loadLogger();
         readDeploymentConfig( deploymentConf -> {
             deployCustomApplication(deploymentConf);
             deployWebServer( deploymentConf );
@@ -62,10 +61,6 @@ public class Launcher {
             plugin.configure(conf);
 
         conf.getImplementationLoader().register(KosContext.class, conf);
-    }
-
-    void loadLogger() {
-        log = conf.createLoggerFor(getClass());
     }
 
     void readDeploymentConfig(Handler<DeploymentContext> handler) {
@@ -103,17 +98,16 @@ public class Launcher {
         deploymentContext.deploy(verticles);
     }
 
+    @Slf4j
     @Getter
     static class DeploymentContext implements kos.api.DeploymentContext {
 
         final KosContext kosContext;
         final JsonObject applicationConfig;
-        final Logger log;
 
         DeploymentContext(KosContext kosContext, JsonObject applicationConfig) {
             this.kosContext = kosContext;
             this.applicationConfig = applicationConfig;
-            this.log = kosContext.createLoggerFor(getClass());
         }
 
         <T> Iterable<T> instancesExposedAs(Class<T> targetClass) {

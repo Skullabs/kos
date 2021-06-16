@@ -3,8 +3,7 @@ package kos.api;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.logging.Logger;
-import kos.core.Lang;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.io.PrintWriter;
@@ -14,14 +13,9 @@ import java.util.Collections;
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 import static java.lang.String.format;
 
+@Slf4j
 class DefaultExceptionHandler implements ExceptionHandler
 {
-    private final Lang.Lazy<Logger> log;
-
-    public DefaultExceptionHandler(KosContext kosContext) {
-        this.log = Lang.Lazy.by(() -> kosContext.createLoggerFor(DefaultExceptionHandler.class));
-    }
-
     @Override
     public Response handle(HttpServerRequest request, HttpServerResponse response, Throwable cause)
     {
@@ -35,7 +29,7 @@ class DefaultExceptionHandler implements ExceptionHandler
     private Response handleUnknownError(HttpServerRequest request, Throwable cause)
     {
         val msg = format("Failed to handle request: %s - %s", request.method(), request.uri());
-        log.get().error(msg, cause);
+        log.error(msg, cause);
 
         val stackTrace = new StringWriter();
         cause.printStackTrace(new PrintWriter(stackTrace));

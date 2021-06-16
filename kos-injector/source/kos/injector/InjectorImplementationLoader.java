@@ -18,27 +18,25 @@ package kos.injector;
 
 import injector.Factory;
 import injector.Injector;
-import io.vertx.core.logging.Logger;
 import kos.api.ImplementationLoader;
 import kos.api.KosContext;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+@Slf4j
 public class InjectorImplementationLoader implements ImplementationLoader {
 
     private final Injector injector;
     private final KosContext kosContext;
-    private final Logger logger;
 
     public InjectorImplementationLoader(KosContext kosContext) {
         this.kosContext = kosContext;
-        this.logger = kosContext.createLoggerFor(getClass());
         this.injector = createInjector();
     }
 
     private Injector createInjector() {
-        val injectorLogger = kosContext.createLoggerFor(Injector.class);
-        return Injector.create(false).setLogger(injectorLogger::debug);
+        return Injector.create(false).setLogger(log::debug);
     }
 
     @Override
@@ -54,7 +52,7 @@ public class InjectorImplementationLoader implements ImplementationLoader {
         try {
             return Result.of(injector.instanceOf(type));
         } catch ( IllegalArgumentException cause ) {
-            logger.debug("Could not get instance of " + type.getCanonicalName(), cause);
+            log.debug("Could not get instance of " + type.getCanonicalName(), cause);
             return Result.failure(cause);
         }
     }

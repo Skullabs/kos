@@ -21,19 +21,16 @@ import io.vertx.core.logging.*;
 import kos.api.KosContext;
 import kos.api.WebServerEventListener;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ExposedAs(WebServerEventListener.class)
 public class InjectorJobRunner implements WebServerEventListener {
 
-    private final Logger logger;
     private final Injector injector;
 
-    public InjectorJobRunner(KosContext kosContext, Injector injector){
-        if (kosContext == null)
-            throw new IllegalArgumentException("kosConfiguration is null");
-
+    public InjectorJobRunner(Injector injector){
         this.injector = injector;
-        this.logger = kosContext.createLoggerFor(getClass());
     }
 
     @Override
@@ -43,10 +40,10 @@ public class InjectorJobRunner implements WebServerEventListener {
 
         for (val job : jobs)
             try {
-                logger.debug("Starting job " + job);
+                log.trace("Starting job " + job);
                 job.execute();
             } catch (Exception e) {
-                logger.fatal("Failed to start job " + job, e);
+                log.error("Failed to start job " + job, e);
                 if (exitOnJobFailure)
                     System.exit(1);
             }

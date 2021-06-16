@@ -33,7 +33,7 @@ import static org.mockito.Mockito.mock;
 class RestClientFactoryTest {
 
     final KosContext kosContext = new MutableKosContext();
-    final RestClientFactory factory = new RestClientFactory(kosContext, kosContext.createLoggerFor(getClass()));
+    final RestClientFactory factory = new RestClientFactory(kosContext);
 
     @Test void loadPreviouslyExposedClient(){
         val client = factory.instantiate(RestClientConfiguration.EMPTY, WhatsMyIpClient.class);

@@ -3,7 +3,6 @@ package kos.api;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
 import io.vertx.ext.web.client.WebClient;
 import lombok.NonNull;
 
@@ -36,8 +35,6 @@ public interface KosContext
     @NonNull ExceptionHandler getExceptionHandler();
 
     @NonNull io.vertx.config.ConfigRetriever getConfigRetriever();
-
-    @NonNull Logger createLoggerFor(Class type);
 
     @NonNull JsonObject readApplicationConfig();
 

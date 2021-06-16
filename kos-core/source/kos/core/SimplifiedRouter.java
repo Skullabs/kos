@@ -27,6 +27,7 @@ import kos.api.RequestInterceptor;
 import kos.api.Response;
 import lombok.*;
 import lombok.experimental.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
@@ -37,10 +38,10 @@ import static kos.core.Lang.mapOf;
  * aspects regarding route configuration, like intercepting requests
  * and the reading body requests in a POST, PUT and PATCH requests.
  */
+@Slf4j
 @Accessors(fluent = true)
 public class SimplifiedRouter implements Handler<HttpServerRequest> {
 
-    private final Logger log;
     private final Router router;
     private final RequestInterceptorHandler interceptorHandler;
     private final Map<HttpMethod, Boolean> httpMethodsThatMayReadBody;
@@ -54,7 +55,6 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
         this.interceptorHandler = interceptor;
         this.router = router;
         this.httpMethodsThatMayReadBody = httpMethodsThatMayReadBody;
-        this.log = kosContext.createLoggerFor(getClass());
         this.kosContext = kosContext;
     }
 
