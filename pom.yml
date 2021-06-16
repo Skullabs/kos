@@ -15,7 +15,6 @@ properties:
   version.vertx: 4.1.0
   version.injector: 1.4.0
   version.mockito: 2.28.2
-  version.kotlin: 1.5.10
   version.lombok: 1.18.20
   version.slf4j: 1.7.9
   version.google-truth: 0.30
@@ -63,9 +62,6 @@ dependencyManagement:
     - { groupId: com.google.truth, artifactId: truth, version: "${version.google-truth}", scope: test }
     - { groupId: com.google.testing.compile, artifactId: compile-testing, version: "${version.compile-testing}", scope: test }
     - { groupId: org.slf4j, artifactId: slf4j-api, version: "${version.slf4j}" }
-
-    # Kotlin
-    - { groupId: org.jetbrains.kotlin, version: "${version.kotlin}", artifactId: kotlin-stdlib }
 
     # Vert.X
     - groupId: io.vertx
