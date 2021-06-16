@@ -18,7 +18,7 @@ package kos.core;
 
 import io.vertx.core.*;
 import io.vertx.core.http.*;
-import io.vertx.core.json.*;
+import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
 import kos.api.KosContext;
@@ -144,8 +144,8 @@ public class VertxWebServer extends AbstractVerticle {
      * Executes before the server is started.
      */
     protected void beforeStart() {
-        Json.mapper.findAndRegisterModules();
-        Json.prettyMapper.findAndRegisterModules();
+        DatabindCodec.mapper().findAndRegisterModules();
+        DatabindCodec.prettyMapper().findAndRegisterModules();
     }
 
     /**

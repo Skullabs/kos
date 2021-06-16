@@ -65,7 +65,7 @@ dependencyManagement:
 
     # Vert.X
     - groupId: io.vertx
-      artifactId: vertx-stack-depchain
+      artifactId: vertx-dependencies
       version: "${version.vertx}"
       type: pom
       scope: import
