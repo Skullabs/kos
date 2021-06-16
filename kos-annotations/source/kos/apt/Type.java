@@ -150,15 +150,15 @@ import static kos.core.Lang.*;
 
 @Value class MethodParam {
 
-    final String annotation;
-    final String name;
-    final String variableName;
-    final String type;
+    String annotation;
+    String name;
+    String variableName;
+    String type;
 
     static SimplifiedAST.WrappedDataIterable from( SimplifiedAST.Method method ) {
         val params = convert(method.getParameters(), p -> {
-            val annotation = extractAnnotation( method, p );
-            val name = first(annotation.getParameters().values()).orElse( p.getName() ).toString();
+            SimplifiedAST.Annotation annotation = extractAnnotation( method, p );
+            String name = first(annotation.getParameters().values()).orElse( p.getName() ).toString();
 
             return new MethodParam(
                 TypeUtils.typeSimpleName(annotation.getType()),
