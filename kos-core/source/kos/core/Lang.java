@@ -166,41 +166,4 @@ public final class Lang {
             return data;
         }
     }
-
-    /**
-     * Wraps elements that should be load lazily to avoid issues
-     * when loading them using Dependency Injection libraries other
-     * than SPI.
-     *
-     * @param <T>
-     */
-    @RequiredArgsConstructor
-    public static class Lazy<T> implements Supplier<T> {
-
-        private final Supplier<T> supplier;
-        private volatile T data;
-
-        public T get(){
-            T localData = data;
-            if ( localData == null ) {
-                localData = data;
-                synchronized (this) {
-                    if ( localData == null )
-                        data = localData = supplier.get();
-                }
-            }
-            return localData;
-        }
-
-        public void set( T newData ) {
-            synchronized (this){
-                this.data = newData;
-            }
-        }
-
-        public static <T> Lazy<T> by( Supplier<T> supplier ) {
-            return new Lazy<>( supplier );
-        }
-    }
-
 }
