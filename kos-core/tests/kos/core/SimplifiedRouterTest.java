@@ -20,6 +20,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.http.impl.HttpServerRequestInternal;
 import io.vertx.ext.web.Router;
 import kos.api.MutableKosContext;
 import kos.api.RequestHandler;
@@ -37,7 +38,8 @@ import static org.mockito.Mockito.*;
 class SimplifiedRouterTest {
 
     @Mock RequestHandler requestHandler;
-    @Mock HttpServerRequest request;
+    // FIXME: https://github.com/vert-x3/vertx-web/issues/1980
+    @Mock HttpServerRequestInternal request;
     @Mock HttpServerResponse response;
 
     SimplifiedRouter simplifiedRouter;

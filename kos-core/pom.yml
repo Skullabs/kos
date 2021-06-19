@@ -24,6 +24,7 @@ dependencies:
 - { groupId: org.junit.jupiter, artifactId: junit-jupiter-engine }
 - { groupId: org.mockito, artifactId: mockito-core }
 - { groupId: org.mockito, artifactId: mockito-junit-jupiter }
+- { groupId: ch.qos.logback, artifactId: logback-classic, scope: test }
 
 build:
   plugins:

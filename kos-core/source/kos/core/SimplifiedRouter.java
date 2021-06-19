@@ -18,7 +18,6 @@ package kos.core;
 
 import io.vertx.core.*;
 import io.vertx.core.http.*;
-import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
 import io.vertx.ext.web.handler.*;
 import kos.api.KosContext;
@@ -199,7 +198,7 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
             try {
                 interceptor.handle(request, next);
             } catch (Throwable cause) {
-                log.error("Could not execute handler", cause);
+                log.error("Could not execute interceptor " + interceptor.getClass().getCanonicalName(), cause);
                 Response.sendError(kosContext, request, cause);
             }
         }
