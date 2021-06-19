@@ -17,6 +17,7 @@ properties:
   version.mockito: 2.28.2
   version.lombok: 1.18.20
   version.slf4j: 1.7.9
+  version.logback: 1.2.3
   version.google-truth: 0.30
   version.compile-testing: "0.18"
   version.class-generator: "0.4.0"
@@ -60,6 +61,7 @@ dependencyManagement:
     - { groupId: com.google.truth, artifactId: truth, version: "${version.google-truth}", scope: test }
     - { groupId: com.google.testing.compile, artifactId: compile-testing, version: "${version.compile-testing}", scope: test }
     - { groupId: org.slf4j, artifactId: slf4j-api, version: "${version.slf4j}" }
+    - { groupId: ch.qos.logback, artifactId: logback-classic, version: "${version.logback}" }
 
     # Vert.X
     - groupId: io.vertx
