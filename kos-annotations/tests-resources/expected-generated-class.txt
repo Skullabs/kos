@@ -23,12 +23,12 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
     /**
      * Response Handler for PATCH requests received by {@link SimpleApi.patchUser}.
      */
-    private static class ResponseTypeHandlerFor$PatchUser$PATCH1015532780 implements Handler<AsyncResult<kos.api.Response>> {
+    private static class ResponseTypeHandlerFor$PatchUser$PATCH277375642 implements Handler<AsyncResult<kos.api.Response>> {
 
         private final KosContext kosContext;
         private final RoutingContext routingContext;
 
-        ResponseTypeHandlerFor$PatchUser$PATCH1015532780(KosContext kosContext, RoutingContext routingContext) {
+        ResponseTypeHandlerFor$PatchUser$PATCH277375642(KosContext kosContext, RoutingContext routingContext) {
             this.routingContext = routingContext;
             this.kosContext = kosContext;
         }
@@ -44,12 +44,12 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
     /**
      * Response Handler for GET requests received by {@link SimpleApi.retrieveUser}.
      */
-    private static class ResponseTypeHandlerFor$RetrieveUser$GET579951970 implements Handler<AsyncResult<kos.rest.sample.User>> {
+    private static class ResponseTypeHandlerFor$RetrieveUser$GET695106300 implements Handler<AsyncResult<kos.rest.sample.User>> {
 
         private final KosContext kosContext;
         private final RoutingContext routingContext;
 
-        ResponseTypeHandlerFor$RetrieveUser$GET579951970(KosContext kosContext, RoutingContext routingContext) {
+        ResponseTypeHandlerFor$RetrieveUser$GET695106300(KosContext kosContext, RoutingContext routingContext) {
             this.routingContext = routingContext;
             this.kosContext = kosContext;
         }
@@ -108,7 +108,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         Request.readBody( kosContext, routingContext, "user", kos.rest.sample.User.class )
                     );
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$PatchUser$PATCH1015532780(kosContext, routingContext));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$PatchUser$PATCH277375642(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
@@ -128,7 +128,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosContext, routingContext));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET695106300(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
@@ -148,7 +148,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET579951970(kosContext, routingContext));
+                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveUser$GET695106300(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
