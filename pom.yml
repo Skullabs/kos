@@ -38,8 +38,7 @@ modules:
   - kos-config-yaml
   - kos-annotations
   - kos-bom
-  - kos-webapp
-  - report 
+  - report
 
 # Pre-configured dependencies
 dependencyManagement:
