@@ -17,8 +17,6 @@
 package kos.injector;
 
 import injector.*;
-import io.vertx.core.logging.*;
-import kos.api.KosContext;
 import kos.api.WebServerEventListener;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +33,7 @@ public class InjectorJobRunner implements WebServerEventListener {
 
     @Override
     public void on(BeforeDeployWebServerEvent event) {
-        val exitOnJobFailure = event.getApplicationConfig().getBoolean("exit-on-job-failure", true);
+        val exitOnJobFailure = event.getApplicationConfig().getBoolean("injector.job.exit-on-failure", true);
         val jobs = injector.instancesExposedAs( Job.class );
 
         for (val job : jobs)
