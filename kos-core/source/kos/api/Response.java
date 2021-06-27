@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Skullabs Contributors (https://github.com/skullabs)
+ * Copyright 2019-2021 Skullabs Contributors (https://github.com/skullabs)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -153,7 +153,7 @@ public interface Response {
     static void sendError(KosContext kosContext, HttpServerRequest request, Throwable cause) {
         val httpResponse = request.response();
         val handledResponse = kosContext.getExceptionHandler()
-            .handle(request, httpResponse, cause);
+            .handle(request, cause);
         handledResponse.send(kosContext, httpResponse);
     }
 

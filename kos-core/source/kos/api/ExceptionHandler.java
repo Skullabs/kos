@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Skullabs Contributors (https://github.com/skullabs)
+ * Copyright 2019-2021 Skullabs Contributors (https://github.com/skullabs)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,7 @@
 
 package kos.api;
 
-import io.vertx.core.buffer.*;
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.logging.*;
-import io.vertx.ext.web.*;
-import kos.core.Lang;
-import lombok.*;
-
-import java.io.*;
-import java.util.*;
-
-import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
-import static java.lang.String.format;
 
 /**
  * Versatile exception handler abstraction.
@@ -40,9 +28,8 @@ public interface ExceptionHandler {
      * will be send as http response to the client.
      *
      * @param request current request context
-     * @param response object representing current response
      * @param cause error cause
      * @return object that will be send as http response to the client
      */
-    Response handle(HttpServerRequest request, HttpServerResponse response, Throwable cause);
+    Response handle(HttpServerRequest request, Throwable cause);
 }

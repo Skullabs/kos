@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Secure Code Warrior BVBA. All rights reserved.
+ * Copyright © 2020-2021 Secure Code Warrior BVBA. All rights reserved.
  * <p>
  * See your license agreement for the terms and conditions of use.
  * Any other usage without prior written consent of Secure Code Warrior BVBA is prohibited.
@@ -42,14 +42,14 @@ class DefaultExceptionHandlerTest
     @DisplayName("SHOULD return the wrapped response WHEN handling HandledResponseExceptions")
     @Test void handle(){
         val cause = new HandledResponseException(Response.UNAUTHORIZED);
-        val handledResponse = handler.handle(request, response, cause);
+        val handledResponse = handler.handle(request, cause);
         assertEquals(Response.UNAUTHORIZED, handledResponse);
     }
 
     @DisplayName("SHOULD wrapped a 500 response WHEN handling unknown exceptions")
     @Test void handle2(){
         val cause = new NullPointerException("id is null");
-        val handledResponse = handler.handle(request, response, cause);
+        val handledResponse = handler.handle(request, cause);
         assertEquals(500, handledResponse.statusCode());
         assertEquals(
             Map.of(HttpHeaders.CONTENT_TYPE, "text/plain"),
