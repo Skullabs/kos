@@ -37,6 +37,7 @@ import java.net.URL;
 
 import static io.vertx.core.http.HttpMethod.GET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @DisplayName("VertxWebServer: serve requests")
@@ -49,10 +50,10 @@ class VertxWebServerTest {
     @Mock JsonObject config;
 
     @BeforeEach void simulateVerticleDeployment(){
-        kosConfiguration.getHttpServerOptions().setPort(9001);
         kosConfiguration.getAvailablePayloadStrategies().useSerializerForContentType("text/plain");
         MockitoAnnotations.initMocks(this);
         doReturn(config).when(verticleContext).config();
+        doReturn(9001).when(config).getInteger(eq("web.server.port"), eq(9000));
         server.init(kosConfiguration.getDefaultVertx(), verticleContext);
     }
 
