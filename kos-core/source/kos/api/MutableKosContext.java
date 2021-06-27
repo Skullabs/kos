@@ -24,7 +24,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.JULLogDelegateFactory;
+import io.vertx.core.logging.SLF4JLogDelegateFactory;
 import io.vertx.core.spi.logging.LogDelegateFactory;
 import io.vertx.ext.web.client.WebClient;
 import kos.core.Lang;
@@ -78,7 +78,7 @@ public class MutableKosContext implements KosContext
         this.defaultSerializer = getSerializers().get("application/json");
         this.payloadSerializationStrategy = new SingleSerializerStrategy(getDefaultSerializer());
         this.httpServerOptions = new HttpServerOptions().setPort(9000);
-        this.logDelegateFactory = new JULLogDelegateFactory();
+        this.logDelegateFactory = new SLF4JLogDelegateFactory();
         this.exceptionHandler = new DefaultExceptionHandler();
         this.stringConverter = new StringConverter.DefaultStringConverter();
         this.defaultRestClientSerializer = getRestClientSerializers().get("application/json");
@@ -164,6 +164,29 @@ public class MutableKosContext implements KosContext
             }
         }, promise);
         return promise.future();
+    }
+
+    @Override
+    public String toString() {
+        return "MutableKosContext{" +
+                "availablePayloadStrategies=" + availablePayloadStrategies +
+                ", serializers=" + serializers +
+                ", restClientSerializers=" + restClientSerializers +
+                ", spi=" + spi +
+                ", implementationLoader=" + implementationLoader +
+                ", payloadSerializationStrategy=" + payloadSerializationStrategy +
+                ", defaultStatusForEmptyResponses=" + defaultStatusForEmptyResponses +
+                ", logDelegateFactory=" + logDelegateFactory +
+                ", httpServerOptions=" + httpServerOptions +
+                ", defaultSerializer=" + defaultSerializer +
+                ", defaultRestClientSerializer=" + defaultRestClientSerializer +
+                ", defaultVertx=" + defaultVertx +
+                ", defaultVertxWebClient=" + defaultVertxWebClient +
+                ", stringConverter=" + stringConverter +
+                ", exceptionHandler=" + exceptionHandler +
+                ", configRetriever=" + configRetriever +
+                ", applicationConfig=" + applicationConfig +
+                '}';
     }
 
     public class AvailablePayloadStrategies {
