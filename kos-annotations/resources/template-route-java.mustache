@@ -73,7 +73,7 @@ public class {{className}} implements WebServerEventListener {
                     );
             {{#containsResponseType}}
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor${{uniqueName}}(kosContext, routingContext));
+                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor${{uniqueName}}(kosContext, routingContext));
             {{/containsResponseType}}{{^containsResponseType}}
                     /* Sends the default response for "no content". */
                     Response.sendDefaultNoContent( kosContext, routingContext );
