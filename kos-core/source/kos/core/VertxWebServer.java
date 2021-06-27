@@ -19,7 +19,6 @@ package kos.core;
 import io.vertx.core.*;
 import io.vertx.core.http.*;
 import io.vertx.core.json.jackson.DatabindCodec;
-import io.vertx.core.logging.*;
 import io.vertx.ext.web.*;
 import kos.api.KosContext;
 import kos.api.RequestInterceptor;
@@ -97,24 +96,21 @@ public class VertxWebServer extends AbstractVerticle {
 
     @Override
     public void start() {
+        beforeStart();
         start(Promise.promise());
     }
 
     @Override
     public void start(Promise<Void> startFuture) {
         try {
-            beforeStart();
-            startServer( startFuture );
-            startFuture.complete();
+            tryToStartServer( startFuture );
         } catch ( Throwable cause ) {
             log.error( "Could not start server", cause );
             startFuture.fail(cause);
         }
     }
 
-    private void startServer( Promise<Void> startFuture ) {
-        notifyWebServerDeploymentListeners();
-
+    private void tryToStartServer(Promise<Void> startFuture ) {
         vertx.createHttpServer( kosContext.getHttpServerOptions() )
             .requestHandler( router() )
                 .listen( as -> {
@@ -124,6 +120,7 @@ public class VertxWebServer extends AbstractVerticle {
                         val server = as.result();
                         Runtime.getRuntime().addShutdownHook(new Thread(server::close));
                         afterStart(server);
+                        startFuture.complete();
                     }
                 });
     }
@@ -144,6 +141,9 @@ public class VertxWebServer extends AbstractVerticle {
      * Executes before the server is started.
      */
     protected void beforeStart() {
+        notifyWebServerDeploymentListeners();
+        log.debug("Initializing Web Service verticle with the following configurations: " + kosContext);
+
         DatabindCodec.mapper().findAndRegisterModules();
         DatabindCodec.prettyMapper().findAndRegisterModules();
     }
