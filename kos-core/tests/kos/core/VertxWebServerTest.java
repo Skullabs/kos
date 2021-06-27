@@ -17,6 +17,7 @@
 package kos.core;
 
 import io.vertx.core.Context;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import kos.api.MutableKosContext;
 import kos.api.Response;
@@ -59,8 +60,9 @@ class VertxWebServerTest {
     @Test void canReceiveRequests(){
         server.router().route(GET, "/hello", ctx -> Response.send(kosConfiguration, ctx, "World"));
 
-        server.start();
-        Thread.sleep(500);
+        val promise = Promise.<Void>promise();
+        server.start(promise);
+        Lang.waitFor(promise.future());
 
         val response = sendGET("http://localhost:9001/hello");
         assertEquals("World", response);
