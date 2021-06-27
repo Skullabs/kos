@@ -135,6 +135,11 @@ public class MutableKosContext implements KosContext
         if (applicationConfig != null) return applicationConfig;
 
         Future<JsonObject> future = Future.future(getConfigRetriever()::getConfig);
+        future.onComplete(obj -> {
+            if (obj.succeeded())
+                applicationConfig = obj.result();
+        });
+
         return Lang.waitFor(future);
     }
 

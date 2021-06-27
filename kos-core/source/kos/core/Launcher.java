@@ -67,6 +67,7 @@ public class Launcher {
         log.info("Reading deployment configuration...");
         conf.getConfigRetriever().getConfig( res -> {
             if (res.succeeded()) {
+                conf.setApplicationConfig(res.result());
                 val deploymentConf = new DeploymentContext(conf, res.result());
                 handler.handle(deploymentConf);
             } else
