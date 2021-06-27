@@ -96,13 +96,13 @@ public class VertxWebServer extends AbstractVerticle {
 
     @Override
     public void start() {
-        beforeStart();
-        start(Promise.promise());
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public void start(Promise<Void> startFuture) {
         try {
+            beforeStart();
             tryToStartServer( startFuture );
         } catch ( Throwable cause ) {
             log.error( "Could not start server", cause );
