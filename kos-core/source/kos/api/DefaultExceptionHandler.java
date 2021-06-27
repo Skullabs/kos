@@ -2,7 +2,6 @@ package kos.api;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.http.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -17,7 +16,7 @@ import static java.lang.String.format;
 class DefaultExceptionHandler implements ExceptionHandler
 {
     @Override
-    public Response handle(HttpServerRequest request, HttpServerResponse response, Throwable cause)
+    public Response handle(HttpServerRequest request, Throwable cause)
     {
         if (cause instanceof HandledResponseException) {
             return ((HandledResponseException) cause).response;
