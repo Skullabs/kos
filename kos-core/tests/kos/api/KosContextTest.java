@@ -20,7 +20,7 @@ import io.vertx.config.ConfigRetriever;
 import io.vertx.config.impl.ConfigRetrieverImpl;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
-import io.vertx.core.logging.JULLogDelegateFactory;
+import io.vertx.core.logging.SLF4JLogDelegateFactory;
 import io.vertx.core.spi.logging.LogDelegateFactory;
 import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
@@ -145,7 +145,7 @@ class KosContextTest
 
         @DisplayName("Should return default value WHEN no object was defined via setter")
         @Test void scenario1() {
-            assertTrue(conf.getLogDelegateFactory() instanceof JULLogDelegateFactory);
+            assertTrue(conf.getLogDelegateFactory() instanceof SLF4JLogDelegateFactory);
         }
 
         @DisplayName("Should the object that was defined via setter")
