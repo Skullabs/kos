@@ -63,7 +63,7 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
                         /* Read request parameters */
                     );
                     /* Wraps response as Future */
-                    futures.asFuture(response).setHandler(new ResponseTypeHandlerFor$RetrieveLocation$GET1518549639(kosContext, routingContext));
+                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveLocation$GET1518549639(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
