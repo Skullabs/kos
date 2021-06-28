@@ -21,7 +21,22 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://skullabs.github.io/kos/04-configuring-your-app/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://skullabs.github.io/kos/05-logging/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://skullabs.github.io/kos/11-dependency-injection/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://skullabs.github.io/kos/12-internal-deployment-events/</loc>
          <lastmod>2021-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>

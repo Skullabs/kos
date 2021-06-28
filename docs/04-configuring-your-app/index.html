@@ -13,14 +13,14 @@
         <meta name="author" content="Skullabs Contributors">
       
       
-        <link rel="canonical" href="https://skullabs.github.io/kos/11-dependency-injection/">
+        <link rel="canonical" href="https://skullabs.github.io/kos/04-configuring-your-app/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
     
     
       
-        <title>Dependency Injection - Kos</title>
+        <title>Configuring your application - Kos</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dependency-injection" class="md-skip">
+        <a href="#configuring-your-application" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dependency Injection
+              Configuring your application
             
           </span>
         </div>
@@ -267,11 +267,21 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../04-configuring-your-app/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Configuring your application
       </a>
+      
     </li>
   
 
@@ -297,85 +307,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Dependency Injection
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../11-dependency-injection/" class="md-nav__link">
         Dependency Injection
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-loaders" class="md-nav__link">
-    Implementation Loaders
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation Loaders">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#jdk-service-provider" class="md-nav__link">
-    JDK Service Provider
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#injector" class="md-nav__link">
-    Injector
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#guice" class="md-nav__link">
-    Guice
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-dependency-injection-mechanism" class="md-nav__link">
-    Custom Dependency Injection Mechanism
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -429,55 +365,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-loaders" class="md-nav__link">
-    Implementation Loaders
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation Loaders">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#jdk-service-provider" class="md-nav__link">
-    JDK Service Provider
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#injector" class="md-nav__link">
-    Injector
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#guice" class="md-nav__link">
-    Guice
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-dependency-injection-mechanism" class="md-nav__link">
-    Custom Dependency Injection Mechanism
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -488,98 +375,20 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/11-dependency-injection.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/04-configuring-your-app.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="dependency-injection">Dependency Injection</h1>
-<p>Kos uses Dependency Injection as a way to allow developers to orthogonally customize
-applications without changing their codebase. This allowed Kos to generate source code,
-reducing the amount of code required by developers to write down everyday routines
-like Rest APIs and Web Clients.</p>
-<h2 id="implementation-loaders">Implementation Loaders</h2>
-<p>Internally, Kos refers to Dependency Injection mechanisms as <em>Implementation Loaders</em>.
-They are responsible to perform two basic tasks the Kos needs all the time:</p>
-<ol>
-<li>Load an object implementing a given Interface - or extending a given class</li>
-<li>Load all objects implementing a given Interface - or extending a given class</li>
-</ol>
-<p>The next topics will cover all DI mechanism provided out-of-box with Kos.</p>
-<h3 id="jdk-service-provider">JDK Service Provider</h3>
-<p>Although it is not considered a proper Dependency Injection implementation, the
-<a href="https://docs.oracle.com/javase/9/docs/api/java/util/ServiceLoader.html">ServiceLoader</a>
-implementation that is bundled with JDK is versatile enough to meet the two above mentioned
-requirements. If you want to keep you footprint small, Service Provider might be a good
-solution. It is the default Implementation Loader mechanism.</p>
-<p>To provide an implementation of a given Kos service all you have to do is implement a given
-interface (or extend a given class) and create a Service Provider meta information in the
-<code>META-INF/services</code> folder. For more details on designing a service provide please read
-the ServiceLoader documentation available
-<a href="https://docs.oracle.com/javase/9/docs/api/java/util/ServiceLoader.html#developing-service-providers">here</a>.</p>
-<h3 id="injector">Injector</h3>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>For more details on how Injector works, please proceed to its
-<a href="https://skullabs.github.io/injector/">documentation</a>.</p>
-</div>
-<p>Injector is lightweight and zero-overhead dependency injection library for JVM developers. It
-was carefully designed to make no-use of reflection by having all required meta-information
-computed at compile time. At runtime it performs only the necessary tasks required to instantiate
-classes and have its dependencies injected. The result is a blistering fast Dependency Injection
-implementation that has less than 7kb of footprint.</p>
-<p>To provide an implementation of a given Kos service all you have to do is implement a given
-interface (or extend a given class) and annotate with <code>injector.ExposedAs</code> annotation. Also,
-to make ordinary classes able to be managed by Injector you should annotated them with 
-either <code>injector.Singleton</code> or <code>injector.New</code>.</p>
-<p>Below you can find a <em>Custom Exception Handler</em> implementation.
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">injector.ExposedAs</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">kos.api.ExceptionHandler</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">kos.api.Response</span><span class="p">;</span>
-
-<span class="nd">@ExposedAs</span><span class="p">(</span><span class="n">ExceptionHandler</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomExceptionHandler</span> <span class="kd">implements</span> <span class="n">ExceptionHandler</span> <span class="p">{</span>
-
-    <span class="kd">public</span> <span class="n">Response</span> <span class="nf">handle</span><span class="p">(</span> <span class="n">RoutingContext</span> <span class="n">request</span><span class="p">,</span> <span class="n">Throwable</span> <span class="n">cause</span> <span class="p">){</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">cause</span> <span class="k">instanceof</span> <span class="n">IllegalArgumentException</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">Response</span><span class="p">.</span><span class="na">BAD_REQUEST</span><span class="p">;</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">cause</span><span class="p">.</span><span class="na">getMessage</span><span class="p">()).</span><span class="na">statusCode</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></p>
-<p>To use Injector as default Implementation Loader you need to import <code>kos-injector</code> module
-on your project.</p>
-<div class="tabbed-set" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Gradle (kts)</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-injector&quot;</span><span class="p">)</span>
-</code></pre></div>
-</div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Maven (pom.kts)</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="n">compile</span><span class="p">(</span><span class="s">&quot;io.skullabs.kos:kos-injector&quot;</span><span class="p">)</span>
-</code></pre></div>
-</div>
-<input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><label for="__tabbed_1_3">Maven (pom.xml)</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>io.skullabs.kos<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>kos-injector<span class="nt">&lt;/artifactId&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
-</div>
-</div>
-<h3 id="guice">Guice</h3>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>Although we have plans to support Guice in the near future, we hasn't created a module
-to officially support it yet. Please send us a <em>thumbs up</em> <a href="https://github.com/Skullabs/kos/issues/1">here</a>
-so we know in what to put more effort for the releases.</p>
-</div>
-<h3 id="custom-dependency-injection-mechanism">Custom Dependency Injection Mechanism</h3>
-<p>As mentioned before Kos dependency injection mechanism is quite simple and doesn't
-enforce you to stick with a single implementation. To provide your own Implementaion Loader
-you need to implement the <code>kos.api.ImplementationLoader</code> interface. Once you've
-implemented you need to register it as the default Implementation Loader by exposing
-it as Service Provider implementation. You can do so by creating a
-<code>META-INF/services/kos.api.ImplementationLoader</code> file with the canonical name of
-your just created class inside of it.</p>
+                <h1 id="configuring-your-application">Configuring your application</h1>
+<p>As any other Kos component, <em>Kos configuration</em> is an automated mechanism that
+relies on Vert.x's core api to read Yaml configuration files. This means that once
+the configuration is read you will have a JsonObject which you can interact with
+and read the desired configuration property. </p>
+<p>By default, Kos will for a file called <code>application.yml</code> in the classpath. In case
+more than one is found, all <code>application.yml</code> found in the classpath will be merged
+before being used.</p>
+<p>To access your configuration you must listen to any <a href="../12-internal-deployment-events/#web-server-events">triggered WebServer events</a>.</p>
                 
               
               
@@ -599,7 +408,7 @@ your just created class inside of it.</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../05-logging/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Logging Configuration" rel="prev">
+        <a href="../03-rest-clients/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Rest Clients" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -608,20 +417,20 @@ your just created class inside of it.</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Logging Configuration
+              Rest Clients
             </div>
           </div>
         </a>
       
       
         
-        <a href="../12-internal-deployment-events/" class="md-footer__link md-footer__link--next" aria-label="Next: Internal Deployment Events" rel="next">
+        <a href="../05-logging/" class="md-footer__link md-footer__link--next" aria-label="Next: Logging Configuration" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Internal Deployment Events
+              Logging Configuration
             </div>
           </div>
           <div class="md-footer__button md-icon">

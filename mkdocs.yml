@@ -19,7 +19,7 @@ site_dir: docs
 
 repo_url: 'https://github.com/skullabs/kos'
 edit_uri: 'https://github.com/skullabs/kos/edit/master/docs_src'
-copyright: 'Copyright &copy; 2018 - 2020 Skullabs Contributors'
+copyright: 'Copyright &copy; 2018 - 2021 Skullabs Contributors'
 
 # Plugins
 plugins:
