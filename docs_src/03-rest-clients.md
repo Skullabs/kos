@@ -28,45 +28,46 @@ The biggest difference though lies on the fact that you don't write concrete cla
 but interfaces to define your Rest Clients. You also have to annotate them with `kos.rest.RestClient`
 instead of the `kos.core.RestApi` one.
 
-```kotlin tab="Kotlin"
-import kos.rest.*
-
-@RestClient("/calc")
-interface CalculatorApiClient {
-
-    @GET("/plus/:a/:b")
-    fun plus(
-        @Param a: Int,
-        @Param b: Int
-    ): Future<Int>
-
-    @GET("/minus/:a/:b")
-    fun minus(
-        @Param a: Int,
-        @Param b: Int
-    ): Future<Int>
-}
-```
-
-```java tab="Java"
-import kos.rest.*;
-
-@RestClient("/calc")
-interface CalculatorApiClient {
-
-    @GET("/plus/:a/:b")
-    Future<Int> plus(
-        @Param Integer a,
-        @Param Integer b
-    );
-
-    @GET("/minus/:a/:b")
-    Future<Int> minus(
-        @Param Integer a,
-        @Param Integer b
-    );
-}
-```
+=== "Kotlin"
+    ```kotlin
+    import kos.rest.*
+    
+    @RestClient("/calc")
+    interface CalculatorApiClient {
+    
+        @GET("/plus/:a/:b")
+        fun plus(
+            @Param a: Int,
+            @Param b: Int
+        ): Future<Int>
+    
+        @GET("/minus/:a/:b")
+        fun minus(
+            @Param a: Int,
+            @Param b: Int
+        ): Future<Int>
+    }
+    ```
+=== "Java"
+    ```java
+    import kos.rest.*;
+    
+    @RestClient("/calc")
+    interface CalculatorApiClient {
+    
+        @GET("/plus/:a/:b")
+        Future<Int> plus(
+            @Param Integer a,
+            @Param Integer b
+        );
+    
+        @GET("/minus/:a/:b")
+        Future<Int> minus(
+            @Param Integer a,
+            @Param Integer b
+        );
+    }
+    ```
 
 ## Consuming responses to the Http Server
 Kos Rest API's will infer the response from the return type defined on your functions:
@@ -95,127 +96,127 @@ consumption they have. For further details on how Dependency Injection works wit
 please process to [this topic](../11-dependency-injection). 
 
 ### Using Dependency Injection
-```kotlin tab="Kotlin"
-import injector.*
-import kos.core.client.RestClientConfiguration
-
-@Singleton
-class CalculatorApiClientConfiguration(
-    val restClientFactory: RestClientFactory
-){
-
-    @Produces
-    // Note: for optimal performance you might consider lazy load the client
-    fun produceClient(): CalculatorApiClient {
-        val baseUrl = "https://empty.url"
-        val restConf = RestClientConfiguration.withUrl(baseUrl).build()
-        return restClientFactory.instantiate(restConf, CalculatorApiClient::class.java)
+=== "Kotlin"
+    ```kotlin
+    import injector.*
+    import kos.core.client.RestClientConfiguration
+    
+    @Singleton
+    class CalculatorApiClientConfiguration(
+        val restClientFactory: RestClientFactory
+    ){
+    
+        @Produces
+        // Note: for optimal performance you might consider lazy load the client
+        fun produceClient(): CalculatorApiClient {
+            val baseUrl = "https://empty.url"
+            val restConf = RestClientConfiguration.withUrl(baseUrl).build()
+            return restClientFactory.instantiate(restConf, CalculatorApiClient::class.java)
+        }
     }
-}
-
-
-@RestApi
-class MyApi(val calculator: CalculatorApiClient) {
-
-    @GET("/calc/2/plus/2")
-    fun calculateTwoPlusTwo() = calculator.plus(2, 2)
-}
-```
-
-```java tab="Java"
-import injector.*;
-import io.vertx.core.Future;
-import kos.core.client.RestClientConfiguration;
-
-@Singleton
-public class CalculatorApiClientConfiguration {
-
-    final RestClientFactory restClientFactory;
-
-    public CalculatorApiClientConfiguration(RestClientFactory restClientFactory) {
-        this.restClientFactory = restClientFactory;
+    
+    @RestApi
+    class MyApi(val calculator: CalculatorApiClient) {
+    
+        @GET("/calc/2/plus/2")
+        fun calculateTwoPlusTwo() = calculator.plus(2, 2)
     }
-
-    @Produces
-    // Note: for optimal performance you might consider lazy load the client
-    private CalculatorApiClient produceClient() {
-        val baseUrl = "https://empty.url";
-        val restConf = RestClientConfiguration.withUrl(baseUrl).build();
-        return restClientFactory.instantiate(restConf, CalculatorApiClient.java);
+    ```
+=== "Java"
+    ```java
+    import injector.*;
+    import io.vertx.core.Future;
+    import kos.core.client.RestClientConfiguration;
+    
+    @Singleton
+    public class CalculatorApiClientConfiguration {
+    
+        final RestClientFactory restClientFactory;
+    
+        public CalculatorApiClientConfiguration(RestClientFactory restClientFactory) {
+            this.restClientFactory = restClientFactory;
+        }
+    
+        @Produces
+        // Note: for optimal performance you might consider lazy load the client
+        private CalculatorApiClient produceClient() {
+            val baseUrl = "https://empty.url";
+            val restConf = RestClientConfiguration.withUrl(baseUrl).build();
+            return restClientFactory.instantiate(restConf, CalculatorApiClient.java);
+        }
     }
-}
-
-
-@RestApi
-public class MyApi {
-
-    final CalculatorApiClient calculator;
-
-    public MyApi(CalculatorApiClient calculator) {
-        this.calculator = calculator;
+    
+    @RestApi
+    public class MyApi {
+    
+        final CalculatorApiClient calculator;
+    
+        public MyApi(CalculatorApiClient calculator) {
+            this.calculator = calculator;
+        }
+    
+        @GET("/calc/2/plus/2")
+        Future<Integer> calculateTwoPlusTwo() {
+            return calculator.plus(2, 2);
+        }
     }
-
-    @GET("/calc/2/plus/2")
-    Future<Integer> calculateTwoPlusTwo() {
-        return calculator.plus(2, 2);
-    }
-}
-```
+    ```
 
 ### Using plain code
-```kotlin tab="Kotlin"
-import kos.core.client.RestClientConfiguration
-
-class CalculatorApiClientConfiguration {
-
-    // Note: for optimal performance please consider to use Kos.implementationLoader to instantiate it
-    val restClientFactory = RestClientFactory();
-
-    // Note: for optimal performance you might consider lazy load the client
-    fun produceClient(): CalculatorApiClient {
-        val baseUrl = "https://empty.url"
-        val restConf = RestClientConfiguration.withUrl(baseUrl).build()
-        return restClientFactory.instantiate(restConf, CalculatorApiClient::class.java)
+=== "Kotlin"
+    ```kotlin
+    import kos.core.client.RestClientConfiguration
+    
+    class CalculatorApiClientConfiguration {
+    
+        // Note: for optimal performance please consider to use Kos.implementationLoader to instantiate it
+        val restClientFactory = RestClientFactory();
+    
+        // Note: for optimal performance you might consider lazy load the client
+        fun produceClient(): CalculatorApiClient {
+            val baseUrl = "https://empty.url"
+            val restConf = RestClientConfiguration.withUrl(baseUrl).build()
+            return restClientFactory.instantiate(restConf, CalculatorApiClient::class.java)
+        }
     }
-}
-
-
-@RestApi
-class MyApi {
-
-    // Note: for optimal performance please consider to use Kos.implementationLoader to instantiate it
-    val calculator = CalculatorApiClientConfiguration().produceClient()
-
-    @GET("/calc/2/plus/2")
-    fun calculateTwoPlusTwo() = calculator.plus(2, 2)
-}
-```
-
-```java tab="Java"
-import io.vertx.core.Future;
-import kos.core.client.RestClientConfiguration;
-
-public class CalculatorApiClientConfiguration {
-
-    // Note: for optimal performance please consider to use Kos.implementationLoader to instantiate it
-    final RestClientFactory restClientFactory = new RestClientFactory();
-
-    // Note: for optimal performance you might consider lazy load the client
-    private CalculatorApiClient produceClient() {
-        val baseUrl = "https://empty.url";
-        val restConf = RestClientConfiguration.withUrl(baseUrl).build();
-        return restClientFactory.instantiate(restConf, CalculatorApiClient.java);
+    
+    
+    @RestApi
+    class MyApi {
+    
+        // Note: for optimal performance please consider to use Kos.implementationLoader to instantiate it
+        val calculator = CalculatorApiClientConfiguration().produceClient()
+    
+        @GET("/calc/2/plus/2")
+        fun calculateTwoPlusTwo() = calculator.plus(2, 2)
     }
-}
-
-@RestApi
-public class MyApi {
-
-    final CalculatorApiClient calculator = new CalculatorApiClientConfiguration().produceClient();
-
-    @GET("/calc/2/plus/2")
-    public Future<Integer> calculateTwoPlusTwo() {
-        return calculator.plus(2, 2);
+    ```
+=== "Java"
+    ```java
+    import io.vertx.core.Future;
+    import kos.core.client.RestClientConfiguration;
+    
+    public class CalculatorApiClientConfiguration {
+    
+        // Note: for optimal performance please consider to use Kos.implementationLoader to instantiate it
+        final RestClientFactory restClientFactory = new RestClientFactory();
+    
+        // Note: for optimal performance you might consider lazy load the client
+        private CalculatorApiClient produceClient() {
+            val baseUrl = "https://empty.url";
+            val restConf = RestClientConfiguration.withUrl(baseUrl).build();
+            return restClientFactory.instantiate(restConf, CalculatorApiClient.java);
+        }
     }
-}
-```
+    
+    @RestApi
+    public class MyApi {
+    
+        final CalculatorApiClient calculator = new CalculatorApiClientConfiguration().produceClient();
+    
+        @GET("/calc/2/plus/2")
+        public Future<Integer> calculateTwoPlusTwo() {
+            return calculator.plus(2, 2);
+        }
+    }
+    ```

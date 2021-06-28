@@ -29,9 +29,8 @@ plugins:
 # Extensions
 markdown_extensions:
   - admonition
-  - codehilite:
-      guess_lang: false
   - pymdownx.details
   - pymdownx.superfences
-  - toc:
-      permalink: true
+  - pymdownx.tabbed
+#  - toc:
+#      permalink: true
