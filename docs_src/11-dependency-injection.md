@@ -63,20 +63,21 @@ public class CustomExceptionHandler implements ExceptionHandler {
 To use Injector as default Implementation Loader you need to import `kos-injector` module
 on your project.
 
-```kotlin tab="Gradle (kts)"
-implementation("io.skullabs.kos:kos-injector")
-```
-
-```kotlin tab="Maven (pom.kts)"
-compile("io.skullabs.kos:kos-injector")
-```
-
-```xml tab="Maven (pom.xml)"
-<dependency>
-    <groupId>io.skullabs.kos</groupId>
-    <artifactId>kos-injector</artifactId>
-</dependency>
-```
+=== "Gradle (kts)"
+    ```kotlin
+    implementation("io.skullabs.kos:kos-injector")
+    ```
+=== "Maven (pom.kts)"
+    ```kotlin
+    compile("io.skullabs.kos:kos-injector")
+    ```
+=== "Maven (pom.xml)"
+    ```xml 
+    <dependency>
+        <groupId>io.skullabs.kos</groupId>
+        <artifactId>kos-injector</artifactId>
+    </dependency>
+    ```
 
 ### Guice
 

@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-     <loc>https://skullabs.github.io/kos/</loc>
-     <lastmod>2020-01-02</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/kos/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://skullabs.github.io/kos/01-getting-started/</loc>
-     <lastmod>2020-01-02</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/kos/01-getting-started/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://skullabs.github.io/kos/02-rest-apis/</loc>
-     <lastmod>2020-01-02</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/kos/02-rest-apis/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://skullabs.github.io/kos/03-rest-clients/</loc>
-     <lastmod>2020-01-02</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/kos/03-rest-clients/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://skullabs.github.io/kos/11-dependency-injection/</loc>
-     <lastmod>2020-01-02</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/kos/11-dependency-injection/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://skullabs.github.io/kos/21-kos-architecture/</loc>
-     <lastmod>2020-01-02</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/kos/21-kos-architecture/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
 </urlset>

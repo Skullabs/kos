@@ -8,38 +8,39 @@ To understand the benefits of using Kos, lets create a _trivial_
 a basic source code that covers the creation, removal and retrieval of user. We'll use it as persistence
 layer for two experiments: one using Kos and another one using pure Vert.x.
 
-```java tab="User.java"
-import lombok.*;
-import java.util.*;
+=== "User.java"
+    ```java
+    import lombok.*;
+    import java.util.*;
+    
+    @Data
+    public class User {
+    
+        final UUID id = UUID.randomUUID();
+        String name;
+        ZonedDateTime creationDate;
+    }
+    ```
+=== "UserRepository.java"
+    ```java
+    import io.vertx.core.*;
+    import java.time.*;
+    import java.util.*;
+    
+    interface UserRepository {
+    
+        Future<User> retrieveUserById(UUID id);
+    
+        Future<List<User>> retrieveUsersCreatedBetween(
+            ZonedDateTime initialDate, ZonedDateTime endDate);
+    
+        Future<UUID> createUser(User user);
+    
+        Future<Void> removeUser(UUID id);
+    }
+    ```
 
-@Data
-public class User {
-
-    final UUID id = UUID.randomUUID();
-    String name;
-    ZonedDateTime creationDate;
-}
-```
-
-```java tab="UserRepository.java"
-import io.vertx.core.*;
-import java.time.*;
-import java.util.*;
-
-interface UserRepository {
-
-    Future<User> retrieveUserById(UUID id);
-
-    Future<List<User>> retrieveUsersCreatedBetween(
-        ZonedDateTime initialDate, ZonedDateTime endDate);
-
-    Future<UUID> createUser(User user);
-
-    Future<Void> removeUser(UUID id);
-}
-```
-
-It worth mention that:
+It is worth mention that:
 
 - All the example files bellow are written in Java, although it may look similar if written in Kotlin or Scala.
 - `User.java` is the entity to be stored in the database - later we'll also use it as a _model_ in our Rest API.
@@ -48,172 +49,173 @@ For brevity, it uses [Lombok](http://projectlombok.org) to make example simpler.
 Lets assume that we have a class `DefaultUserRepository` else where that properly implements the required methods.
 
 ### Vanilla Vert.x Webapp
-```java tab="App.java"
-import io.vertx.core.*;
-import io.vertx.core.http.*;
-import io.vertx.ext.web.*;
-import java.util.*;
-import lombok.*;
-
-public class App { // 1
-
-    private final Vertx vertx = Vertx.create();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    void start() {
-        val configRetriever = loadConfigRetriever(); // 2
-        configRetriever.getConfig(res -> {
-            if (res.failed()) {
-                handleFatalFailure("Failed to load configuration", res.cause());
-            } else {
-                Router router = Router.router(vertx); // 3
-                // Ensure any POST message will have its body payload buffered before the
-                // expected request handler method is called.
-                router.post().handler( BodyHandler.create() );
-
-                val config = res.result();
-                deployVerticlesWithConfig(router, config);
-                startVertxHttpServer(router, config);
-            }
-        });
-    }
-
-    private ConfigRetriever loadConfigRetriever() {
-        val store = new ConfigStoreOptions()
-            .setOptional(true)
-            .setType("file")
-            .setFormat("yaml")
-            .setConfig(new JsonObject().put("path", "conf/application.yml"));
-
-        val retrieverOptions = new ConfigRetrieverOptions();
-        retrieverOptions.addStore(store);
-
-        return ConfigRetriever.create(vertx, retrieverOptions);
-    }
-
-    private void deployVerticlesWithConfig(Router router, JsonObject config){
-        val options = new DeploymentOptions().setConfig(res.result());
-        val repository = new DefaultUserRepository();
-        val userVerticle = UserApi.with(router, repository);
-        vertx.deployVerticle(verticle, options); // 4
-    }
-
-    private void startVertxHttpServer(Router router, JsonObject config){
-        val httpOptions = new HttpServerOptions(config);
-
-        vertx.createHttpServer(httpServerOptions)
-            .requestHandler(router)
-            .listen( res -> {
-                if ( res.failed() ) {
-                    handleFatalFailure("Could not start server", as.cause() );
+=== "App.java"
+    ```java
+    import io.vertx.core.*;
+    import io.vertx.core.http.*;
+    import io.vertx.ext.web.*;
+    import java.util.*;
+    import lombok.*;
+    
+    public class App { // 1
+    
+        private final Vertx vertx = Vertx.create();
+        private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+        void start() {
+            val configRetriever = loadConfigRetriever(); // 2
+            configRetriever.getConfig(res -> {
+                if (res.failed()) {
+                    handleFatalFailure("Failed to load configuration", res.cause());
                 } else {
-                    val server = res.result();
-                    Runtime.getRuntime().addShutdownHook(new Thread(server::close));
-                    logger.info("Application started and listening for requests");
+                    Router router = Router.router(vertx); // 3
+                    // Ensure any POST message will have its body payload buffered before the
+                    // expected request handler method is called.
+                    router.post().handler( BodyHandler.create() );
+    
+                    val config = res.result();
+                    deployVerticlesWithConfig(router, config);
+                    startVertxHttpServer(router, config);
                 }
             });
-    }
-
-    private void handleFatalFailure(String message, Throwable cause) {
-        log.fatal(message, cause);
-        System.exit(1);
-    }
-
-    // Starts the application from the command line.
-    public static void main(String[] args){
-        System.setProperty( // 5
-            "vertx.logger-delegate-factory-class-name",
-            SLF4JLogDelegateFactory.class.getCanonicalName()
-        );
-
-        new App().start();
-    }
-}
-```
-
-```java tab="UserApi.java"
-import io.vertx.core.http.*;
-import io.vertx.core.buffer.*;
-import io.vertx.core.logging.*;
-import io.vertx.core.json.*;
-import io.vertx.ext.web.*;
-import java.util.*;
-import java.time.*;
-import lombok.*;
-
-class UserApi { // 6
-
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
-    final UserRepository repository;
-
-    UserApi(UserRepository repository) {
-        this.repository = repository;
-    }
-
-    void retrieveUserById(RoutingContext event) {
-        val idAsString = event.request().params().get("id");
-        val id = isAsString == null ? null : UUID.fromString(isAsString); // 7
-
-        repository.retrieveUserById(id)
-            .setHandler(UserApi::defaultResponseHandler); // 8
-    }
-
-    void retrieveUsersCreatedBetween(RoutingContext event) {
-        val initialDateAsString = event.request().params().get("initDate");
-        val initialDate = ZonedDateTime.parse(initialDateAsString);
-        val endDateAsString = event.request().params().get("endDate");
-        val endDate = ZonedDateTime.parse(endDateAsString);
-
-        retrieveUsersCreatedBetween(initialDate, endDate)
-            .setHandler(UserApi::defaultResponseHandler);
-    }
-
-    void createUser(RoutingContext event) {
-        val user = Json.decodeValue(context.getBody(), User.class);
-        createUser(user)
-            .setHandler(UserApi::defaultResponseHandler);
-    }
-
-    void removeUser(RoutingContext event) {
-        val idAsString = event.request().params().get("id");
-        val id = isAsString == null ? null : UUID.fromString(isAsString);
-
-        removeUser(id)
-            .setHandler(UserApi::defaultResponseHandler);
-    }
-
-    <T> static void defaultResponseHandler(AsyncResult<T> res) { // 9
-        if (res.failed()) {
-            sendInternalServerError(event, res.cause());
-        } else {
-            sendOkResponseAsJson(event, res.result());
+        }
+    
+        private ConfigRetriever loadConfigRetriever() {
+            val store = new ConfigStoreOptions()
+                .setOptional(true)
+                .setType("file")
+                .setFormat("yaml")
+                .setConfig(new JsonObject().put("path", "conf/application.yml"));
+    
+            val retrieverOptions = new ConfigRetrieverOptions();
+            retrieverOptions.addStore(store);
+    
+            return ConfigRetriever.create(vertx, retrieverOptions);
+        }
+    
+        private void deployVerticlesWithConfig(Router router, JsonObject config){
+            val options = new DeploymentOptions().setConfig(res.result());
+            val repository = new DefaultUserRepository();
+            val userVerticle = UserApi.with(router, repository);
+            vertx.deployVerticle(verticle, options); // 4
+        }
+    
+        private void startVertxHttpServer(Router router, JsonObject config){
+            val httpOptions = new HttpServerOptions(config);
+    
+            vertx.createHttpServer(httpServerOptions)
+                .requestHandler(router)
+                .listen( res -> {
+                    if ( res.failed() ) {
+                        handleFatalFailure("Could not start server", as.cause() );
+                    } else {
+                        val server = res.result();
+                        Runtime.getRuntime().addShutdownHook(new Thread(server::close));
+                        logger.info("Application started and listening for requests");
+                    }
+                });
+        }
+    
+        private void handleFatalFailure(String message, Throwable cause) {
+            log.fatal(message, cause);
+            System.exit(1);
+        }
+    
+        // Starts the application from the command line.
+        public static void main(String[] args){
+            System.setProperty( // 5
+                "vertx.logger-delegate-factory-class-name",
+                SLF4JLogDelegateFactory.class.getCanonicalName()
+            );
+    
+            new App().start();
         }
     }
-
-    static void sendInternalServerError(RoutingContext event, Throwable cause) { // 10
-        val req = event.request();
-        logger.error("Failed to handle request: " + req..method() + " - " + .path(), cause);
-        event.response().setStatusCode(500).end();
+    ```
+=== "UserApi.java"
+    ```java
+    import io.vertx.core.http.*;
+    import io.vertx.core.buffer.*;
+    import io.vertx.core.logging.*;
+    import io.vertx.core.json.*;
+    import io.vertx.ext.web.*;
+    import java.util.*;
+    import java.time.*;
+    import lombok.*;
+    
+    class UserApi { // 6
+    
+        final Logger logger = LoggerFactory.getLogger(this.getClass());
+        final UserRepository repository;
+    
+        UserApi(UserRepository repository) {
+            this.repository = repository;
+        }
+    
+        void retrieveUserById(RoutingContext event) {
+            val idAsString = event.request().params().get("id");
+            val id = isAsString == null ? null : UUID.fromString(isAsString); // 7
+    
+            repository.retrieveUserById(id)
+                .setHandler(UserApi::defaultResponseHandler); // 8
+        }
+    
+        void retrieveUsersCreatedBetween(RoutingContext event) {
+            val initialDateAsString = event.request().params().get("initDate");
+            val initialDate = ZonedDateTime.parse(initialDateAsString);
+            val endDateAsString = event.request().params().get("endDate");
+            val endDate = ZonedDateTime.parse(endDateAsString);
+    
+            retrieveUsersCreatedBetween(initialDate, endDate)
+                .setHandler(UserApi::defaultResponseHandler);
+        }
+    
+        void createUser(RoutingContext event) {
+            val user = Json.decodeValue(context.getBody(), User.class);
+            createUser(user)
+                .setHandler(UserApi::defaultResponseHandler);
+        }
+    
+        void removeUser(RoutingContext event) {
+            val idAsString = event.request().params().get("id");
+            val id = isAsString == null ? null : UUID.fromString(isAsString);
+    
+            removeUser(id)
+                .setHandler(UserApi::defaultResponseHandler);
+        }
+    
+        static <T>  void defaultResponseHandler(AsyncResult<T> res) { // 9
+            if (res.failed()) {
+                sendInternalServerError(event, res.cause());
+            } else {
+                sendOkResponseAsJson(event, res.result());
+            }
+        }
+    
+        static void sendInternalServerError(RoutingContext event, Throwable cause) { // 10
+            val req = event.request();
+            logger.error("Failed to handle request: " + req..method() + " - " + .path(), cause);
+            event.response().setStatusCode(500).end();
+        }
+    
+        static void sendOkResponseAsJson(RoutingContext event, Object object) {
+            val buffer = Json.encodeToBuffer(object); // 11
+            event.response()
+                .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .setStatusCode(200)
+                .end(buffer);
+        }
+    
+        static UserApi create(Router router, UserRepository repository) {
+            val api = UserApi(repository);
+            router.get("/users/:id", api::retrieveUserById); // 12
+            router.get("/users/:initDate/:endDate", api::retrieveUsersCreatedBetween);
+            router.post("/users", api::createUser);
+            router.delete("/users/:id", api::removeUser);
+            return api;
+        }
     }
-
-    static void sendOkResponseAsJson(RoutingContext event, Object object) {
-        val buffer = Json.encodeToBuffer(object); // 11
-        event.response()
-            .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-            .setStatusCode(200)
-            .end(buffer);
-    }
-
-    static UserApi create(Router router, UserRepository repository) {
-        val api = UserApi(repository);
-        router.get("/users/:id", api::retrieveUserById); // 12
-        router.get("/users/:initDate/:endDate", api::retrieveUsersCreatedBetween);
-        router.post("/users", api::createUser);
-        router.delete("/users/:id", api::removeUser);
-        return api;
-    }
-}
-```
+    ```
 
 Although the above application is perfectly efficient and fast as it is reliant on Vert.x core,
 the code itself is far from simple. Let's dive into the source code and look into the numbered
@@ -260,47 +262,48 @@ The above steps indeed makes sense and covers a fairly amount of features that i
 platform, although one may expect to have less work to bridge their business logic from the network. Kos comes
 as tool to significantly reduce this layer.
 
-```java tab="UserApi.java"
-import java.util.*;
-import java.time.*;
-import kos.rest.*;
-import lombok.extern.slf4j.Slf4j;
-import injector.Singleton;
-
-@Slf4j
-@Path("users")
-@Singleton class UserApi {
-
-    final UserRepository repository;
-
-    UserApi(UserRepository repository) {
-        this.repository = repository;
+=== "UserApi.java"
+    ```java
+    import java.util.*;
+    import java.time.*;
+    import kos.rest.*;
+    import lombok.extern.slf4j.Slf4j;
+    import injector.Singleton;
+    
+    @Slf4j
+    @Path("users")
+    @Singleton class UserApi {
+    
+        final UserRepository repository;
+    
+        UserApi(UserRepository repository) {
+            this.repository = repository;
+        }
+    
+        @GET(":id")
+        Future<User> retrieveUserById(@Param UUID id) {
+            return repository.retrieveUserById(id);
+        }
+    
+        @GET(":initDate/:endDate")
+        Future<List<User>> retrieveUsersCreatedBetween(
+            @Param ZonedDateTime initDate,
+            @Param ZonedDateTime endDate
+        ) {
+            return repository.retrieveUsersCreatedBetween(initDate,endDate);
+        }
+    
+        @POST
+        Future<UUID> createUser(User user) {
+            return repository.createUser(user);
+        }
+    
+        @DELETE(":id")
+        Future<Void> removeUser(UUID id) {
+            return repository.removeUser(id);
+        }
     }
-
-    @GET(":id")
-    Future<User> retrieveUserById(@Param UUID id) {
-        return repository.retrieveUserById(id);
-    }
-
-    @GET(":initDate/:endDate")
-    Future<List<User>> retrieveUsersCreatedBetween(
-        @Param ZonedDateTime initDate,
-        @Param ZonedDateTime endDate
-    ) {
-        return repository.retrieveUsersCreatedBetween(initDate,endDate);
-    }
-
-    @POST
-    Future<UUID> createUser(User user) {
-        return repository.createUser(user);
-    }
-
-    @DELETE(":id")
-    Future<Void> removeUser(UUID id) {
-        return repository.removeUser(id);
-    }
-}
-```
+    ```
 
 It was rather simplified. Let's walk through the biggest differences we have between both examples.
 
