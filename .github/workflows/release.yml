@@ -43,8 +43,8 @@ jobs:
       - name: Compute Release Version
         run: |
           . builder.conf
-          echo ::set-env name=RELEASE_VERSION::${CURRENT_VERSION}
-          echo ::set-env name=CHANGE_LOG::$(git log -1 --pretty=%b)
+          echo "RELEASE_VERSION=${CURRENT_VERSION}" >> $GITHUB_ENV
+          echo "CHANGE_LOG=$(git log -1 --pretty=%b)" >> $GITHUB_ENV
 
       - name: Publish to Sonatype Staging Repository
         run: ./builder.sh remote
