@@ -86,13 +86,18 @@ class TypeUtils {
     List<String> asAbsolutePath(Iterable<String> rootPaths, String value) {
         val buffer = new ArrayList<String>();
         val parsedValues = parseMultiParamValue(value);
-        for ( val root : rootPaths )
+
+        val nonEmptyRootPaths = nonEmptySetOfString(rootPaths);
+        if (nonEmptyRootPaths.isEmpty())
+            nonEmptyRootPaths.add("/");
+
+        for ( val root : nonEmptyRootPaths )
             for ( val parsed : parsedValues ) {
                 val grouped = nonEmptySetOfString( asList( root, parsed ) );
                 if ( !grouped.isEmpty() ) {
                     val path = String.join("/", grouped)
-                        .replaceAll("//", "/")
-                        .replaceFirst("/$", "");
+                        .replaceAll("//+", "/")
+                        .replaceFirst("^(/.+)/$", "$1");
                     buffer.add(path);
                 } else
                     buffer.add("/");
