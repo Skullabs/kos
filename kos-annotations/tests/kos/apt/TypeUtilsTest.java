@@ -18,8 +18,14 @@ package kos.apt;
 
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TypeUtilsTest {
@@ -68,5 +74,46 @@ class TypeUtilsTest {
         val wrapped = "java.client.List<java.lang.String>";
         val expected = "java.client.List";
         assertEquals( expected, TypeUtils.rawType(wrapped).get() );
+    }
+
+    @Nested class GenerateHttpPaths {
+
+        @Test @DisplayName("should allow define / as the only path")
+        void asAbsolutePath(){
+            val httpPath = TypeUtils.asAbsolutePath(emptyList(), "/");
+            assertEquals(singletonList("/"), httpPath);
+        }
+
+        @Test @DisplayName("should remove trailing / from the path")
+        void asAbsolutePath2(){
+            val httpPath = TypeUtils.asAbsolutePath(singletonList("/root"), "/");
+            assertEquals(singletonList("/root"), httpPath);
+        }
+
+        @Test @DisplayName("should generate multiple paths for each root path")
+        void asAbsolutePath3(){
+            val httpPath = TypeUtils.asAbsolutePath(asList("/root/1","/root/2"), "/test");
+            assertEquals(asList("/root/1/test", "/root/2/test"), httpPath);
+        }
+    }
+
+    @DisplayName("Parse path handled by the Javac APT as one single String")
+    @Nested class ParsePathHandledByJavacAPTAsOneSingleString {
+
+        @DisplayName("should treat as a list")
+        @Nested class ShouldTreatAsAList {
+
+            @Test @DisplayName("when multiple of them was parsed one single string")
+            void parseMultiParamValue() {
+                val result = TypeUtils.parseMultiParamValue("{\"/v1\",\"/v2/public\"}");
+                assertEquals(asList("/v1", "/v2/public"), result);
+            }
+
+            @Test @DisplayName("when one single was defined")
+            void parseMultiParamValue1() {
+                val result = TypeUtils.parseMultiParamValue("/v2/public");
+                assertEquals(singletonList("/v2/public"), result);
+            }
+        }
     }
 }
