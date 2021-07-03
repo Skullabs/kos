@@ -71,10 +71,7 @@ public class RestClientProcessor extends AbstractKosProcessor {
     }
 
     private boolean isInterfaceOrAbstractClass(SimplifiedAST.Type type) {
-        val actualClass = Lang.classFor(type.getCanonicalName());
-        val classModifiers = actualClass.getModifiers();
-        return Modifier.isAbstract(classModifiers)
-            || Modifier.isInterface(classModifiers);
+        return type.isInterface() || type.isAbstract();
     }
 
     @Override
