@@ -34,6 +34,8 @@ public interface KosContext
 
     @NonNull ExceptionHandler getExceptionHandler();
 
+    @NonNull Validation getDefaultValidation();
+
     @NonNull io.vertx.config.ConfigRetriever getConfigRetriever();
 
     @NonNull JsonObject readApplicationConfig();
