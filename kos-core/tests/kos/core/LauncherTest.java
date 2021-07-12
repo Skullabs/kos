@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,6 +40,24 @@ class LauncherTest {
         launcher.run();
 
         verify(plugin).configure( eq(kosConf) );
+    }
+
+    @DisplayName("Should configure Kos and call plugins sorted by its priority")
+    @Test void scenario1b(){
+        val plugin = mock(ConfigurationPlugin.class);
+        doReturn(0).when(plugin).priority();
+
+        val plugin2 = mock(ConfigurationPlugin.class);
+        doReturn(1).when(plugin2).priority();
+
+        doReturn(asList(plugin, plugin2)).when(implLoader).instancesExposedAs(eq(ConfigurationPlugin.class));
+
+        launcher.run();
+
+        val ordered = inOrder(plugin2, plugin);
+
+        ordered.verify(plugin2).configure( eq(kosConf) );
+        ordered.verify(plugin).configure( eq(kosConf) );
     }
 
     @DisplayName("Should configure custom application")
