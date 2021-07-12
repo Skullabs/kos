@@ -17,7 +17,7 @@
 package kos.apt;
 
 import generator.apt.SimplifiedAST;
-import kos.core.KosException;
+import kos.core.exception.KosException;
 import kos.core.Lang;
 import kos.rest.*;
 import lombok.EqualsAndHashCode;

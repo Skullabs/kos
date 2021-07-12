@@ -27,6 +27,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.SLF4JLogDelegateFactory;
 import io.vertx.core.spi.logging.LogDelegateFactory;
 import io.vertx.ext.web.client.WebClient;
+import kos.core.exception.PredicateExceptionHandler;
 import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
 import lombok.Getter;
@@ -79,7 +80,7 @@ public class MutableKosContext implements KosContext
         this.payloadSerializationStrategy = new SingleSerializerStrategy(getDefaultSerializer());
         this.httpServerOptions = new HttpServerOptions().setPort(9000);
         this.logDelegateFactory = new SLF4JLogDelegateFactory();
-        this.exceptionHandler = new DefaultExceptionHandler();
+        this.exceptionHandler = new PredicateExceptionHandler();
         this.stringConverter = new StringConverter.DefaultStringConverter();
         this.defaultRestClientSerializer = getRestClientSerializers().get("application/json");
     }

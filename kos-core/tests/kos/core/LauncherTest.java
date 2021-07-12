@@ -10,6 +10,7 @@ import kos.api.ImplementationLoader;
 import kos.api.ImplementationLoader.Result;
 import kos.api.MutableKosContext;
 import kos.api.ConfigurationPlugin;
+import kos.core.exception.KosException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

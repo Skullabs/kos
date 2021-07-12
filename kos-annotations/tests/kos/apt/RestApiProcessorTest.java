@@ -19,7 +19,7 @@ package kos.apt;
 import generator.apt.SimplifiedAPTRunner;
 import injector.apt.InjectorProcessor;
 import kos.api.WebServerEventListener;
-import kos.core.*;
+import kos.core.exception.KosException;
 import kos.rest.sample.*;
 import lombok.*;
 import org.junit.jupiter.api.*;
