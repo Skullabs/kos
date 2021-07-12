@@ -19,7 +19,7 @@ package kos.core.client;
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.client.WebClient;
 import kos.api.KosContext;
-import kos.core.KosException;
+import kos.core.exception.KosException;
 import kos.api.StringConverter;
 import lombok.*;
 

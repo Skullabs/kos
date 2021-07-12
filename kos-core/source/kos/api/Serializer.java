@@ -18,7 +18,7 @@ package kos.api;
 
 import io.vertx.core.buffer.*;
 import io.vertx.core.json.*;
-import kos.core.KosException;
+import kos.core.exception.KosException;
 import lombok.*;
 
 import java.util.function.Function;

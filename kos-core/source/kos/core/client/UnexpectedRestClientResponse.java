@@ -18,7 +18,7 @@ package kos.core.client;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.client.HttpResponse;
-import kos.core.KosException;
+import kos.core.exception.KosException;
 import lombok.Getter;
 
 /**

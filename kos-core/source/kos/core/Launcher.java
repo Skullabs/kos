@@ -21,6 +21,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Verticle;
 import io.vertx.core.json.JsonObject;
 import kos.api.*;
+import kos.core.exception.KosException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

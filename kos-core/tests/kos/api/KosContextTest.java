@@ -22,6 +22,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.logging.SLF4JLogDelegateFactory;
 import io.vertx.core.spi.logging.LogDelegateFactory;
+import kos.core.exception.PredicateExceptionHandler;
 import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
 import lombok.SneakyThrows;
@@ -195,12 +196,12 @@ class KosContextTest
 
         @DisplayName("Should return default value WHEN no object was defined via setter")
         @Test void scenario1() {
-            assertTrue(conf.getExceptionHandler() instanceof DefaultExceptionHandler);
+            assertTrue(conf.getExceptionHandler() instanceof PredicateExceptionHandler);
         }
 
         @DisplayName("Should the object that was defined via setter")
         @Test void scenario2(){
-            val defined = mock(ExceptionHandler.class);
+            val defined = mock(PredicateExceptionHandler.class);
             conf.setExceptionHandler(defined);
             assertEquals(defined, conf.getExceptionHandler());
         }
