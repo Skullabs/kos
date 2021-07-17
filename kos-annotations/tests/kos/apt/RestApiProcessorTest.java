@@ -36,34 +36,57 @@ class RestApiProcessorTest {
 
     String
         generatedClassName = SimpleApi.class.getCanonicalName() + "RoutingContextHandler",
-        generatedClassName1 = ApiWithNoPath.class.getCanonicalName() + "RoutingContextHandler"
+        generatedClassName2 = ApiWithNoPath.class.getCanonicalName() + "RoutingContextHandler",
+        generatedClassName3 = ApiWithValidation.class.getCanonicalName() + "RoutingContextHandler"
     ;
 
     Processor processor = new RestApiProcessor();
 
-    @DisplayName("SHOULD generate classes as expected WHEN find classes/methods properly annotated")
-    @Test void generateClasses() throws IOException
-    {
-        val source = APT.asSource( APT.testFile(SimpleApi.class) );
-        runAPT( processor, source );
+    @DisplayName("When no validation is defined")
+    @Nested class NoValidation {
 
-        val generatedClass = APT.readFileAsString(APT.outputGeneratedClass( generatedClassName ));
+        @DisplayName("SHOULD generate classes as expected WHEN find classes/methods properly annotated")
+        @Test
+        void generateClasses() throws IOException {
+            val source = APT.asSource(APT.testFile(SimpleApi.class));
+            runAPT(processor, source);
 
-        val expectedClass = APT.testResourceAsString("expected-generated-class.txt");
-        assertEquals(expectedClass, generatedClass);
+            val generatedClass = APT.readFileAsString(APT.outputGeneratedClass(generatedClassName));
+
+            val expectedClass = APT.testResourceAsString("expected-generated-class.java");
+            assertEquals(expectedClass, generatedClass);
+        }
+
+        @DisplayName("SHOULD generate classes WHEN find method annotated but no @Path is defined")
+        @Test
+        void generateClasses1() throws IOException {
+            val source = APT.asSource(APT.testFile(ApiWithNoPath.class));
+            runAPT(processor, source);
+            runAPT(new InjectorProcessor(), source);
+
+            val generatedClass = APT.readFileAsString(APT.outputGeneratedClass(generatedClassName2));
+
+            val expectedClass = APT.testResourceAsString("expected-generated-class2.java");
+            assertEquals(expectedClass, generatedClass);
+        }
     }
 
-    @DisplayName("SHOULD generate classes WHEN find method annotated but no @Path is defined")
-    @Test void generateClasses1() throws IOException
-    {
-        val source = APT.asSource( APT.testFile(ApiWithNoPath.class) );
-        runAPT( processor, source );
-        runAPT( new InjectorProcessor(), source );
+    @DisplayName("When Validation is defined")
+    @Nested class WithValidation {
 
-        val generatedClass = APT.readFileAsString(APT.outputGeneratedClass( generatedClassName1 ));
+        @DisplayName("SHOULD generate classes")
+        @Test
+        void generateClasses1() throws IOException {
+            val source = APT.asSource(APT.testFile(ApiWithValidation.class));
+            runAPT(processor, source);
+            runAPT(new InjectorProcessor(), source);
 
-        val expectedClass = APT.testResourceAsString("expected-generated-class2.txt");
-        assertEquals(expectedClass, generatedClass);
+            val generatedClass = APT.readFileAsString(APT.outputGeneratedClass(generatedClassName3));
+
+            val expectedClass = APT.testResourceAsString("expected-generated-class3.java");
+            assertEquals(expectedClass, generatedClass);
+        }
+
     }
 
     @DisplayName("SHOULD expose the generated class as 'SPI' WHEN find classes/methods properly annotated")

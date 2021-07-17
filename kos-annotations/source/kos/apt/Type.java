@@ -17,8 +17,8 @@
 package kos.apt;
 
 import generator.apt.SimplifiedAST;
-import kos.core.exception.KosException;
 import kos.core.Lang;
+import kos.core.exception.KosException;
 import kos.rest.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,15 +31,16 @@ import java.util.stream.Collectors;
 
 import static kos.core.Lang.*;
 
+@SuppressWarnings("SameParameterValue")
 @Value class Type implements SpiClass {
 
-    final String jdkGeneratedAnnotation;
-    final String packageName;
-    final String simpleName;
-    final String className;
-    final String importantSuperClassOrInterface;
+    String jdkGeneratedAnnotation;
+    String packageName;
+    String simpleName;
+    String className;
+    String importantSuperClassOrInterface;
 
-    final Iterable<Method> methods;
+    Iterable<Method> methods;
 
     public String getClassCanonicalName(){
         return packageName + "." + className;
@@ -154,32 +155,79 @@ import static kos.core.Lang.*;
     String name;
     String variableName;
     String type;
+    boolean shouldBeValidated;
 
     static SimplifiedAST.WrappedDataIterable from( SimplifiedAST.Method method ) {
         val params = convert(method.getParameters(), p -> {
-            SimplifiedAST.Annotation annotation = extractAnnotation( method, p );
+            SimplifiedAST.Annotation annotation = extractMainAnnotation( method, p );
             String name = first(annotation.getParameters().values()).orElse( p.getName() ).toString();
+            boolean shouldBeValidated = shouldBeValidated(p);
+
+            if (shouldBeValidated) {
+                ensureIsATypeOfParameterThatCanBeValidated(method, p, annotation);
+                ensureIsNotAJavaNativeType(method, p, annotation);
+            }
 
             return new MethodParam(
                 TypeUtils.typeSimpleName(annotation.getType()),
                 name.replace("\"",""),
                 p.getName(),
-                p.getType()
+                p.getType(),
+                shouldBeValidated
             );
         });
 
         return new SimplifiedAST.WrappedDataIterable(params);
     }
 
-    private static SimplifiedAST.Annotation extractAnnotation(
+    private static SimplifiedAST.Annotation extractMainAnnotation(
             SimplifiedAST.Method method,
-            SimplifiedAST.Element element
+            SimplifiedAST.Element parameter
     ) {
-        return first( element.getAnnotations(), TypeUtils::isParamAnn )
+        return first( parameter.getAnnotations(), TypeUtils::isParamAnn )
                 .orElseThrow( () -> new IllegalArgumentException(
                     "Missing annotation in method parameter." +
                         " Method: " + method.getName() +
-                        " Parameter: " + element.getName() ));
+                        " Parameter: " + parameter.getName() ));
+    }
+
+    private static boolean shouldBeValidated(
+            SimplifiedAST.Element parameter
+    ) {
+        return first(parameter.getAnnotations(), ann -> ann.getType().equals(TypeUtils.validationAnnotation))
+            .isPresent();
+    }
+
+    private static void ensureIsATypeOfParameterThatCanBeValidated(
+            SimplifiedAST.Method method,
+            SimplifiedAST.Element parameter,
+            SimplifiedAST.Annotation annotation
+    ) {
+        val annType = annotation.getType();
+        if (!annType.equals(TypeUtils.bodyAnnotation)) {
+            throw new UnsupportedOperationException(
+                "Cannot enforce validation on parameter annotated with @" + annType + ". " +
+                "Only parameters annotated with @" + TypeUtils.bodyAnnotation + "." +
+                " Method: " + method.getName() +
+                " Parameter: " + parameter.getName()
+            );
+        }
+    }
+
+    private static void ensureIsNotAJavaNativeType(
+            SimplifiedAST.Method method,
+            SimplifiedAST.Element parameter,
+            SimplifiedAST.Annotation annotation
+    ){
+        val paramType = annotation.getType();
+        if (TypeUtils.isJavaBasicType(paramType)) {
+            throw new UnsupportedOperationException(
+                "Cannot enforce validation on parameter which type is" + paramType + ". " +
+                        "Ensure the type of the object you're enforcing validation is not a basic Java type (e.g. java.lang.String)." +
+                        " Method: " + method.getName() +
+                        " Parameter: " + parameter.getName()
+            );
+        }
     }
 }
 
@@ -220,8 +268,8 @@ import static kos.core.Lang.*;
 
     private static AtomicInteger REFERENCE_COUNTER = new AtomicInteger();
 
-    final String name = "TYPE_REFERENCE_" + REFERENCE_COUNTER.getAndIncrement();
-    final String mappedType;
+    String name = "TYPE_REFERENCE_" + REFERENCE_COUNTER.getAndIncrement();
+    String mappedType;
 
     static TypeReference from(SimplifiedAST.Method method) {
         val type = method.getType();
@@ -251,9 +299,10 @@ import static kos.core.Lang.*;
     }
 }
 
-@Value class MethodDefinedHeaders {
-    final String headerName;
-    final String variableWithHeaderValue;
+@Value class MethodDefinedHeaders
+{
+    String headerName;
+    String variableWithHeaderValue;
 
     static List<MethodDefinedHeaders> extractAnnotatedHeadersFrom(SimplifiedAST.Method method) {
         val headers = new ArrayList<MethodDefinedHeaders>();
