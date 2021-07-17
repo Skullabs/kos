@@ -16,14 +16,7 @@ Kos is for you if you need:
 - automatically deploy Vert.x Verticles
 - automatically load vertx-config configuration
 
-## History
-This project was started between late 2018 and early 2019 on an attempt to provide
-[Sizebay](https://sizebay.com) a simple API to replace their previous solution
-(based on [undertow](https://undertow.io)) for microservices. The idea came up
-when we had the necessity to include more developers on the team and we wanted
-to avoid them to talk directly to Undertow and XNIO as they was designed as
-low-level APIs.
-
+## What does Kos mean?
 The project name **kos** (pronounces like _coosh_) came from Norwegian and is
 a word used to describe all the things that make you feel cozy and warm inside.
 
