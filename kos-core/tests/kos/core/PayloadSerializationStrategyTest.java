@@ -21,6 +21,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import kos.api.MutableKosContext;
 import kos.api.Serializer;
+import kos.core.exception.KosException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

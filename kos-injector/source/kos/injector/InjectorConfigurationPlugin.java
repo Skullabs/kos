@@ -10,6 +10,11 @@ import lombok.val;
 public class InjectorConfigurationPlugin implements ConfigurationPlugin {
 
     @Override
+    public int priority() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
     public void configure(MutableKosContext kosConfiguration) {
         val loader = new InjectorImplementationLoader(kosConfiguration);
         loader.register(KosContext.class, kosConfiguration);

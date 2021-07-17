@@ -18,7 +18,7 @@ package kos.core.client;
 
 import injector.Singleton;
 import kos.api.KosContext;
-import kos.core.KosException;
+import kos.core.exception.KosException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 

@@ -20,6 +20,7 @@ import generator.apt.SimplifiedAST;
 import io.vertx.core.Future;
 import kos.core.Lang;
 import kos.rest.*;
+import kos.validation.Valid;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 
@@ -37,7 +38,7 @@ import static kos.core.Lang.nonEmptySetOfString;
 @UtilityClass
 class TypeUtils {
 
-    private SimplerRegexPattern
+    private final SimplerRegexPattern
         futureWrapper = new SimplerRegexPattern(
             "(io.vertx.core.Future|" +
             "java.util.concurrent.Future|" +
@@ -45,7 +46,7 @@ class TypeUtils {
         rawClass = new SimplerRegexPattern("([^<]+)<.*>")
     ;
 
-    private Map<String, String> primitiveTypeObjects = Lang
+    private final Map<String, String> primitiveTypeObjects = Lang
         .mapOf( "long", "java.lang.Long" )
           .and( "int", "java.lang.Integer" )
           .and( "short", "java.lang.Short" )
@@ -55,14 +56,17 @@ class TypeUtils {
           .and( "boolean", "java.lang.Boolean" )
             .build();
 
-    private List<String> validParamAnnotations = asList(
+    final String validationAnnotation = Valid.class.getCanonicalName();
+    final String bodyAnnotation = Body.class.getCanonicalName();
+
+    private final List<String> validParamAnnotations = asList(
         Param.class.getCanonicalName(),
         Header.class.getCanonicalName(),
         Body.class.getCanonicalName(),
         Context.class.getCanonicalName()
     );
 
-    private List<String> validRouteAnnotations = asList(
+    private final List<String> validRouteAnnotations = asList(
         GET.class.getCanonicalName(),
         POST.class.getCanonicalName(),
         PUT.class.getCanonicalName(),
@@ -118,6 +122,17 @@ class TypeUtils {
 
     String getBoxedType( String type ) {
         return primitiveTypeObjects.getOrDefault(type, type);
+    }
+
+    /**
+     * @return {@code true} when {@code type} is a primitive type,
+     * a boxed representation of a primitive type or a String. Otherwise,
+     * returns {@code false}
+     */
+    boolean isJavaBasicType( String type ) {
+        val actualType = getBoxedType(type);
+        return actualType.equals(String.class.getCanonicalName())
+            || primitiveTypeObjects.containsValue(actualType);
     }
 
     String unwrapFutureGenericType(String responseType) {

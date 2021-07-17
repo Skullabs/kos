@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package kos.core;
+package kos.core.exception;
 
 /**
  * Convenient {@link Exception} class.

@@ -17,6 +17,7 @@
 package kos.core;
 
 import kos.api.ImplementationLoader;
+import kos.core.exception.KosException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

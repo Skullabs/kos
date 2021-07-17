@@ -1,8 +1,11 @@
 package kos.api;
 
+import lombok.Getter;
+
 public class HandledResponseException extends RuntimeException
 {
-    final Response response;
+    @Getter
+    private final Response response;
 
     public HandledResponseException(Response response){
         super("Handled Response: " + response);

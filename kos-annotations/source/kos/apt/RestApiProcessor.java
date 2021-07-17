@@ -29,6 +29,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static kos.core.Lang.convert;
+import static kos.core.Lang.filter;
+
 @SupportedAnnotationTypes( { "kos.rest.*" } )
 public class RestApiProcessor extends AbstractKosProcessor {
 
@@ -53,7 +56,9 @@ public class RestApiProcessor extends AbstractKosProcessor {
 
         routeClassGenerator.generateClasses(routes);
         spiGenerator.memorizeSPIFor(routes);
-        injectorProcessor.process(types);
+
+        val nonAbstractTypes = filter(types, t -> !t.isAbstract() && !t.isInterface());
+        injectorProcessor.process(nonAbstractTypes);
     }
 
     @Override

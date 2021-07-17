@@ -16,7 +16,7 @@
 
 package kos.api;
 
-import kos.core.KosException;
+import kos.core.exception.KosException;
 import kos.core.Lang;
 import lombok.*;
 import lombok.experimental.Accessors;

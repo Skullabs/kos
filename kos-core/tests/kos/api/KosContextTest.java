@@ -22,8 +22,10 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.logging.SLF4JLogDelegateFactory;
 import io.vertx.core.spi.logging.LogDelegateFactory;
+import kos.core.exception.PredicateExceptionHandler;
 import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
+import kos.core.validation.DefaultValidation;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -195,14 +197,30 @@ class KosContextTest
 
         @DisplayName("Should return default value WHEN no object was defined via setter")
         @Test void scenario1() {
-            assertTrue(conf.getExceptionHandler() instanceof DefaultExceptionHandler);
+            assertTrue(conf.getExceptionHandler() instanceof PredicateExceptionHandler);
         }
 
         @DisplayName("Should the object that was defined via setter")
         @Test void scenario2(){
-            val defined = mock(ExceptionHandler.class);
+            val defined = mock(PredicateExceptionHandler.class);
             conf.setExceptionHandler(defined);
             assertEquals(defined, conf.getExceptionHandler());
+        }
+    }
+
+    @DisplayName("Scenario: Validation")
+    @Nested class ValidationFactoryScenario {
+
+        @DisplayName("Should return default value WHEN no object was defined via setter")
+        @Test void scenario1() {
+            assertTrue(conf.getDefaultValidation() instanceof DefaultValidation);
+        }
+
+        @DisplayName("Should the object that was defined via setter")
+        @Test void scenario2(){
+            val defined = mock(DefaultValidation.class);
+            conf.setDefaultValidation(defined);
+            assertEquals(defined, conf.getDefaultValidation());
         }
     }
 

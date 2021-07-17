@@ -6,5 +6,9 @@ package kos.api;
  */
 public interface ConfigurationPlugin {
 
+    default int priority(){
+        return 0;
+    }
+
     void configure(MutableKosContext kosConfiguration);
 }

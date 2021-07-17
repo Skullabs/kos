@@ -18,7 +18,7 @@ package kos.apt;
 
 import generator.apt.SimplifiedAST;
 import generator.apt.SimplifiedAbstractProcessor;
-import kos.core.KosException;
+import kos.core.exception.KosException;
 import kos.rest.*;
 import lombok.val;
 

@@ -2,6 +2,7 @@ package kos.rest.sample;
 
 import kos.api.*;
 import kos.core.*;
+import kos.core.validation.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
@@ -44,31 +45,33 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
 
     public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
         final KosContext kosContext = event.getKosContext();
-        final VertxFutures futures = kosContext.getImplementationLoader()
-                    .instanceOfOrFail(VertxFutures.class);
+        final ImplementationLoader implementationLoader = kosContext.getImplementationLoader();
+        final VertxFutures futures = implementationLoader.instanceOfOrFail(VertxFutures.class);
+        final WebPointcutValidation webPointcutValidation = implementationLoader.instanceOfOrFail(WebPointcutValidation.class);
 
-        final ApiWithNoPath handler = kosContext.getImplementationLoader()
-                    .instanceOfOrFail(ApiWithNoPath.class);
+        // Fetches an instance of the web handler class
+        final ApiWithNoPath handler = implementationLoader.instanceOfOrFail(ApiWithNoPath.class);
 
-        event.getRouter().route( HttpMethod.GET, "/location", new Handler<RoutingContext>() {
+        /**
+         * Handle incoming requests mapped for {@link kos.rest.sample.ApiWithNoPath#retrieveLocation}.
+         */
+        Handler<RoutingContext> handlerForRetrieveLocation$GET1518549639 = new Handler<RoutingContext>() {
 
-            /**
-             * Auto generated wrapper for {@link kos.rest.sample.ApiWithNoPath#retrieveLocation}.
-             */
             public void handle(final RoutingContext routingContext) {
                 try {
                     /* Call original handler */
                     final java.lang.String response =
-                    handler.retrieveLocation(
-                        /* Read request parameters */
-                    );
+                        handler.retrieveLocation(
+                        );
                     /* Wraps response as Future */
                     futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveLocation$GET1518549639(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
             }
-        });
+        };
+        // Maps the method handler to an HTTP endpoint
+        event.getRouter().route( HttpMethod.GET, "/location", handlerForRetrieveLocation$GET1518549639);
 
     }
 

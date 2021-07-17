@@ -17,7 +17,7 @@
 package kos.apt;
 
 import generator.apt.ResourceLocator;
-import kos.core.*;
+import kos.core.exception.KosException;
 import lombok.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
