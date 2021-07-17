@@ -2,6 +2,7 @@ package {{packageName}};
 
 import kos.api.*;
 import kos.core.*;
+import kos.core.validation.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
@@ -48,29 +49,35 @@ public class {{className}} implements WebServerEventListener {
 
     public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
         final KosContext kosContext = event.getKosContext();
-        final VertxFutures futures = kosContext.getImplementationLoader()
-                    .instanceOfOrFail(VertxFutures.class);
+        final ImplementationLoader implementationLoader = kosContext.getImplementationLoader();
+        final VertxFutures futures = implementationLoader.instanceOfOrFail(VertxFutures.class);
+        final WebPointcutValidation webPointcutValidation = implementationLoader.instanceOfOrFail(WebPointcutValidation.class);
 
-        final {{simpleName}} handler = kosContext.getImplementationLoader()
-                    .instanceOfOrFail({{simpleName}}.class);
+        // Fetches an instance of the web handler class
+        final {{simpleName}} handler = implementationLoader.instanceOfOrFail({{simpleName}}.class);
 
         {{#methods}}
         {{#httpPath}}
-        event.getRouter().route( HttpMethod.{{httpMethod}}, "{{.}}", new Handler<RoutingContext>() {
+        /**
+         * Handle incoming requests mapped for {@link {{packageName}}.{{simpleName}}#{{name}}}.
+         */
+        Handler<RoutingContext> handlerFor{{uniqueName}} = new Handler<RoutingContext>() {
 
-            /**
-             * Auto generated wrapper for {@link {{packageName}}.{{simpleName}}#{{name}}}.
-             */
             public void handle(final RoutingContext routingContext) {
                 try {
                     /* Call original handler */
             {{#responseType}}
                     final {{{responseType}}} response =
             {{/responseType}}
-                    handler.{{name}}(
-                        /* Read request parameters */{{#parameters}}{{^first}},{{/first}}
-                        Request.read{{data.annotation}}( kosContext, routingContext, "{{data.name}}", {{data.type}}.class ){{/parameters}}
-                    );
+                        handler.{{name}}({{#parameters}}{{^first}},{{/first}}
+                            {{#data.shouldBeValidated}}
+                            /* Read attached (and pre-validated) {{data.annotation}} parameter identified by "{{data.name}}" */
+                            webPointcutValidation.unwrapFor{{data.annotation}}(routingContext, "{{data.name}}"){{/data.shouldBeValidated}}
+                            {{^data.shouldBeValidated}}
+                            /* Read {{data.annotation}} parameter identified by "{{data.name}}" */
+                            Request.read{{data.annotation}}( kosContext, routingContext, "{{data.name}}", {{data.type}}.class ){{/data.shouldBeValidated}}
+                            {{/parameters}}
+                        );
             {{#containsResponseType}}
                     /* Wraps response as Future */
                     futures.asFuture(response).onComplete(new ResponseTypeHandlerFor${{uniqueName}}(kosContext, routingContext));
@@ -82,7 +89,14 @@ public class {{className}} implements WebServerEventListener {
                     Response.sendError(kosContext, routingContext, cause);
                 }
             }
-        });
+        };
+        {{#parameters}}{{#data.shouldBeValidated}}
+
+        // Validates the parameter identified as {{data.name}}
+        handlerFor{{uniqueName}} = webPointcutValidation.wrapFor{{data.annotation}}( {{data.type}}.class, "{{data.name}}", handlerFor{{uniqueName}} );
+        {{/data.shouldBeValidated}}{{/parameters}}
+        // Maps the method handler to an HTTP endpoint
+        event.getRouter().route( HttpMethod.{{httpMethod}}, "{{.}}", handlerFor{{uniqueName}});
 
         {{/httpPath}}
         {{/methods}}

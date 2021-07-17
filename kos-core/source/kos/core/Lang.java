@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -97,6 +98,14 @@ public final class Lang {
         val buffer = new ArrayList<N>();
         for ( val item : data )
             buffer.add( converter.apply(item) );
+        return buffer;
+    }
+
+    public static <T,N> List<N> convertIndex(Iterable<T> data, BiFunction<Integer,T, N> converter) {
+        val buffer = new ArrayList<N>();
+        int i = 0;
+        for ( val item : data )
+            buffer.add( converter.apply(i++, item) );
         return buffer;
     }
 
