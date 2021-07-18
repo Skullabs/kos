@@ -1,7 +1,7 @@
 package kos.core.validation;
 
 import injector.Exposed;
-import kos.api.ConfigurationPlugin;
+import kos.api.Plugin;
 import kos.api.MutableKosContext;
 import kos.api.Validation;
 import kos.core.exception.PredicateExceptionHandler;
@@ -12,7 +12,7 @@ import lombok.val;
  * all found validations in the class path.
  */
 @Exposed
-public class ValidationPlugin implements ConfigurationPlugin {
+public class ValidationPlugin implements Plugin {
 
     @Override
     public void configure(MutableKosContext kosConfiguration) {
