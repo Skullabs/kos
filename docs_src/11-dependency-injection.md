@@ -1,4 +1,4 @@
-# Dependency Injection
+# 2. Dependency Injection
 Kos uses Dependency Injection as a way to allow developers to orthogonally customize
 applications without changing their codebase. This allowed Kos to generate source code,
 reducing the amount of code required by developers to write down everyday routines

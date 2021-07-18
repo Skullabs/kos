@@ -1,4 +1,4 @@
-# Logging Configuration
+# 1.5. Logging Configuration
 Kos uses [SLF4J](http://www.slf4j.org) as main logging implementation. Vert.x
 internal logging is also automatically configured to use SLF4J as its default
 logging mechanism.
