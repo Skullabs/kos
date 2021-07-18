@@ -1,4 +1,4 @@
-# Getting Started
+# 1. Getting Started
 
 !!! info
     Don't want to follow the following steps by yourself? What about downloading

@@ -1,4 +1,4 @@
-# Rest Clients
+# 1.3. Rest Clients
 Write down rest clients is usually a task most people doesn't like to do,
 specially in the JVM ecosystem. We have several Http abstractions and
 implementations, each of them with different dependency stack. Vert.x team

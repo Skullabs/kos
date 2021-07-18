@@ -1,4 +1,4 @@
-# Kos Architecture Overview
+# 3. Kos Architecture Overview
 In the following topics we're going to introduce you the main points that Kos may come in handy on your project,
 how it reduces boilerplate codes but keeps the performance close to a pure Vert.x solution.
 

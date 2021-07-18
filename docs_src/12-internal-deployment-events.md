@@ -1,4 +1,4 @@
-# Internal Deployment Events
+# 2.1 Internal Deployment Events
 Kos triggers a few events during the application bootstrap. It might be particularly
 useful to customize how Vert.x will behave internally, allowing developers to deploy
 custom verticles or even changing Kos' default configuration parameters.
@@ -57,30 +57,3 @@ logic to be instantiated.
         }
     }
     ```
-
-## Configuration Events
-By exposing an implementation of the interface `kos.api.ConfigurationPlugin` you will
-be allowed to change how all the main components managed by Kos will behave.
-
-=== "Kotlin"
-```kotlin
-@Exposed
-class MyWebListener: ConfigurationPlugin {
-
-        fun configure(kosContext: MutableKosContext) {
-            TODO("Implement me!")
-        }
-    }
-    ```
-
-=== "Java"
-```java
-@Exposed
-class MyWebListener implements WebServerEventListener {
-
-        public void configure(MutableKosContext kosContext) {
-            throw new UnsupportedOperationException("Implement me!");
-        }
-    }
-    ```
-

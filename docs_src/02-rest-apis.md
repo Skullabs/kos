@@ -1,4 +1,4 @@
-# Rest APIs
+# 1.1. Rest APIs
 Write down rest API's with Kos is dead simple and, if you've been using
 Java ecosystem in the last few years you're probably at home.
 
