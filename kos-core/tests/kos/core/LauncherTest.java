@@ -9,7 +9,7 @@ import kos.api.Application;
 import kos.api.ImplementationLoader;
 import kos.api.ImplementationLoader.Result;
 import kos.api.MutableKosContext;
-import kos.api.ConfigurationPlugin;
+import kos.api.Plugin;
 import kos.core.exception.KosException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,8 +34,8 @@ class LauncherTest {
 
     @DisplayName("Should configure Kos and call plugins")
     @Test void scenario1(){
-        val plugin = mock(ConfigurationPlugin.class);
-        doReturn(singletonList(plugin)).when(implLoader).instancesExposedAs(eq(ConfigurationPlugin.class));
+        val plugin = mock(Plugin.class);
+        doReturn(singletonList(plugin)).when(implLoader).instancesExposedAs(eq(Plugin.class));
 
         launcher.run();
 
@@ -44,13 +44,13 @@ class LauncherTest {
 
     @DisplayName("Should configure Kos and call plugins sorted by its priority")
     @Test void scenario1b(){
-        val plugin = mock(ConfigurationPlugin.class);
+        val plugin = mock(Plugin.class);
         doReturn(0).when(plugin).priority();
 
-        val plugin2 = mock(ConfigurationPlugin.class);
+        val plugin2 = mock(Plugin.class);
         doReturn(1).when(plugin2).priority();
 
-        doReturn(asList(plugin, plugin2)).when(implLoader).instancesExposedAs(eq(ConfigurationPlugin.class));
+        doReturn(asList(plugin, plugin2)).when(implLoader).instancesExposedAs(eq(Plugin.class));
 
         launcher.run();
 

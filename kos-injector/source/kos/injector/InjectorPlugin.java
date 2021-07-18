@@ -1,13 +1,13 @@
 package kos.injector;
 
 import injector.ExposedAs;
-import kos.api.ConfigurationPlugin;
+import kos.api.Plugin;
 import kos.api.KosContext;
 import kos.api.MutableKosContext;
 import lombok.val;
 
-@ExposedAs(ConfigurationPlugin.class)
-public class InjectorConfigurationPlugin implements ConfigurationPlugin {
+@ExposedAs(Plugin.class)
+public class InjectorPlugin implements Plugin {
 
     @Override
     public int priority() {

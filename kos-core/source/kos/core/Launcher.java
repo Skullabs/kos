@@ -47,7 +47,7 @@ public class Launcher {
     }
 
     public void run(){
-        configureKos();
+        runPluginsAndConfigureKos();
         readDeploymentConfig( deploymentConf -> {
             deployCustomApplication(deploymentConf);
             deployWebServer( deploymentConf );
@@ -55,9 +55,9 @@ public class Launcher {
         });
     }
 
-    private void configureKos() {
+    private void runPluginsAndConfigureKos() {
         val plugins = Lang.sorted(
-            conf.getSpi().instancesExposedAs(ConfigurationPlugin.class),
+            conf.getSpi().instancesExposedAs(Plugin.class),
             (p1, p2) -> Integer.compare(p2.priority(), p1.priority())
         );
 

@@ -1,12 +1,12 @@
 package kos.config;
 
 import injector.ExposedAs;
-import kos.api.ConfigurationPlugin;
+import kos.api.Plugin;
 import kos.api.MutableKosContext;
 import lombok.val;
 
-@ExposedAs(ConfigurationPlugin.class)
-public class YamlConfigurationPlugin implements ConfigurationPlugin {
+@ExposedAs(Plugin.class)
+public class YamlPlugin implements Plugin {
 
     @Override
     public void configure(MutableKosContext kosConfiguration) {
