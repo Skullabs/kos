@@ -16,12 +16,19 @@
 
 package kos.api;
 
-/**
- * Configures a custom Kos application. It can be used to deploy
- * manually crafted Vert.x Verticles. To have your application automatically
- * discovered, ensure that you have it properly exposed.
- */
-public interface Application {
+import io.vertx.core.json.JsonObject;
+import lombok.Value;
 
-    void configure(DeploymentContext deploymentContext);
+/**
+ * A listener for "Configuration Loaded" event. It can be used to read the configuration
+ * file, interact with the configured Vert.x components or deploy tailor made Vert.x Verticles.
+ */
+public interface ConfigurationLoadedEventListener {
+
+    void on(ConfigurationLoadedEvent configurationLoadedEvent);
+
+    @Value class ConfigurationLoadedEvent {
+        KosContext kosContext;
+        JsonObject applicationConfig;
+    }
 }
