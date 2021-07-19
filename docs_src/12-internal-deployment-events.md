@@ -9,6 +9,8 @@ your code will be notified before the web server is instantiated and its routes
 are deployed. This might be useful to deploy custom routes, or tweaking the web
 server nobs to your needs.
 
+> *Note*: this event won't be triggered if the default WebServer verticle is turned off.
+
 === "Kotlin"
     ```kotlin
     @Exposed
@@ -30,18 +32,17 @@ server nobs to your needs.
     }
     ```
 
-## Application events
-By exposing an implementation of the interface `kos.api.Application`,
+## Configuration Loaded events
+By exposing an implementation of the interface `kos.api.ConfigurationLoadedEventListener`,
 developers will be notified whenever the whole application is about to be
-started. It is useful to deploy custom Verticles that requires complex
-logic to be instantiated.
+started. It allow one to read the whole configuration of the software.
 
 === "Kotlin"
     ```kotlin
     @Exposed
-    class MyCustomAppBootstrap: Application {
+    class MyCustomAppBootstrap: ConfigurationLoadedEventListener {
     
-        fun configure( deploymentContext: DeploymentContext ) {
+        fun on( event: ConfigurationLoadedEvent ) {
             TODO("Implement me!")
         }
     }
@@ -50,9 +51,9 @@ logic to be instantiated.
 === "Java"
     ```java
     @Exposed
-    class MyCustomAppBootstrap implements Application {
+    class MyCustomAppBootstrap implements ConfigurationLoadedEventListener {
     
-        public void configure( DeploymentContext deploymentContext ) {
+        public void on( ConfigurationLoadedEventListener event ) {
             throw new UnsupportedOperationException("Implement me!");
         }
     }
