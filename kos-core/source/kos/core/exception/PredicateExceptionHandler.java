@@ -3,7 +3,6 @@ package kos.core.exception;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import kos.api.ExceptionHandler;
-import kos.api.HandledResponseException;
 import kos.api.Response;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
