@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Skullabs Contributors (https://github.com/skullabs)
+ * Copyright 2019-2021 Skullabs Contributors (https://github.com/skullabs)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package kos.apt;
+package kos.apt.rest;
 
 import generator.apt.SimplifiedAST;
+import kos.apt.TypeUtils;
+import kos.apt.spi.SpiClass;
 import kos.core.Lang;
 import kos.core.exception.KosException;
 import kos.rest.*;

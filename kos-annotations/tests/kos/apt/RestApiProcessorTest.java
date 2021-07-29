@@ -19,6 +19,8 @@ package kos.apt;
 import generator.apt.SimplifiedAPTRunner;
 import injector.apt.InjectorProcessor;
 import kos.api.WebServerEventListener;
+import kos.apt.rest.RestApiProcessor;
+import kos.apt.spi.SPIGenerator;
 import kos.core.exception.KosException;
 import kos.rest.sample.*;
 import lombok.*;

@@ -36,7 +36,7 @@ import static kos.core.Lang.convert;
 import static kos.core.Lang.nonEmptySetOfString;
 
 @UtilityClass
-class TypeUtils {
+public class TypeUtils {
 
     private final SimplerRegexPattern
         futureWrapper = new SimplerRegexPattern(
@@ -56,8 +56,8 @@ class TypeUtils {
           .and( "boolean", "java.lang.Boolean" )
             .build();
 
-    final String validationAnnotation = Valid.class.getCanonicalName();
-    final String bodyAnnotation = Body.class.getCanonicalName();
+    public final String validationAnnotation = Valid.class.getCanonicalName();
+    public final String bodyAnnotation = Body.class.getCanonicalName();
 
     private final List<String> validParamAnnotations = asList(
         Param.class.getCanonicalName(),
@@ -74,20 +74,20 @@ class TypeUtils {
         DELETE.class.getCanonicalName()
     );
 
-    boolean isParamAnn( SimplifiedAST.Annotation element ) {
+    public boolean isParamAnn( SimplifiedAST.Annotation element ) {
         return validParamAnnotations.contains(element.getType());
     }
 
-    boolean isRouteAnn( SimplifiedAST.Annotation element ) {
+    public boolean isRouteAnn( SimplifiedAST.Annotation element ) {
         return validRouteAnnotations.contains(element.getType());
     }
 
-    String typeSimpleName( String canonicalName ) {
+    public String typeSimpleName( String canonicalName ) {
         val tokens = canonicalName.split("\\.");
         return tokens[tokens.length-1];
     }
 
-    List<String> asAbsolutePath(Iterable<String> rootPaths, String value) {
+    public List<String> asAbsolutePath(Iterable<String> rootPaths, String value) {
         val buffer = new ArrayList<String>();
         val parsedValues = parseMultiParamValue(value);
 
@@ -109,7 +109,7 @@ class TypeUtils {
         return buffer;
     }
 
-    Iterable<String> parseMultiParamValue( String value ) {
+    public Iterable<String> parseMultiParamValue( String value ) {
         val found = nonEmptySetOfString(convert(
             asList(value.replaceAll("[{}]","").split(",")),
             entry -> entry.replaceAll("[\" ]","")
@@ -120,7 +120,7 @@ class TypeUtils {
         return found;
     }
 
-    String getBoxedType( String type ) {
+    public String getBoxedType( String type ) {
         return primitiveTypeObjects.getOrDefault(type, type);
     }
 
@@ -129,25 +129,25 @@ class TypeUtils {
      * a boxed representation of a primitive type or a String. Otherwise,
      * returns {@code false}
      */
-    boolean isJavaBasicType( String type ) {
+    public boolean isJavaBasicType( String type ) {
         val actualType = getBoxedType(type);
         return actualType.equals(String.class.getCanonicalName())
             || primitiveTypeObjects.containsValue(actualType);
     }
 
-    String unwrapFutureGenericType(String responseType) {
+    public String unwrapFutureGenericType(String responseType) {
         return futureWrapper.matchedGroup(responseType, 2).orElse(responseType);
     }
 
-    boolean isVertxFuture( String type ){
+    public boolean isVertxFuture( String type ){
         return type.startsWith(Future.class.getCanonicalName());
     }
 
-    Optional<String> rawType(String wrapped) {
+    public Optional<String> rawType(String wrapped) {
         return rawClass.matchedGroup(wrapped, 1);
     }
 
-    static class SimplerRegexPattern{
+    public static class SimplerRegexPattern{
         final Pattern pattern;
 
         SimplerRegexPattern(String pattern) {

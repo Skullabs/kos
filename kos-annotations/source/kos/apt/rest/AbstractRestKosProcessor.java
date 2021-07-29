@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package kos.apt;
+package kos.apt.rest;
 
 import generator.apt.SimplifiedAST;
 import generator.apt.SimplifiedAbstractProcessor;
+import kos.apt.spi.SPIGenerator;
 import kos.core.exception.KosException;
 import kos.rest.*;
 import lombok.val;
@@ -29,12 +30,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractKosProcessor extends SimplifiedAbstractProcessor {
+abstract class AbstractRestKosProcessor extends SimplifiedAbstractProcessor {
 
     private final String spiLocation;
     protected SPIGenerator spiGenerator;
 
-    public AbstractKosProcessor(Class spiType){
+    public AbstractRestKosProcessor(Class<?> spiType){
         super(
             Collections.emptyList(),
             Arrays.asList(GET.class, POST.class, PUT.class, PATCH.class, DELETE.class),

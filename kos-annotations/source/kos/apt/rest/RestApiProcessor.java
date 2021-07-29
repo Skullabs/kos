@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package kos.apt;
+package kos.apt.rest;
 
 import generator.apt.SimplifiedAST;
 import injector.apt.InjectorProcessor;
+import kos.apt.ClassGenerator;
 import kos.core.Lang;
 import kos.api.WebServerEventListener;
 import kos.rest.RestClient;
@@ -29,11 +30,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static kos.core.Lang.convert;
 import static kos.core.Lang.filter;
 
 @SupportedAnnotationTypes( { "kos.rest.*" } )
-public class RestApiProcessor extends AbstractKosProcessor {
+public class RestApiProcessor extends AbstractRestKosProcessor {
 
     private ClassGenerator routeClassGenerator;
     private CustomInjectorProcessor injectorProcessor = new CustomInjectorProcessor();

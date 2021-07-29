@@ -18,6 +18,7 @@ package kos.apt;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
+import kos.apt.spi.SpiClass;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
