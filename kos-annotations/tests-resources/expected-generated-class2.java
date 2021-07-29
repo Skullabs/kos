@@ -14,7 +14,7 @@ import io.vertx.ext.web.RoutingContext;
  */
 @SuppressWarnings("all")
 @injector.Singleton
-@javax.annotation.processing.Generated("kos.apt.RestApiProcessor")
+@javax.annotation.processing.Generated("kos.apt.rest.RestApiProcessor")
 public class ApiWithNoPathRoutingContextHandler implements WebServerEventListener {
 
     public int priority() {

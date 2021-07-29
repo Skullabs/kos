@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package kos.apt;
+package kos.apt.spi;
 
-interface SpiClass {
+public interface SpiClass {
 
     String getClassCanonicalName();
 }

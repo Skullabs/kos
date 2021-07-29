@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package kos.apt;
+package kos.apt.spi;
 
 import generator.apt.ResourceLocator;
 import kos.core.exception.KosException;

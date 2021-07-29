@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 
-kos.apt.RestApiProcessor
-kos.apt.RestClientProcessor
+kos.apt.rest.RestApiProcessor
+kos.apt.rest.RestClientProcessor
