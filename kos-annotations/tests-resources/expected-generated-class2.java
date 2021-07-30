@@ -6,11 +6,11 @@ import kos.core.validation.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.RoutingContext;
+import kos.sample.rest.api.ApiWithNoPath;
 
 /**
- * Auto generated server configuration for {@link kos.rest.sample.ApiWithNoPath}.
+ * Auto generated server configuration for {@link ApiWithNoPath}.
  */
 @SuppressWarnings("all")
 @injector.Singleton
@@ -53,7 +53,7 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
         final ApiWithNoPath handler = implementationLoader.instanceOfOrFail(ApiWithNoPath.class);
 
         /**
-         * Handle incoming requests mapped for {@link kos.rest.sample.ApiWithNoPath#retrieveLocation}.
+         * Handle incoming requests mapped for {@link ApiWithNoPath#retrieveLocation}.
          */
         Handler<RoutingContext> handlerForRetrieveLocation$GET1518549639 = new Handler<RoutingContext>() {
 

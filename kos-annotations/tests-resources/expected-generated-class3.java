@@ -3,14 +3,13 @@ package kos.rest.sample;
 import kos.api.*;
 import kos.core.*;
 import kos.core.validation.*;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.RoutingContext;
+import kos.sample.rest.api.ApiWithValidation;
 
 /**
- * Auto generated server configuration for {@link kos.rest.sample.ApiWithValidation}.
+ * Auto generated server configuration for {@link ApiWithValidation}.
  */
 @SuppressWarnings("all")
 @injector.Singleton
@@ -32,7 +31,7 @@ public class ApiWithValidationRoutingContextHandler implements WebServerEventLis
         final ApiWithValidation handler = implementationLoader.instanceOfOrFail(ApiWithValidation.class);
 
         /**
-         * Handle incoming requests mapped for {@link kos.rest.sample.ApiWithValidation#updateEvent}.
+         * Handle incoming requests mapped for {@link ApiWithValidation#updateEvent}.
          */
         Handler<RoutingContext> handlerForUpdateEvent$PUT1812602333 = new Handler<RoutingContext>() {
 

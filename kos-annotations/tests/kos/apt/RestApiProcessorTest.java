@@ -22,7 +22,9 @@ import kos.api.WebServerEventListener;
 import kos.apt.rest.RestApiProcessor;
 import kos.apt.spi.SPIGenerator;
 import kos.core.exception.KosException;
-import kos.rest.sample.*;
+import kos.sample.rest.api.ApiWithNoPath;
+import kos.sample.rest.api.ApiWithValidation;
+import kos.sample.rest.api.SimpleApi;
 import lombok.*;
 import org.junit.jupiter.api.*;
 

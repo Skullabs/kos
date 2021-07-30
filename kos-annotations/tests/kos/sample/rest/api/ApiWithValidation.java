@@ -1,4 +1,4 @@
-package kos.rest.sample;
+package kos.sample.rest.api;
 
 import kos.rest.*;
 import kos.validation.Valid;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package kos.rest.client.sample;
+package kos.sample.rest.client;
 
 import io.vertx.core.Future;
 import kos.rest.*;

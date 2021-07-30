@@ -6,11 +6,11 @@ import kos.core.validation.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.RoutingContext;
+import kos.sample.rest.api.SimpleApi;
 
 /**
- * Auto generated server configuration for {@link kos.rest.sample.SimpleApi}.
+ * Auto generated server configuration for {@link SimpleApi}.
  */
 @SuppressWarnings("all")
 @injector.Singleton
@@ -74,7 +74,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         final SimpleApi handler = implementationLoader.instanceOfOrFail(SimpleApi.class);
 
         /**
-         * Handle incoming requests mapped for {@link kos.rest.sample.SimpleApi#deleteUser}.
+         * Handle incoming requests mapped for {@link SimpleApi#deleteUser}.
          */
         Handler<RoutingContext> handlerForDeleteUser$DELETE1662323373 = new Handler<RoutingContext>() {
 
@@ -98,7 +98,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         event.getRouter().route( HttpMethod.DELETE, "/api/simple/:user_id", handlerForDeleteUser$DELETE1662323373);
 
         /**
-         * Handle incoming requests mapped for {@link kos.rest.sample.SimpleApi#patchUser}.
+         * Handle incoming requests mapped for {@link SimpleApi#patchUser}.
          */
         Handler<RoutingContext> handlerForPatchUser$PATCH1739706485 = new Handler<RoutingContext>() {
 
@@ -125,7 +125,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         event.getRouter().route( HttpMethod.PATCH, "/api/simple/:user_id", handlerForPatchUser$PATCH1739706485);
 
         /**
-         * Handle incoming requests mapped for {@link kos.rest.sample.SimpleApi#retrieveUser}.
+         * Handle incoming requests mapped for {@link SimpleApi#retrieveUser}.
          */
         Handler<RoutingContext> handlerForRetrieveUser$GET695106300 = new Handler<RoutingContext>() {
 
@@ -146,7 +146,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         event.getRouter().route( HttpMethod.GET, "/api/simple", handlerForRetrieveUser$GET695106300);
 
         /**
-         * Handle incoming requests mapped for {@link kos.rest.sample.SimpleApi#retrieveUser}.
+         * Handle incoming requests mapped for {@link SimpleApi#retrieveUser}.
          */
         Handler<RoutingContext> handlerForRetrieveUser$GET695106300 = new Handler<RoutingContext>() {
 
@@ -167,7 +167,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         event.getRouter().route( HttpMethod.GET, "/api/simple/all", handlerForRetrieveUser$GET695106300);
 
         /**
-         * Handle incoming requests mapped for {@link kos.rest.sample.SimpleApi#saveUser}.
+         * Handle incoming requests mapped for {@link SimpleApi#saveUser}.
          */
         Handler<RoutingContext> handlerForSaveUser$POST509553712 = new Handler<RoutingContext>() {
 
@@ -189,7 +189,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         event.getRouter().route( HttpMethod.POST, "/api/simple", handlerForSaveUser$POST509553712);
 
         /**
-         * Handle incoming requests mapped for {@link kos.rest.sample.SimpleApi#updateUser}.
+         * Handle incoming requests mapped for {@link SimpleApi#updateUser}.
          */
         Handler<RoutingContext> handlerForUpdateUser$PUT1179257411 = new Handler<RoutingContext>() {
 
