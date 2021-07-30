@@ -1,15 +1,16 @@
-package kos.rest.sample;
+package kos.sample.rest.api;
 
 import kos.api.*;
 import kos.core.*;
 import kos.core.validation.*;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.RoutingContext;
-import kos.sample.rest.api.ApiWithValidation;
 
 /**
- * Auto generated server configuration for {@link ApiWithValidation}.
+ * Auto generated server configuration for {@link kos.sample.rest.api.ApiWithValidation}.
  */
 @SuppressWarnings("all")
 @injector.Singleton
@@ -31,9 +32,9 @@ public class ApiWithValidationRoutingContextHandler implements WebServerEventLis
         final ApiWithValidation handler = implementationLoader.instanceOfOrFail(ApiWithValidation.class);
 
         /**
-         * Handle incoming requests mapped for {@link ApiWithValidation#updateEvent}.
+         * Handle incoming requests mapped for {@link kos.sample.rest.api.ApiWithValidation#updateEvent}.
          */
-        Handler<RoutingContext> handlerForUpdateEvent$PUT1812602333 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForUpdateEvent$PUT1123808995 = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -53,9 +54,9 @@ public class ApiWithValidationRoutingContextHandler implements WebServerEventLis
         };
 
         // Validates the parameter identified as receivedEvent
-        handlerForUpdateEvent$PUT1812602333 = webPointcutValidation.wrapForBody( kos.rest.sample.Event.class, "receivedEvent", handlerForUpdateEvent$PUT1812602333 );
+        handlerForUpdateEvent$PUT1123808995 = webPointcutValidation.wrapForBody( kos.sample.rest.api.Event.class, "receivedEvent", handlerForUpdateEvent$PUT1123808995 );
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.PUT, "/events/:id", handlerForUpdateEvent$PUT1812602333);
+        event.getRouter().route( HttpMethod.PUT, "/events/:id", handlerForUpdateEvent$PUT1123808995);
 
     }
 

@@ -17,26 +17,23 @@
 package kos.apt.rest;
 
 import generator.apt.SimplifiedAST;
-import injector.apt.InjectorProcessor;
-import kos.apt.ClassGenerator;
-import kos.core.Lang;
 import kos.api.WebServerEventListener;
+import kos.apt.ClassGenerator;
+import kos.apt.spi.CustomInjectorProcessor;
+import kos.core.Lang;
 import kos.rest.RestClient;
 import lombok.val;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static kos.core.Lang.filter;
 
 @SupportedAnnotationTypes( { "kos.rest.*" } )
 public class RestApiProcessor extends AbstractRestKosProcessor {
 
+    private final CustomInjectorProcessor injectorProcessor = new CustomInjectorProcessor();
     private ClassGenerator routeClassGenerator;
-    private CustomInjectorProcessor injectorProcessor = new CustomInjectorProcessor();
 
     public RestApiProcessor() {
         super(WebServerEventListener.class);
@@ -56,9 +53,7 @@ public class RestApiProcessor extends AbstractRestKosProcessor {
 
         routeClassGenerator.generateClasses(routes);
         spiGenerator.memorizeSPIFor(routes);
-
-        val nonAbstractTypes = filter(types, t -> !t.isAbstract() && !t.isInterface());
-        injectorProcessor.process(nonAbstractTypes);
+        injectorProcessor.process(types);
     }
 
     @Override
@@ -67,13 +62,5 @@ public class RestApiProcessor extends AbstractRestKosProcessor {
             type.getAnnotations(),
             ann -> ann.getType().equals(RestClient.class.getCanonicalName())
         ).isEmpty();
-    }
-
-    private static class CustomInjectorProcessor extends InjectorProcessor {
-
-        @Override
-        public void process(Collection<SimplifiedAST.Type> types) {
-            super.process(types);
-        }
     }
 }

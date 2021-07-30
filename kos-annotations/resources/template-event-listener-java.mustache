@@ -1,0 +1,60 @@
+package {{packageName}};
+
+import io.vertx.core.*;
+import io.vertx.core.eventbus.Message;
+import kos.api.*;
+import kos.core.events.*;
+
+/**
+ * Auto generated event bus listener configuration for {@link {{targetClassSimpleName}} }.
+ */
+@SuppressWarnings("all")
+@injector.Singleton
+@{{jdkGeneratedAnnotation}}("kos.apt.EventListenerKosProcessor")
+public class {{eventListenerClassName}} implements ConfigurationLoadedEventListener {
+
+    @Override
+    public void on(ConfigurationLoadedEvent event) {
+        final ImplementationLoader implementationLoader = event.getKosContext().getImplementationLoader();
+
+        // Auto-configure a message producer, if found in the classpath
+        final EventBusSinkManager messageProducerSyncManager = implementationLoader.instanceOfOrFail(EventBusSinkManager.class);
+
+        final Validation validation = event.getKosContext().getDefaultValidation();
+        final Vertx vertx = event.getKosContext().getDefaultVertx();
+        final {{targetClassSimpleName}} listener = implementationLoader.instanceOfOrFail({{targetClassSimpleName}}.class);
+
+        {{#listenerMethods}}
+        /*
+         * Configuring listener for
+         *  - eventBus address: "{{topicAddressName}}"
+         *  - handled by: {{targetClassSimpleName}}#{{targetMethodName}}
+         *  - handler is async: {{isAsync}}
+         *  - requires validation: {{requiresValidation}}
+         */
+        {{#requiresValidation}}
+        java.util.function.Function<{{{messageType}}}, Future<Void>> validEventHandler{{uniqueIdentifier}} = message -> {
+            {{#isAsync}}
+            return listener.{{targetMethodName}}(message);
+            {{/isAsync}}{{^isAsync}}
+            listener.{{targetMethodName}}(message);
+            return Future.succeededFuture();
+            {{/isAsync}}
+        };
+        {{/requiresValidation}}
+        messageProducerSyncManager.tryInitialise(event.getApplicationConfig(), event.getKosContext(), "{{topicAddressName}}");
+        vertx.eventBus().consumer("{{topicAddressName}}", EventHandler.async((Message<{{{messageType}}}> message) -> {
+            {{{messageType}}} body = message.body();
+            {{#requiresValidation}}
+            return validation.validate({{{messageType}}}.class, body)
+                .compose(validEventHandler{{uniqueIdentifier}});
+            {{/requiresValidation}}{{^requiresValidation}}{{#isAsync}}
+            return listener.{{targetMethodName}}(body);
+            {{/isAsync}}{{^isAsync}}
+            listener.{{targetMethodName}}(body);
+            return Future.succeededFuture();
+        {{/isAsync}}{{/requiresValidation}}
+        }));
+        {{/listenerMethods}}
+    }
+}

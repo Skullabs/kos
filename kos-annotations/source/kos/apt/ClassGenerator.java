@@ -33,7 +33,7 @@ public class ClassGenerator {
     private final String template;
     private final ProcessingEnvironment processingEnv;
 
-    protected void generateClasses(List<? extends SpiClass> types) throws IOException {
+    public void generateClasses(List<? extends SpiClass> types) throws IOException {
         for ( val route : types ) {
             val filer = processingEnv.getFiler();
             val source = filer.createSourceFile( route.getClassCanonicalName() );
