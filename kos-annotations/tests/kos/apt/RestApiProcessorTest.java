@@ -53,7 +53,7 @@ class RestApiProcessorTest {
         @Test
         void generateClasses() throws IOException {
             val source = APT.asSource(APT.testFile(SimpleApi.class));
-            runAPT(processor, source);
+            APT.run(processor, source);
 
             val generatedClass = APT.readFileAsString(APT.outputGeneratedClass(generatedClassName));
 
@@ -65,8 +65,8 @@ class RestApiProcessorTest {
         @Test
         void generateClasses1() throws IOException {
             val source = APT.asSource(APT.testFile(ApiWithNoPath.class));
-            runAPT(processor, source);
-            runAPT(new InjectorProcessor(), source);
+            APT.run(processor, source);
+            APT.run(new InjectorProcessor(), source);
 
             val generatedClass = APT.readFileAsString(APT.outputGeneratedClass(generatedClassName2));
 
@@ -82,8 +82,8 @@ class RestApiProcessorTest {
         @Test
         void generateClasses1() throws IOException {
             val source = APT.asSource(APT.testFile(ApiWithValidation.class));
-            runAPT(processor, source);
-            runAPT(new InjectorProcessor(), source);
+            APT.run(processor, source);
+            APT.run(new InjectorProcessor(), source);
 
             val generatedClass = APT.readFileAsString(APT.outputGeneratedClass(generatedClassName3));
 
@@ -97,7 +97,7 @@ class RestApiProcessorTest {
     @Test void generateClasses2() throws IOException
     {
         val source = APT.asSource( APT.testFile(SimpleApi.class) );
-        runAPT( processor, source );
+        APT.run( processor, source );
 
         val spiFileLocation = APT.outputGeneratedFile(
                 "META-INF/services/" + WebServerEventListener.class.getCanonicalName());
@@ -105,14 +105,5 @@ class RestApiProcessorTest {
 
         val expected = generatedClassName + SPIGenerator.EOL;
         assertTrue(spiFile.contains(expected));
-    }
-
-    static void runAPT(Processor processor, SimplifiedAPTRunner.LocalJavaSource source) {
-        val result = APT.runner().run( processor, source );
-        result.printErrorsIfAny();
-        result.printErrorsIfAny( d -> {
-            if ( d.getKind() == Diagnostic.Kind.ERROR )
-                throw new KosException( d.toString() );
-        });
     }
 }

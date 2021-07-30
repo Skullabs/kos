@@ -17,9 +17,11 @@
 package kos.apt;
 
 import generator.apt.*;
+import kos.core.exception.KosException;
 import lombok.experimental.*;
 import lombok.*;
 
+import javax.annotation.processing.Processor;
 import javax.tools.*;
 import java.io.*;
 import java.nio.charset.*;
@@ -52,7 +54,7 @@ public class APT {
         return new File("tests/" + path + ".java");
     }
 
-    public String testResourceAsString(String path ) throws IOException {
+    public String testResourceAsString(String path ) {
         return readFileAsString( new File("tests-resources/" + path) );
     }
 
@@ -65,8 +67,18 @@ public class APT {
         return new File("output/apt/" + path);
     }
 
-    public String readFileAsString( File file ) throws IOException {
+    @SneakyThrows
+    public String readFileAsString( File file ) {
         val bytes = Files.readAllBytes(file.toPath());
         return new String( bytes, StandardCharsets.UTF_8);
+    }
+
+    public static void run(Processor processor, SimplifiedAPTRunner.LocalJavaSource source) {
+        val result = APT.runner().run( processor, source );
+        result.printErrorsIfAny();
+        result.printErrorsIfAny( d -> {
+            if ( d.getKind() == Diagnostic.Kind.ERROR )
+                throw new KosException( d.toString() );
+        });
     }
 }

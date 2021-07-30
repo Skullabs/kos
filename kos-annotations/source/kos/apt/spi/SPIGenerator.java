@@ -30,7 +30,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SPIGenerator {
 
-    static final String EOL = "\n";
+    public static final String EOL = "\n";
 
     private final ProcessingEnvironment processingEnv;
     private final ResourceLocator resourceLocator;

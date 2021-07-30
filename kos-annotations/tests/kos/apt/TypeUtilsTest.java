@@ -76,6 +76,14 @@ class TypeUtilsTest {
         assertEquals( expected, TypeUtils.rawType(wrapped).get() );
     }
 
+    @Test @DisplayName("SHOULD remove quotas from annotation type value")
+    void annotationValueAsString()
+    {
+        val wrapped = "\"some 'important' \" value\"";
+        val expected = "some 'important' \" value";
+        assertEquals(expected, TypeUtils.annotationValueAsString(wrapped));
+    }
+
     @Nested class GenerateHttpPaths {
 
         @Test @DisplayName("should allow define / as the only path")

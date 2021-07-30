@@ -21,6 +21,7 @@ import io.vertx.core.Future;
 import kos.core.Lang;
 import kos.rest.*;
 import kos.validation.Valid;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 
@@ -160,5 +161,11 @@ public class TypeUtils {
                 return Optional.of(matcher.group(group));
             return Optional.empty();
         }
+    }
+
+    public String annotationValueAsString(@NonNull Object value) {
+        return value.toString()
+            .replaceFirst("^\"", "")
+            .replaceFirst("\"$", "");
     }
 }
