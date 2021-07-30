@@ -94,6 +94,7 @@ public class SPIGenerator {
     }
 
     private void info(String msg){
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, msg);
+        if (System.getenv("VERBOSE") != null)
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, msg);
     }
 }
