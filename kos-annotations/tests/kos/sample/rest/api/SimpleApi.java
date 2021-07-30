@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package kos.rest.sample;
+package kos.sample.rest.api;
 
 import io.vertx.core.Future;
 import io.vertx.core.http.*;

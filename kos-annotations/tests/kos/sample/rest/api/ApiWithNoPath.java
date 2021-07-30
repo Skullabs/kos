@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package kos.rest.sample;
+package kos.sample.rest.api;
 
 import kos.rest.*;
 
