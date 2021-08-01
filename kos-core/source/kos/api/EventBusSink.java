@@ -12,7 +12,21 @@ public interface EventBusSink {
     /**
      * Attempts to initialise the Sink.
      */
-    Result tryInitialise(JsonObject applicationConfig, KosContext kosContext, String address);
+    Result tryInitialise(SubscriptionRequest subscriptionRequest);
+
+    /**
+     * Represents a subscription request. Whenever EventBusSinkManager receives
+     * a subscription request, it will notify all {@link EventBusSink}. As a result
+     * of a successfully handled request, one or more producers will be available in
+     * Vert.x's EventBus.
+     */
+    @Value
+    class SubscriptionRequest {
+        JsonObject applicationConfig;
+        KosContext kosContext;
+        String address;
+        Class<?> expectedType;
+    }
 
     /**
      * Represents the outcome of an initialisation attempt.

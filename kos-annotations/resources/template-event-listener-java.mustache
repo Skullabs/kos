@@ -42,7 +42,10 @@ public class {{eventListenerClassName}} implements ConfigurationLoadedEventListe
             {{/isAsync}}
         };
         {{/requiresValidation}}
-        messageProducerSyncManager.tryInitialise(event.getApplicationConfig(), event.getKosContext(), "{{topicAddressName}}");
+        EventBusSink.SubscriptionRequest subscriptionRequest{{uniqueIdentifier}} = new EventBusSink.SubscriptionRequest(
+            event.getApplicationConfig(), event.getKosContext(), "{{topicAddressName}}", {{{messageTypeWithTypeErasure}}}.class
+        );
+        messageProducerSyncManager.tryInitialise(subscriptionRequest{{uniqueIdentifier}});
         vertx.eventBus().consumer("{{topicAddressName}}", EventHandler.async((Message<{{{messageType}}}> message) -> {
             {{{messageType}}} body = message.body();
             {{#requiresValidation}}
