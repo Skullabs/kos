@@ -22,7 +22,7 @@ public interface EventBusSink {
         boolean initialised;
         Throwable failure;
 
-        public static Result
+        public static final Result
             SUCCEEDED = new Result(true, null),
             NOT_ATTEMPTED = new Result(false, null)
         ;
