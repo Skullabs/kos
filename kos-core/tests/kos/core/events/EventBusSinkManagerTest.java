@@ -1,8 +1,6 @@
 package kos.core.events;
 
-import io.vertx.core.json.JsonObject;
 import kos.api.EventBusSink;
-import kos.api.KosContext;
 import kos.core.exception.KosException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,13 +22,13 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class EventBusSinkManagerTest {
 
-    final static String ADDRESS = "address";
+    EventBusSink.SubscriptionRequest subscriptionRequest = new EventBusSink.SubscriptionRequest(
+        null, null, "address", Object.class
+    );
 
     @Mock EventBusSink eventBusSink;
     @Mock EventBusSink eventBusSink2;
     @Mock EventBusSink eventBusSink3;
-    @Mock JsonObject jsonObject;
-    @Mock KosContext kosContext;
 
     EventBusSinkManager manager;
 
@@ -46,15 +44,15 @@ class EventBusSinkManagerTest {
 
         @BeforeEach
         void ensureMocksNoAttemptToInitialize() {
-            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any(), any(), any());
-            doReturn(NOT_ATTEMPTED).when(eventBusSink2).tryInitialise(any(), any(), any());
-            doReturn(NOT_ATTEMPTED).when(eventBusSink3).tryInitialise(any(), any(), any());
+            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any());
+            doReturn(NOT_ATTEMPTED).when(eventBusSink2).tryInitialise(any());
+            doReturn(NOT_ATTEMPTED).when(eventBusSink3).tryInitialise(any());
         }
 
         @DisplayName("Should return NOT_ATTEMPTED")
         @Test void tryInitialise()
         {
-            val result = manager.tryInitialise(jsonObject, kosContext, ADDRESS);
+            val result = manager.tryInitialise(subscriptionRequest);
             assertEquals(NOT_ATTEMPTED, result);
         }
     }
@@ -63,40 +61,39 @@ class EventBusSinkManagerTest {
 
         @BeforeEach
         void ensureMocksNoAttemptToInitialize() {
-            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any(), any(), any());
-            doReturn(SUCCEEDED).when(eventBusSink2).tryInitialise(any(), any(), any());
-//            doReturn(NOT_ATTEMPTED).when(eventBusSink3).tryInitialise(any(), any(), any());
+            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any());
+            doReturn(SUCCEEDED).when(eventBusSink2).tryInitialise(any());
         }
 
         @DisplayName("Should return SUCCEEDED")
         @Test void tryInitialise()
         {
-            val result = manager.tryInitialise(jsonObject, kosContext, ADDRESS);
+            val result = manager.tryInitialise(subscriptionRequest);
             assertEquals(SUCCEEDED, result);
         }
 
         @DisplayName("Should not invoke subsequent sinks after the successful ones")
         @Test void tryInitialise2()
         {
-            manager.tryInitialise(jsonObject, kosContext, ADDRESS);
+            manager.tryInitialise(subscriptionRequest);
 
-            verify(eventBusSink3, never()).tryInitialise(any(), any(), any());
+            verify(eventBusSink3, never()).tryInitialise(any());
         }
 
         @DisplayName("Should invoke the ones before the successful attempt")
         @Test void tryInitialise3()
         {
-            manager.tryInitialise(jsonObject, kosContext, ADDRESS);
+            manager.tryInitialise(subscriptionRequest);
 
-            verify(eventBusSink).tryInitialise(any(), any(), any());
+            verify(eventBusSink).tryInitialise(eq(subscriptionRequest));
         }
 
         @DisplayName("Should invoke the successful attempt")
         @Test void tryInitialise4()
         {
-            manager.tryInitialise(jsonObject, kosContext, ADDRESS);
+            manager.tryInitialise(subscriptionRequest);
 
-            verify(eventBusSink2).tryInitialise(any(), any(), any());
+            verify(eventBusSink2).tryInitialise(eq(subscriptionRequest));
         }
     }
 
@@ -106,38 +103,38 @@ class EventBusSinkManagerTest {
 
         @BeforeEach
         void ensureMocksNoAttemptToInitialize() {
-            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any(), any(), any());
-            doThrow(FAILURE).when(eventBusSink2).tryInitialise(any(), any(), any());
+            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any());
+            doThrow(FAILURE).when(eventBusSink2).tryInitialise(any());
         }
 
         @DisplayName("Should return Failure")
         @Test void tryInitialise()
         {
-            assertThrows(KosException.class, () -> manager.tryInitialise(jsonObject, kosContext, ADDRESS));
+            assertThrows(KosException.class, () -> manager.tryInitialise(subscriptionRequest));
         }
 
         @DisplayName("Should not invoke subsequent sinks after the successful ones")
         @Test void tryInitialise2()
         {
-            assertThrows(KosException.class, () -> manager.tryInitialise(jsonObject, kosContext, ADDRESS));
+            assertThrows(KosException.class, () -> manager.tryInitialise(subscriptionRequest));
 
-            verify(eventBusSink3, never()).tryInitialise(any(), any(), any());
+            verify(eventBusSink3, never()).tryInitialise(any());
         }
 
         @DisplayName("Should invoke the ones before the successful attempt")
         @Test void tryInitialise3()
         {
-            assertThrows(KosException.class, () -> manager.tryInitialise(jsonObject, kosContext, ADDRESS));
+            assertThrows(KosException.class, () -> manager.tryInitialise(subscriptionRequest));
 
-            verify(eventBusSink).tryInitialise(any(), any(), any());
+            verify(eventBusSink).tryInitialise(eq(subscriptionRequest));
         }
 
         @DisplayName("Should invoke the successful attempt")
         @Test void tryInitialise4()
         {
-            assertThrows(KosException.class, () -> manager.tryInitialise(jsonObject, kosContext, ADDRESS));
+            assertThrows(KosException.class, () -> manager.tryInitialise(subscriptionRequest));
 
-            verify(eventBusSink2).tryInitialise(any(), any(), any());
+            verify(eventBusSink2).tryInitialise(eq(subscriptionRequest));
         }
     }
 }

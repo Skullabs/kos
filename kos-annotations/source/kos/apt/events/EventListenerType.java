@@ -55,6 +55,7 @@ class EventListenerMethod {
 
     final String topicAddressName;
     final String messageType;
+    final String messageTypeWithTypeErasure;
     final boolean requiresValidation;
     final boolean isAsync;
     final String targetMethodName;
@@ -78,10 +79,12 @@ class EventListenerMethod {
         }
 
         val parameter = targetMethod.getParameters().get(0);
+        val messageType = parameter.getType();
 
         return new EventListenerMethod(
             topicAddressName,
-            parameter.getType(),
+            messageType,
+            TypeUtils.rawType(messageType).orElse(messageType),
             parameter.getAnnotation(Valid.class) != null,
             !targetMethod.isVoidMethod(),
             targetMethod.getName(),

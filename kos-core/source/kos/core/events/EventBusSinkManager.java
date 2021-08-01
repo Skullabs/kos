@@ -2,10 +2,9 @@ package kos.core.events;
 
 import injector.AllOf;
 import injector.Singleton;
-import io.vertx.core.json.JsonObject;
 import kos.api.EventBusSink;
-import kos.api.KosContext;
 import kos.core.exception.KosException;
+import lombok.val;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,18 +22,19 @@ public class EventBusSinkManager implements EventBusSink {
     }
 
     @Override
-    public Result tryInitialise(JsonObject applicationConfig, KosContext kosContext, String address) {
-        if (syncsAttemptedToBeInitialised.contains(address))
+    public Result tryInitialise(SubscriptionRequest subscriptionRequest) {
+        if (syncsAttemptedToBeInitialised.contains(subscriptionRequest.getAddress()))
             return Result.NOT_ATTEMPTED;
 
-        return attemptToInitialise(applicationConfig, kosContext, address);
+        return performInitialization(subscriptionRequest);
     }
 
-    private Result attemptToInitialise(JsonObject applicationConfig, KosContext kosContext, String address) {
+    private Result performInitialization(SubscriptionRequest subscriptionRequest) {
+        val address = subscriptionRequest.getAddress();
         Result result = Result.NOT_ATTEMPTED;
 
-        for (EventBusSink sink : sinks) {
-            result = tryInitialise(sink, applicationConfig, kosContext, address);
+        for (val sink : sinks) {
+            result = tryInitialiseSink(sink, subscriptionRequest);
             if (Result.SUCCEEDED.equals(result)) break;
             if (result.getFailure() != null) {
                 throw new KosException("Failed to initialize Sync for " + address + ".", result.getFailure());
@@ -45,12 +45,11 @@ public class EventBusSinkManager implements EventBusSink {
         return result;
     }
 
-    private Result tryInitialise(
-        EventBusSink sync, JsonObject applicationConfig,
-        KosContext kosContext, String address
+    private Result tryInitialiseSink(
+        EventBusSink sync, SubscriptionRequest subscriptionRequest
     ) {
         try {
-            return sync.tryInitialise(applicationConfig, kosContext, address);
+            return sync.tryInitialise(subscriptionRequest);
         } catch (Throwable cause) {
             return Result.failure(cause);
         }

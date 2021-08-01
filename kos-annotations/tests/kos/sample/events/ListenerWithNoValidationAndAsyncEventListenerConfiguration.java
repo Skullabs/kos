@@ -31,7 +31,10 @@ public class ListenerWithNoValidationAndAsyncEventListenerConfiguration implemen
          *  - handler is async: true
          *  - requires validation: false
          */
-        messageProducerSyncManager.tryInitialise(event.getApplicationConfig(), event.getKosContext(), "gcp::pubsub::users::deleted");
+        EventBusSink.SubscriptionRequest subscriptionRequest1 = new EventBusSink.SubscriptionRequest(
+            event.getApplicationConfig(), event.getKosContext(), "gcp::pubsub::users::deleted", java.lang.String.class
+        );
+        messageProducerSyncManager.tryInitialise(subscriptionRequest1);
         vertx.eventBus().consumer("gcp::pubsub::users::deleted", EventHandler.async((Message<java.lang.String> message) -> {
             java.lang.String body = message.body();
             return listener.on(body);
