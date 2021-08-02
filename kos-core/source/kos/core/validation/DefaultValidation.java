@@ -13,7 +13,7 @@ import static java.util.Arrays.asList;
  */
 @RequiredArgsConstructor
 @SuppressWarnings("all")
-public class DefaultValidation implements Validation {
+public class DefaultValidation implements Validation<Object> {
 
     @Getter(AccessLevel.PACKAGE)
     private final Map<Class, Validation> validationCache;
@@ -34,20 +34,21 @@ public class DefaultValidation implements Validation {
     }
 
     @Override
-    public <T> Future<T> validate(Class<T> type, T object)
+    public Future<Object> validate(Object object)
     {
         val classes = new ArrayDeque<Class>();
+        val type = getTypeOfTheObjectBeingValidated();
         populateWithClassAndItsInterfaces(classes, type);
 
         Class aClass = null;
         while ((aClass = classes.poll()) != null) {
             val validation = this.validationCache.get(aClass);
             if (validation != null)
-                return validation.validate(aClass, object);
+                return validation.validate(object);
             populateWithClassAndItsInterfaces(classes, aClass.getSuperclass());
         }
 
-        return fallbackValidation.validate(type, object);
+        return fallbackValidation.validate(object);
     }
 
     private void populateWithClassAndItsInterfaces(Queue<Class> stack, Class klass) {
@@ -67,7 +68,7 @@ public class DefaultValidation implements Validation {
      * as an optimistic-validator for cases where no validation was defined by
      * the developer.
      */
-    static class AlwaysValid implements Validation {
+    static class AlwaysValid implements Validation<Object> {
 
         @Override
         public Class getTypeOfTheObjectBeingValidated() {
@@ -75,7 +76,7 @@ public class DefaultValidation implements Validation {
         }
 
         @Override
-        public <T> Future<T> validate(Class<T> type, T object) {
+        public Future<Object> validate(Object object) {
             return Future.succeededFuture(object);
         }
     }

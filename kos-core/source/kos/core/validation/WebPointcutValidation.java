@@ -17,7 +17,7 @@ public class WebPointcutValidation {
     public <T> Handler<RoutingContext> wrapForBody(Class<T> type, String name, Handler<RoutingContext> handler) {
         return event -> {
             val parameter = Request.readBody(kosContext, event, name, type);
-            val future = kosContext.getDefaultValidation().validate(type, parameter);
+            val future = kosContext.getDefaultValidation().validate(parameter);
             future.onSuccess(new AttachAndForward<>("body:" + name, event, handler));
         };
     }

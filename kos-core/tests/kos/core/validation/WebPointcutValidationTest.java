@@ -1,6 +1,5 @@
 package kos.core.validation;
 
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
@@ -9,7 +8,6 @@ import kos.api.MutableKosContext;
 import kos.api.PayloadSerializationStrategy;
 import kos.api.Serializer;
 import kos.api.Validation;
-import kos.core.exception.KosException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +36,7 @@ class WebPointcutValidationTest {
 
     @BeforeEach void setupValidationMocks(){
         doAnswer(a -> succeededFuture(a.getArgument(1)))
-            .when(validation).validate(any(), any());
+            .when(validation).validate(any());
 
         kosContext.setDefaultValidation(validation);
     }
@@ -68,7 +66,7 @@ class WebPointcutValidationTest {
             newHandler.handle(routingContext);
 
             verify(handler).handle(routingContext);
-            verify(validation).validate(any(), eq(deserializedObject));
+            verify(validation).validate(eq(deserializedObject));
         }
     }
 }

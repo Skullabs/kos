@@ -1,6 +1,5 @@
 package kos.core.validation;
 
-import io.vertx.core.Future;
 import kos.api.Validation;
 import kos.core.Lang;
 import lombok.val;
@@ -15,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.HashMap;
 
 import static io.vertx.core.Future.succeededFuture;
-import static kos.core.Lang.mapOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,7 +54,7 @@ class DefaultValidationTest {
             @BeforeEach
             void configureValidation(){
                 doReturn(String.class).when(validation).getTypeOfTheObjectBeingValidated();
-                doAnswer(ctx -> succeededFuture("World")).when(validation).validate(any(), any());
+                doAnswer(ctx -> succeededFuture("World")).when(validation).validate(any());
 
                 defaultValidation = new DefaultValidation();
                 defaultValidation.memorise(validation);
@@ -65,14 +63,14 @@ class DefaultValidationTest {
             @DisplayName("it should validate using the specified validation")
             @Test
             void validate() {
-                defaultValidation.validate(String.class, "Hello");
-                verify(validation).validate(any(), eq("Hello"));
+                defaultValidation.validate("Hello");
+                verify(validation).validate(eq("Hello"));
             }
 
             @DisplayName("it should return the result produced by the validation")
             @Test
             void validate1() {
-                val future = defaultValidation.validate(String.class, "Hello");
+                val future = defaultValidation.validate("Hello");
                 val result = Lang.waitFor(future);
                 assertEquals("World", result);
             }
@@ -87,7 +85,7 @@ class DefaultValidationTest {
             @BeforeEach
             void configureValidation(){
                 doReturn(CharSequence.class).when(validation).getTypeOfTheObjectBeingValidated();
-                doAnswer(ctx -> succeededFuture("World")).when(validation).validate(any(), any());
+                doAnswer(ctx -> succeededFuture("World")).when(validation).validate(any());
 
                 defaultValidation = new DefaultValidation();
                 defaultValidation.memorise(validation);
@@ -97,15 +95,15 @@ class DefaultValidationTest {
             @Test
             void validate()
             {
-                defaultValidation.validate(String.class, "Hello");
-                verify(validation).validate(any(), eq("Hello"));
+                defaultValidation.validate("Hello");
+                verify(validation).validate(eq("Hello"));
             }
 
             @DisplayName("it should return the result produced by the validation")
             @Test
             void validate1()
             {
-                val future = defaultValidation.validate(String.class, "Hello");
+                val future = defaultValidation.validate("Hello");
                 val result = Lang.waitFor(future);
                 assertEquals("World", result);
             }
@@ -128,14 +126,14 @@ class DefaultValidationTest {
             @DisplayName("it should validate using the fallback validation")
             @Test void validate()
             {
-                defaultValidation.validate(String.class, "Hello");
-                verify(fallbackValidation).validate(any(), eq("Hello"));
+                defaultValidation.validate("Hello");
+                verify(fallbackValidation).validate(eq("Hello"));
             }
 
             @DisplayName("it should return the result produced by the fallback validation")
             @Test void validate1()
             {
-                val future = defaultValidation.validate(String.class,"Hello");
+                val future = defaultValidation.validate("Hello");
                 val result = Lang.waitFor(future);
                 assertEquals("Hello", result);
             }
