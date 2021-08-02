@@ -11,7 +11,9 @@ import lombok.val;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -45,17 +47,20 @@ public class EventListenerKosProcessor extends SimplifiedAbstractProcessor {
 
     @Override
     protected void process(Collection<SimplifiedAST.Type> types) {
-        spiGenerator.flushSPIClasses();
-
         try {
             val eventListenerTypes = convert(types, EventListenerType::from);
             classGenerator.generateClasses(eventListenerTypes);
-            spiGenerator.memorizeSPIFor(eventListenerTypes);
             injectorProcessor.process(types);
+            generateSpiDescriptors(eventListenerTypes);
         } catch (Throwable cause) {
             throw new RuntimeException(cause);
         }
 
+    }
+
+    private void generateSpiDescriptors(List<EventListenerType> eventListenerTypes) throws IOException {
         spiGenerator.flushSPIClasses();
+        spiGenerator.memorizeSPIFor(eventListenerTypes);
+        spiGenerator.generateSPIFiles();
     }
 }
