@@ -47,21 +47,24 @@ public class Launcher {
 
     public void run(){
         runPluginsAndConfigureKos();
-        readDeploymentConfig( deploymentConf -> {
-            deployCustomApplication(deploymentConf);
-            deployWebServer( deploymentConf );
-            deployVerticles( deploymentConf );
+        readDeploymentConfig( loadedConfiguration -> {
+            trigger( loadedConfiguration );
+            deployWebServer( loadedConfiguration );
+            deployVerticles( loadedConfiguration );
         });
     }
 
     private void runPluginsAndConfigureKos() {
+        log.info("Initializing plugins...");
         val plugins = Lang.sorted(
             conf.getSpi().instancesExposedAs(Plugin.class),
             (p1, p2) -> Integer.compare(p2.priority(), p1.priority())
         );
 
-        for (val plugin : plugins)
+        for (val plugin : plugins) {
+            log.debug(" -> " + plugin.getClass().getCanonicalName());
             plugin.configure(conf);
+        }
 
         conf.getImplementationLoader().register(KosContext.class, conf);
     }
@@ -78,7 +81,7 @@ public class Launcher {
         });
     }
 
-    void deployCustomApplication(ConfigurationLoadedEvent event) {
+    void trigger(ConfigurationLoadedEvent event) {
         val listeners = event.getKosContext().getImplementationLoader().instancesExposedAs(ConfigurationLoadedEventListener.class);
 
         log.info("Configuration loaded.");
