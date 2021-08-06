@@ -63,6 +63,8 @@ class EventListenerMethod {
 
     public static EventListenerMethod from(int counter, SimplifiedAST.Method targetMethod)
     {
+        if (targetMethod.isConstructor()) return null;
+
         val topicAddressName = extractTopicAddressNameFrom(targetMethod);
         if (topicAddressName == null) return null;
 
