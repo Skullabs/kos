@@ -36,7 +36,7 @@ class WebPointcutValidationTest {
 
     @BeforeEach void setupValidationMocks(){
         doAnswer(a -> succeededFuture(a.getArgument(1)))
-            .when(validation).validate(any());
+            .when(validation).validate(any(), any());
 
         kosContext.setDefaultValidation(validation);
     }
@@ -66,7 +66,7 @@ class WebPointcutValidationTest {
             newHandler.handle(routingContext);
 
             verify(handler).handle(routingContext);
-            verify(validation).validate(eq(deserializedObject));
+            verify(validation).validate(eq(deserializedObject), eq(Object.class));
         }
     }
 }

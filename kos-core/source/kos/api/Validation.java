@@ -18,6 +18,7 @@ public interface Validation<T> {
      * will be returned in the successful {@link Future} result.
      *
      * @param object the object to be validated
+     * @param targetClass
      */
-    Future<T> validate(T object);
+    Future<T> validate(T object, Class<T> targetClass);
 }

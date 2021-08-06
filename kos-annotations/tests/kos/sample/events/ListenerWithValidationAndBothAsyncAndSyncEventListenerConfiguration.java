@@ -40,7 +40,7 @@ public class ListenerWithValidationAndBothAsyncAndSyncEventListenerConfiguration
         messageProducerSyncManager.tryInitialise(subscriptionRequest1);
         vertx.eventBus().consumer("gcp::pubsub::users::deleted", EventHandler.async((Message<java.lang.String> message) -> {
             java.lang.String body = message.body();
-            return validation.validate(body)
+            return validation.validate(body, java.lang.String.class)
                 .compose(validEventHandler1);
         }));
         /*
@@ -60,7 +60,7 @@ public class ListenerWithValidationAndBothAsyncAndSyncEventListenerConfiguration
         messageProducerSyncManager.tryInitialise(subscriptionRequest2);
         vertx.eventBus().consumer("gcp::pubsub::users::deleted", EventHandler.async((Message<java.util.UUID> message) -> {
             java.util.UUID body = message.body();
-            return validation.validate(body)
+            return validation.validate(body, java.util.UUID.class)
                 .compose(validEventHandler2);
         }));
     }
