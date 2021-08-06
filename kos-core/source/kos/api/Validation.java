@@ -11,7 +11,7 @@ public interface Validation<T> {
      * Returns a static representation of the object being validated.
      */
     @SuppressWarnings("rawtypes")
-    Class getTypeOfTheObjectBeingValidated();
+    Class<T> getTypeOfTheObjectBeingValidated();
 
     /**
      * Validates the {@code object}. It is expected that the validated object
