@@ -19,7 +19,7 @@ public class {{validatorClassName}} implements Validation<{{{validatedType}}}> {
     }
 
     @Override
-    public Future<{{{validatedType}}}> validate({{{validatedType}}} object) {
+    public Future<{{{validatedType}}}> validate({{{validatedType}}} object, Class targetClass) {
         try {
             {{#isAsync}}return {{/isAsync}}validator.{{validatorMethod}}(object);{{^isAsync}}
 

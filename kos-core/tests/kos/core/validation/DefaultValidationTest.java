@@ -54,7 +54,7 @@ class DefaultValidationTest {
             @BeforeEach
             void configureValidation(){
                 doReturn(String.class).when(validation).getTypeOfTheObjectBeingValidated();
-                doAnswer(ctx -> succeededFuture("World")).when(validation).validate(any());
+                doAnswer(ctx -> succeededFuture("World")).when(validation).validate(any(), eq(String.class));
 
                 defaultValidation = new DefaultValidation();
                 defaultValidation.memorise(validation);
@@ -63,14 +63,14 @@ class DefaultValidationTest {
             @DisplayName("it should validate using the specified validation")
             @Test
             void validate() {
-                defaultValidation.validate("Hello");
-                verify(validation).validate(eq("Hello"));
+                defaultValidation.validate("Hello", String.class);
+                verify(validation).validate(eq("Hello"), eq(String.class));
             }
 
             @DisplayName("it should return the result produced by the validation")
             @Test
             void validate1() {
-                val future = defaultValidation.validate("Hello");
+                val future = defaultValidation.validate("Hello", String.class);
                 val result = Lang.waitFor(future);
                 assertEquals("World", result);
             }
@@ -85,7 +85,7 @@ class DefaultValidationTest {
             @BeforeEach
             void configureValidation(){
                 doReturn(CharSequence.class).when(validation).getTypeOfTheObjectBeingValidated();
-                doAnswer(ctx -> succeededFuture("World")).when(validation).validate(any());
+                doAnswer(ctx -> succeededFuture("World")).when(validation).validate(any(), eq(CharSequence.class));
 
                 defaultValidation = new DefaultValidation();
                 defaultValidation.memorise(validation);
@@ -95,15 +95,15 @@ class DefaultValidationTest {
             @Test
             void validate()
             {
-                defaultValidation.validate("Hello");
-                verify(validation).validate(eq("Hello"));
+                defaultValidation.validate("Hello", String.class);
+                verify(validation).validate(eq("Hello"), eq(CharSequence.class));
             }
 
             @DisplayName("it should return the result produced by the validation")
             @Test
             void validate1()
             {
-                val future = defaultValidation.validate("Hello");
+                val future = defaultValidation.validate("Hello", String.class);
                 val result = Lang.waitFor(future);
                 assertEquals("World", result);
             }
@@ -126,14 +126,14 @@ class DefaultValidationTest {
             @DisplayName("it should validate using the fallback validation")
             @Test void validate()
             {
-                defaultValidation.validate("Hello");
-                verify(fallbackValidation).validate(eq("Hello"));
+                defaultValidation.validate("Hello", String.class);
+                verify(fallbackValidation).validate(eq("Hello"), eq(String.class));
             }
 
             @DisplayName("it should return the result produced by the fallback validation")
             @Test void validate1()
             {
-                val future = defaultValidation.validate("Hello");
+                val future = defaultValidation.validate("Hello", String.class);
                 val result = Lang.waitFor(future);
                 assertEquals("Hello", result);
             }

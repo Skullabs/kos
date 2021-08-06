@@ -19,7 +19,7 @@ public class SyncValidator$UUID$Validation1 implements Validation<java.util.UUID
     }
 
     @Override
-    public Future<java.util.UUID> validate(java.util.UUID object) {
+    public Future<java.util.UUID> validate(java.util.UUID object, Class targetClass) {
         try {
             validator.validate(object);
             return Future.succeededFuture(object);

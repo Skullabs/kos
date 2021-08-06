@@ -19,7 +19,7 @@ public class ValidatorWithMultipleValidations$List$Validation2 implements Valida
     }
 
     @Override
-    public Future<java.awt.List> validate(java.awt.List object) {
+    public Future<java.awt.List> validate(java.awt.List object, Class targetClass) {
         try {
             validator.validate(object);
             return Future.succeededFuture(object);

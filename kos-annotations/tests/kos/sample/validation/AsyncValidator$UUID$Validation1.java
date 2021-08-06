@@ -19,7 +19,7 @@ public class AsyncValidator$UUID$Validation1 implements Validation<java.util.UUI
     }
 
     @Override
-    public Future<java.util.UUID> validate(java.util.UUID object) {
+    public Future<java.util.UUID> validate(java.util.UUID object, Class targetClass) {
         try {
             return validator.validate(object);
         } catch (Throwable cause) {

@@ -49,7 +49,7 @@ public class {{eventListenerClassName}} implements ConfigurationLoadedEventListe
         vertx.eventBus().consumer("{{topicAddressName}}", EventHandler.async((Message<{{{messageType}}}> message) -> {
             {{{messageType}}} body = message.body();
             {{#requiresValidation}}
-            return validation.validate({{{messageType}}}.class, body)
+            return validation.validate(body, {{{messageType}}}.class)
                 .compose(validEventHandler{{uniqueIdentifier}});
             {{/requiresValidation}}{{^requiresValidation}}{{#isAsync}}
             return listener.{{targetMethodName}}(body);

@@ -13,7 +13,7 @@ import static java.util.Arrays.asList;
  */
 @RequiredArgsConstructor
 @SuppressWarnings("all")
-public class DefaultValidation implements Validation<Object> {
+public class DefaultValidation implements Validation {
 
     @Getter(AccessLevel.PACKAGE)
     private final Map<Class, Validation> validationCache;
@@ -34,21 +34,21 @@ public class DefaultValidation implements Validation<Object> {
     }
 
     @Override
-    public Future<Object> validate(Object object)
+    public Future validate(Object object, Class targetClass)
     {
         val classes = new ArrayDeque<Class>();
-        val type = getTypeOfTheObjectBeingValidated();
+        val type = targetClass;
         populateWithClassAndItsInterfaces(classes, type);
 
         Class aClass = null;
         while ((aClass = classes.poll()) != null) {
             val validation = this.validationCache.get(aClass);
             if (validation != null)
-                return validation.validate(object);
+                return validation.validate(object, aClass);
             populateWithClassAndItsInterfaces(classes, aClass.getSuperclass());
         }
 
-        return fallbackValidation.validate(object);
+        return fallbackValidation.validate(object, targetClass);
     }
 
     private void populateWithClassAndItsInterfaces(Queue<Class> stack, Class klass) {
@@ -59,7 +59,7 @@ public class DefaultValidation implements Validation<Object> {
     }
 
     @Override
-    public Class getTypeOfTheObjectBeingValidated() {
+    public Class<Object> getTypeOfTheObjectBeingValidated() {
         return Object.class;
     }
 
@@ -76,7 +76,7 @@ public class DefaultValidation implements Validation<Object> {
         }
 
         @Override
-        public Future<Object> validate(Object object) {
+        public Future<Object> validate(Object object, Class<Object> targetClass) {
             return Future.succeededFuture(object);
         }
     }
