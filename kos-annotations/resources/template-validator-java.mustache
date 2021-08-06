@@ -1,0 +1,36 @@
+package {{packageName}};
+
+import io.vertx.core.Future;
+import kos.api.Validation;
+
+/**
+ * Auto generated validation for type {@link {{{validatedType}}} }.
+ */
+@SuppressWarnings("all")
+@injector.Singleton
+@{{jdkGeneratedAnnotation}}("kos.apt.validation.ValidatorProcessor")
+public class {{validatorClassName}} implements Validation<{{{validatedType}}}> {
+
+    private final {{targetClassSimpleName}} validator;
+
+    @injector.Constructor
+    public {{validatorClassName}}({{targetClassSimpleName}} validator) {
+        this.validator = validator;
+    }
+
+    @Override
+    public Future<{{{validatedType}}}> validate({{{validatedType}}} object) {
+        try {
+            {{#isAsync}}return {{/isAsync}}validator.{{validatorMethod}}(object);{{^isAsync}}
+
+            return Future.succeededFuture(object);{{/isAsync}}
+        } catch (Throwable cause) {
+            return Future.failedFuture(cause);
+        }
+    }
+
+    @Override
+    public Class<{{{validatedType}}}> getTypeOfTheObjectBeingValidated() {
+        return {{{validatedTypeWithTypeErasure}}}.class;
+    }
+}
