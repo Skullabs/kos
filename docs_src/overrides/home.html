@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block tabs %}
+{{ super() }}
+
+<style>
+
+    .md-header {
+      position: initial;
+    }
+
+    @media screen and (min-width: 60em) {
+      .md-sidebar--secondary {
+        display: none;
+      }
+    }
+
+    @media screen and (min-width: 76.25em) {
+      .md-sidebar--primary {
+        display: none;
+      }
+    }
+
+    .mdx-container {
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: hsla(232, 15%, 21%, 1)' /></svg>") no-repeat bottom,linear-gradient(to bottom,var(--md-primary-fg-color),#a63fd9 99%,var(--md-default-bg-color) 99%);
+    }
+
+    .md-typeset h1, .md-typeset h2 {
+        font-weight: 600;
+        color: white;
+        margin: 30px 0 0;
+    }
+
+    .mdx-hero .md-typeset h1 {
+        margin: 30px 0 30px 0;
+    }
+
+    .mdx-hero__content  > .md-button {
+        color: white;
+        border-color: white;
+    }
+
+    .mdx-hero__content  > .md-button.md-button--primary {
+        background: white;
+        color: purple;
+    }
+
+    .md-main h1 { display: none; }
+
+    .s-grid {
+        display: flex;
+        overflow: auto;
+        justify-content: space-around;
+    }
+
+    .s-grid > div {
+        margin: 20px;
+        flex: 1;
+    }
+
+    @media screen and (min-width: 1144px){
+        .mdx-hero {
+            display: flex;
+            overflow: auto;
+            justify-content: space-around;
+            min-height: 500px;
+            margin-top: 30px;
+            color: white;
+        }
+
+        .mdx-hero > .mdx-hero__content {
+          width: 40%;
+        }
+
+        .mdx-container ~ .s-grid { margin-top: -100px; }
+    }
+
+    @media screen and (min-width: 1600px){
+        .mdx-hero {
+            min-height: 700px;
+        }
+
+        .mdx-container ~ .s-grid { margin-top: -200px; }
+    }
+
+    @media screen and (min-width: 3000px){
+        .mdx-hero {
+            min-height: 900px;
+        }
+
+        .mdx-container ~ .s-grid { margin-top: -200px; }
+    }
+
+    @media screen and (max-width: 1144px){
+        .mdx-hero {
+            display: block;
+            overflow: auto;
+            width: 100%;
+            min-height: 300px;
+        }
+
+        .mdx-hero > div {
+            float: left;
+            width: 100%;
+            padding: 0 10% 50px;
+            display: block;
+        }
+
+        .mdx-hero > div.mdx-hero__image > img {
+            margin: 0 auto;
+            display: block;
+            max-width: 768px;
+            min-width: 653px;
+            width: 80%;
+        }
+    }
+
+    @media screen and (max-width: 800px){
+        .mdx-hero { text-align: center; }
+        .mdx-hero p { text-align: left; }
+        .mdx-hero > div.mdx-hero__image { display: none; }
+        .mdx-hero a.md-button { margin: 20px auto 20px; width: 160px }
+        .mdx-hero a.md-button:last-child { margin-top: 0; }
+    }
+
+    @media screen and (max-width: 640px){
+        .s-grid { display: block; }
+        .s-grid > div { margin: 10%; }
+        #btn_src_code { display: none; }
+    }
+
+
+  </style>
+
+<section class="mdx-container">
+    <div class="md-grid md-typeset">
+        <div class="mdx-hero">
+
+            <!-- Hero content -->
+            <div class="mdx-hero__content">
+                <h1>Overhead matters</h1>
+                <p>Kos is zero-overhead and minimalist web framework based on Vert.x. It provides developers with
+                    an opinionated, but fully customizable, development API, allowing them to focus on what
+                    matter the most: the product itself. After all, why should we choose between performance and
+                    productivity when you can choose both?</p>
+                <a
+                    href="{{ page.next_page.url | url }}"
+                    title="{{ page.next_page.title | e }}"
+                    class="md-button md-button--primary"
+                >
+                    Quick start
+                </a>
+                <a  id="btn_src_code"
+                    href="https://github.com/skullabs/kos"
+                    title="Source Code"
+                    class="md-button"
+                >
+                    Source Code
+                </a>
+            </div>
+
+            <!-- Hero image -->
+            <div class="mdx-hero__image">
+                <img src="sample-code.png">
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="md-grid md-typeset s-grid">
+    <div>
+        <h2>Performance</h2>
+        <p>Kos provides a thin layer of fundamental web application features, without obscuring Vert.x
+            features that you know and love. It leverages traditional annotation-driven design that
+            is so common in the JVM, but empowers reactive programming provided by Vert.x.</p>
+    </div>
+    <div>
+        <h2>Flexible</h2>
+        <p>Conventions helps developers to put effort on what matter: business. Kos will simplify
+            things whenever possible, but developers are always able to change its default behaviours.</p>
+    </div>
+    <div>
+        <h2>Fast</h2>
+        <p>Simplifying repetitive routines should never hurt the software performance. We value compilation-time
+            optimizations over reflection or runtime proxies.</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}

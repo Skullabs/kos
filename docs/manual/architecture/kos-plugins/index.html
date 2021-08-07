@@ -13,21 +13,21 @@
         <meta name="author" content="Skullabs Contributors">
       
       
-        <link rel="canonical" href="https://skullabs.github.io/kos/">
+        <link rel="canonical" href="https://skullabs.github.io/kos/manual/architecture/kos-plugins/">
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
     
     
       
-        <title>Kos - Kos</title>
+        <title>Plugins - Kos</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.ca7ac06f.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ca7ac06f.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.f1a3b89f.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.f1a3b89f.min.css">
         
           
           
@@ -46,7 +46,7 @@
     
     
     
-      <link rel="stylesheet" href="theme.css">
+      <link rel="stylesheet" href="../../../theme.css">
     
     
       
@@ -65,12 +65,17 @@
     <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="purple">
   
     
-    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#kos-plugins" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -79,7 +84,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Kos" class="md-header__button md-logo" aria-label="Kos" data-md-component="logo">
+    <a href="../../.." title="Kos" class="md-header__button md-logo" aria-label="Kos" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -98,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Kos
+              Plugins
             
           </span>
         </div>
@@ -157,7 +162,6 @@
     <div class="md-container" data-md-component="container">
       
       
-
         
           
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
@@ -167,12 +171,10 @@
         
   
   
-    
-  
 
 
   <li class="md-tabs__item">
-    <a href="." class="md-tabs__link md-tabs__link--active">
+    <a href="../../.." class="md-tabs__link">
       Home
     </a>
   </li>
@@ -184,7 +186,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="getting-started/" class="md-tabs__link">
+    <a href="../../../getting-started/" class="md-tabs__link">
       Getting Started
     </a>
   </li>
@@ -193,13 +195,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="manual/developer/basic-concepts/" class="md-tabs__link">
+      <a href="../../developer/basic-concepts/" class="md-tabs__link md-tabs__link--active">
         Manual
       </a>
     </li>
@@ -212,7 +216,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="license/" class="md-tabs__link">
+    <a href="../../../license/" class="md-tabs__link">
       License
     </a>
   </li>
@@ -223,192 +227,6 @@
 </nav>
         
       
-
-<style>
-
-    .md-header {
-      position: initial;
-    }
-
-    @media screen and (min-width: 60em) {
-      .md-sidebar--secondary {
-        display: none;
-      }
-    }
-
-    @media screen and (min-width: 76.25em) {
-      .md-sidebar--primary {
-        display: none;
-      }
-    }
-
-    .mdx-container {
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: hsla(232, 15%, 21%, 1)' /></svg>") no-repeat bottom,linear-gradient(to bottom,var(--md-primary-fg-color),#a63fd9 99%,var(--md-default-bg-color) 99%);
-    }
-
-    .md-typeset h1, .md-typeset h2 {
-        font-weight: 600;
-        color: white;
-        margin: 30px 0 0;
-    }
-
-    .mdx-hero .md-typeset h1 {
-        margin: 30px 0 30px 0;
-    }
-
-    .mdx-hero__content  > .md-button {
-        color: white;
-        border-color: white;
-    }
-
-    .mdx-hero__content  > .md-button.md-button--primary {
-        background: white;
-        color: purple;
-    }
-
-    .md-main h1 { display: none; }
-
-    .s-grid {
-        display: flex;
-        overflow: auto;
-        justify-content: space-around;
-    }
-
-    .s-grid > div {
-        margin: 20px;
-        flex: 1;
-    }
-
-    @media screen and (min-width: 1144px){
-        .mdx-hero {
-            display: flex;
-            overflow: auto;
-            justify-content: space-around;
-            min-height: 500px;
-            margin-top: 30px;
-            color: white;
-        }
-
-        .mdx-hero > .mdx-hero__content {
-          width: 40%;
-        }
-
-        .mdx-container ~ .s-grid { margin-top: -100px; }
-    }
-
-    @media screen and (min-width: 1600px){
-        .mdx-hero {
-            min-height: 700px;
-        }
-
-        .mdx-container ~ .s-grid { margin-top: -200px; }
-    }
-
-    @media screen and (min-width: 3000px){
-        .mdx-hero {
-            min-height: 900px;
-        }
-
-        .mdx-container ~ .s-grid { margin-top: -200px; }
-    }
-
-    @media screen and (max-width: 1144px){
-        .mdx-hero {
-            display: block;
-            overflow: auto;
-            width: 100%;
-            min-height: 300px;
-        }
-
-        .mdx-hero > div {
-            float: left;
-            width: 100%;
-            padding: 0 10% 50px;
-            display: block;
-        }
-
-        .mdx-hero > div.mdx-hero__image > img {
-            margin: 0 auto;
-            display: block;
-            max-width: 768px;
-            min-width: 653px;
-            width: 80%;
-        }
-    }
-
-    @media screen and (max-width: 800px){
-        .mdx-hero { text-align: center; }
-        .mdx-hero p { text-align: left; }
-        .mdx-hero > div.mdx-hero__image { display: none; }
-        .mdx-hero a.md-button { margin: 20px auto 20px; width: 160px }
-        .mdx-hero a.md-button:last-child { margin-top: 0; }
-    }
-
-    @media screen and (max-width: 640px){
-        .s-grid { display: block; }
-        .s-grid > div { margin: 10%; }
-        #btn_src_code { display: none; }
-    }
-
-
-  </style>
-
-<section class="mdx-container">
-    <div class="md-grid md-typeset">
-        <div class="mdx-hero">
-
-            <!-- Hero content -->
-            <div class="mdx-hero__content">
-                <h1>Overhead matters</h1>
-                <p>Kos is zero-overhead and minimalist web framework based on Vert.x. It provides developers with
-                    an opinionated, but fully customizable, development API, allowing them to focus on what
-                    matter the most: the product itself. After all, why should we choose between performance and
-                    productivity when you can choose both?</p>
-                <a
-                    href="getting-started/"
-                    title="Getting Started"
-                    class="md-button md-button--primary"
-                >
-                    Quick start
-                </a>
-                <a  id="btn_src_code"
-                    href="https://github.com/skullabs/kos"
-                    title="Source Code"
-                    class="md-button"
-                >
-                    Source Code
-                </a>
-            </div>
-
-            <!-- Hero image -->
-            <div class="mdx-hero__image">
-                <img src="sample-code.png">
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<div class="md-grid md-typeset s-grid">
-    <div>
-        <h2>Performance</h2>
-        <p>Kos provides a thin layer of fundamental web application features, without obscuring Vert.x
-            features that you know and love. It leverages traditional annotation-driven design that
-            is so common in the JVM, but empowers reactive programming provided by Vert.x.</p>
-    </div>
-    <div>
-        <h2>Flexible</h2>
-        <p>Conventions helps developers to put effort on what matter: business. Kos will simplify
-            things whenever possible, but developers are always able to change its default behaviours.</p>
-    </div>
-    <div>
-        <h2>Fast</h2>
-        <p>Simplifying repetitive routines should never hurt the software performance. We value compilation-time
-            optimizations over reflection or runtime proxies.</p>
-    </div>
-</div>
-
-
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
@@ -424,7 +242,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Kos" class="md-nav__button md-logo" aria-label="Kos" data-md-component="logo">
+    <a href="../../.." title="Kos" class="md-nav__button md-logo" aria-label="Kos" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -454,19 +272,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
         Home
       </a>
-      
     </li>
   
 
@@ -479,7 +289,7 @@
   
   
     <li class="md-nav__item">
-      <a href="getting-started/" class="md-nav__link">
+      <a href="../../../getting-started/" class="md-nav__link">
         Getting Started
       </a>
     </li>
@@ -492,12 +302,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
       
       <label class="md-nav__link" for="__nav_3">
         Manual
@@ -515,7 +327,7 @@
   
   
     <li class="md-nav__item">
-      <a href="manual/developer/basic-concepts/" class="md-nav__link">
+      <a href="../../developer/basic-concepts/" class="md-nav__link">
         Basic Concepts
       </a>
     </li>
@@ -527,7 +339,7 @@
   
   
     <li class="md-nav__item">
-      <a href="manual/developer/rest-apis/" class="md-nav__link">
+      <a href="../../developer/rest-apis/" class="md-nav__link">
         Rest API
       </a>
     </li>
@@ -539,7 +351,7 @@
   
   
     <li class="md-nav__item">
-      <a href="manual/developer/rest-clients/" class="md-nav__link">
+      <a href="../../developer/rest-clients/" class="md-nav__link">
         Rest Clients
       </a>
     </li>
@@ -551,7 +363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="manual/developer/logging/" class="md-nav__link">
+      <a href="../../developer/logging/" class="md-nav__link">
         Logging
       </a>
     </li>
@@ -563,7 +375,7 @@
   
   
     <li class="md-nav__item">
-      <a href="manual/developer/config-files/" class="md-nav__link">
+      <a href="../../developer/config-files/" class="md-nav__link">
         Configuration File
       </a>
     </li>
@@ -573,14 +385,16 @@
             
   
   
+    
+  
   
     
       
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" checked>
       
       <label class="md-nav__link" for="__nav_3_6">
         Extending Kos
@@ -598,7 +412,7 @@
   
   
     <li class="md-nav__item">
-      <a href="manual/architecture/internal-events/" class="md-nav__link">
+      <a href="../internal-events/" class="md-nav__link">
         Internal Events
       </a>
     </li>
@@ -608,11 +422,58 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="manual/architecture/kos-plugins/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Plugins
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Plugins
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-kos-context" class="md-nav__link">
+    The Kos Context
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-plugin" class="md-nav__link">
+    Creating a Plugin
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -622,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="manual/architecture/implementation-loaders/" class="md-nav__link">
+      <a href="../implementation-loaders/" class="md-nav__link">
         Implementation Loaders
       </a>
     </li>
@@ -649,7 +510,7 @@
   
   
     <li class="md-nav__item">
-      <a href="license/" class="md-nav__link">
+      <a href="../../../license/" class="md-nav__link">
         License
       </a>
     </li>
@@ -663,25 +524,90 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-kos-context" class="md-nav__link">
+    The Kos Context
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-plugin" class="md-nav__link">
+    Creating a Plugin
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-
                 
-                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/index.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/manual/architecture/kos-plugins.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Home</h1>
-                
-                
-                
-                  
+                <h1 id="kos-plugins">Kos Plugins</h1>
+<p>Kos Plugins are useful to change how any internal component
+will work on Kos, being it provided by Kos itself or a Vert.x one.</p>
+<h2 id="the-kos-context">The Kos Context</h2>
+<p><code>kos.api.KosContext</code> is the backbone of the system, contains all basic components
+in which Kos will interact with. Thus, to avoid misconfiguration, there will be
+only one instance of this object (managed by Kos) in the  whole application. The
+only way to mutate its content is by creating a <code>kos.api.Plugin</code> implementation.</p>
+<h2 id="creating-a-plugin">Creating a Plugin</h2>
+<p>Creating a plugin is easy. All it's needed is exposing an implementation of
+the interface <code>kos.api.Plugin</code> and you will have access to a mutable instance
+of <code>kos.api.KosContext</code>.</p>
+<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Kotlin</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nd">@Exposed</span>
+<span class="kd">class</span> <span class="nc">MyWebListener</span><span class="p">:</span> <span class="n">Plugin</span> <span class="p">{</span>
+
+    <span class="kd">fun</span> <span class="nf">configure</span><span class="p">(</span><span class="n">kosContext</span><span class="p">:</span> <span class="n">MutableKosContext</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">TODO</span><span class="p">(</span><span class="s">&quot;Implement me!&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Java</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nd">@Exposed</span>
+<span class="kd">class</span> <span class="nc">MyWebListener</span> <span class="kd">implements</span> <span class="n">Plugin</span> <span class="p">{</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configure</span><span class="p">(</span><span class="n">MutableKosContext</span> <span class="n">kosContext</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s">&quot;Implement me!&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
                 
               
-
               
                 
 
@@ -702,15 +628,30 @@
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
+        
+        <a href="../internal-events/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Internal Events" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Internal Events
+            </div>
+          </div>
+        </a>
+      
       
         
-        <a href="getting-started/" class="md-footer__link md-footer__link--next" aria-label="Next: Getting Started" rel="next">
+        <a href="../implementation-loaders/" class="md-footer__link md-footer__link--next" aria-label="Next: Implementation Loaders" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Getting Started
+              Implementation Loaders
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -743,10 +684,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": ".", "features": ["content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.82b56eb2.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.82b56eb2.min.js"></script>
       
     
   </body>
