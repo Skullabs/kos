@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.md-sidebar.md-sidebar--primary {
+    display: none;
+}
+.md-sidebar.md-sidebar--secondary {
+    display: none;
+}
+</style>
+
+{{ super() }}
+{% endblock %}

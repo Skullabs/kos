@@ -2,47 +2,57 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://skullabs.github.io/kos/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://skullabs.github.io/kos/01-getting-started/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <loc>https://skullabs.github.io/kos/getting-started/</loc>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://skullabs.github.io/kos/02-rest-apis/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <loc>https://skullabs.github.io/kos/license/</loc>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://skullabs.github.io/kos/03-rest-clients/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <loc>https://skullabs.github.io/kos/manual/architecture/implementation-loaders/</loc>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://skullabs.github.io/kos/04-configuring-your-app/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <loc>https://skullabs.github.io/kos/manual/architecture/internal-events/</loc>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://skullabs.github.io/kos/05-logging/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <loc>https://skullabs.github.io/kos/manual/architecture/kos-plugins/</loc>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://skullabs.github.io/kos/11-dependency-injection/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <loc>https://skullabs.github.io/kos/manual/developer/basic-concepts/</loc>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://skullabs.github.io/kos/12-internal-deployment-events/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <loc>https://skullabs.github.io/kos/manual/developer/config-files/</loc>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://skullabs.github.io/kos/21-kos-architecture/</loc>
-         <lastmod>2021-06-28</lastmod>
+         <loc>https://skullabs.github.io/kos/manual/developer/logging/</loc>
+         <lastmod>2021-08-08</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://skullabs.github.io/kos/manual/developer/rest-apis/</loc>
+         <lastmod>2021-08-08</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://skullabs.github.io/kos/manual/developer/rest-clients/</loc>
+         <lastmod>2021-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

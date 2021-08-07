@@ -1,15 +1,31 @@
 site_name: Kos
-site_description: 'Zero-overhead and minimalist web framework for Vert.x'
+site_description: 'Kos is zero-overhead and minimalist web framework for Vert.x'
 site_author: 'Skullabs Contributors'
 site_url: 'https://skullabs.github.io/kos/'
 
 theme:
   name: 'material'
+  custom_dir: 'docs_src/overrides'
   palette:
+    scheme: slate
     primary: 'deep orange'
-    accent: 'blue grey'
-  feature:
-    tabs: true
+    accent: 'purple'
+  features:
+   - content.code.annotate
+   - content.tabs.link
+   # - header.autohide
+   # - navigation.expand
+   # - navigation.indexes
+   - navigation.instant
+   - navigation.sections
+   - navigation.tabs
+   # - navigation.tabs.sticky
+   - navigation.top
+   - navigation.tracking
+   - search.highlight
+   - search.share
+   - search.suggest
+   # - toc.integrate
 
 extra_css:
   - "theme.css"
@@ -34,3 +50,18 @@ markdown_extensions:
   - pymdownx.tabbed
 #  - toc:
 #      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Manual:
+      - Basic Concepts: manual/developer/basic-concepts.md
+      - Rest API: manual/developer/rest-apis.md
+      - Rest Clients: manual/developer/rest-clients.md
+      - Logging: manual/developer/logging.md
+      - Configuration File: manual/developer/config-files.md
+      - Extending Kos:
+        - Internal Events: manual/architecture/internal-events.md
+        - Plugins: manual/architecture/kos-plugins.md
+        - Implementation Loaders: manual/architecture/implementation-loaders.md
+  - License: license.md

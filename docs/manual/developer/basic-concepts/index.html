@@ -1,0 +1,844 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kos is zero-overhead and minimalist web framework for Vert.x">
+      
+      
+      
+        <meta name="author" content="Skullabs Contributors">
+      
+      
+        <link rel="canonical" href="https://skullabs.github.io/kos/manual/developer/basic-concepts/">
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
+    
+    
+      
+        <title>Basic Concepts - Kos</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ca7ac06f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.f1a3b89f.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ff6e42">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../theme.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="purple">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#basic-concepts" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Kos" class="md-header__button md-logo" aria-label="Kos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kos
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Basic Concepts
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/skullabs/kos/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../../getting-started/" class="md-tabs__link">
+      Getting Started
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
+        Manual
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../../license/" class="md-tabs__link">
+      License
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Kos" class="md-nav__button md-logo" aria-label="Kos" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Kos
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/skullabs/kos/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      <label class="md-nav__link" for="__nav_3">
+        Manual
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Manual" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Manual
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Basic Concepts
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Basic Concepts
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    Motivation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#annotation-processors" class="md-nav__link">
+    Annotation Processors
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-injection" class="md-nav__link">
+    Dependency Injection
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Injection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-discovery" class="md-nav__link">
+    Implementation Discovery
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatically-discovered-classes" class="md-nav__link">
+    Automatically discovered classes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-launcher" class="md-nav__link">
+    The Launcher
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kos-context" class="md-nav__link">
+    Kos Context
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rest-apis/" class="md-nav__link">
+        Rest API
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rest-clients/" class="md-nav__link">
+        Rest Clients
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        Logging
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config-files/" class="md-nav__link">
+        Configuration File
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+      
+      <label class="md-nav__link" for="__nav_3_6">
+        Extending Kos
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Extending Kos" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          Extending Kos
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/internal-events/" class="md-nav__link">
+        Internal Events
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/kos-plugins/" class="md-nav__link">
+        Plugins
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/implementation-loaders/" class="md-nav__link">
+        Implementation Loaders
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    Motivation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#annotation-processors" class="md-nav__link">
+    Annotation Processors
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-injection" class="md-nav__link">
+    Dependency Injection
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Injection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-discovery" class="md-nav__link">
+    Implementation Discovery
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatically-discovered-classes" class="md-nav__link">
+    Automatically discovered classes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-launcher" class="md-nav__link">
+    The Launcher
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kos-context" class="md-nav__link">
+    Kos Context
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/manual/developer/basic-concepts.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="basic-concepts">Basic Concepts</h1>
+<p>Kos is just a tiny opinionated layer that wraps all the basic functionality we love from
+Vert.x behind a simple syntax. In this page we will enumerate the concepts that you need
+to learn before you use Kos.</p>
+<h2 id="motivation">Motivation</h2>
+<p>Vert.x is a JVM reactive toolkit. From Database queries to web apis, it aims to provide
+all the benefits of the reactive paradigm when developing services. However, as reactive
+APIs, in general, are slightly more elaborate than traditional imperative programming,
+using it for big projects might be challenging. Consider the following sample code:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">Server</span> <span class="p">:</span> <span class="n">AbstractVerticle</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">override</span> <span class="kd">fun</span> <span class="nf">start</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">vertx</span><span class="p">.</span><span class="na">createHttpServer</span><span class="p">().</span><span class="na">requestHandler</span> <span class="p">{</span> <span class="n">req</span> <span class="o">-&gt;</span>
+      <span class="kd">val</span> <span class="nv">queryParams</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="na">queryParams</span><span class="p">();</span>
+      <span class="kd">val</span> <span class="nv">name</span> <span class="o">=</span> <span class="n">queryParams</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> <span class="o">?:</span> <span class="s">&quot;World&quot;</span><span class="p">;</span>
+      <span class="n">req</span><span class="p">.</span><span class="na">response</span><span class="p">()</span>
+        <span class="p">.</span><span class="na">putHeader</span><span class="p">(</span><span class="s">&quot;content-type&quot;</span><span class="p">,</span> <span class="s">&quot;text/plain&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="na">end</span><span class="p">(</span><span class="s">&quot;Hello </span><span class="si">$</span><span class="n">name</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="p">}.</span><span class="na">listen</span><span class="p">(</span><span class="m">8080</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>It is supposed to be a simple <code>Hello $name</code> endpoint, but it hides a few challenges to those unfamiliar with Vert.x or
+reactive programming. A wise developer will certainly identify that this class has two responsibilities and will
+segregate this into (at least) two different units: the controller and business logic.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">HelloBusiness</span> <span class="p">{</span>
+    <span class="kd">fun</span> <span class="nf">sayHelloTo</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;Hello </span><span class="si">$</span><span class="n">name</span><span class="s">&quot;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Server</span> <span class="p">:</span>  <span class="n">AbstractVerticle</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">private</span> <span class="kd">val</span> <span class="nv">helloBusiness</span> <span class="o">=</span> <span class="n">HelloBusiness</span><span class="p">()</span> 
+
+    <span class="kd">override</span> <span class="kd">fun</span> <span class="nf">start</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">vertx</span><span class="p">.</span><span class="na">createHttpServer</span><span class="p">().</span><span class="na">requestHandler</span> <span class="p">{</span> <span class="n">req</span> <span class="o">-&gt;</span>
+            <span class="kd">val</span> <span class="nv">queryParams</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="na">queryParams</span><span class="p">();</span>
+            <span class="kd">val</span> <span class="nv">name</span> <span class="o">=</span> <span class="n">queryParams</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> <span class="o">?:</span> <span class="s">&quot;World&quot;</span><span class="p">;</span>
+
+            <span class="kd">val</span> <span class="nv">response</span> <span class="o">=</span> <span class="n">helloBusiness</span><span class="p">.</span><span class="na">sayHelloTo</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="n">req</span><span class="p">.</span><span class="na">response</span><span class="p">()</span>
+                <span class="p">.</span><span class="na">putHeader</span><span class="p">(</span><span class="s">&quot;content-type&quot;</span><span class="p">,</span> <span class="s">&quot;text/plain&quot;</span><span class="p">)</span>
+                <span class="p">.</span><span class="na">end</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="p">}.</span><span class="na">listen</span><span class="p">(</span><span class="m">8080</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>For this small example, it doesn't worth the effort: the <code>Server</code> class is a bit more complex, and the business logic
+is a just a single line. In the real world, though, this design actually pays off. The current design certainly increased
+clarity of the business layer, the one which is more likely to expand as the time passes by.</p>
+<p>If we expand this example ever further, this simple would become unmaintainable. Imagine what would happen if try to
+persist users, parse input parameters, deserialize request payload or externalize the server configuration through to a
+configuration file. Unless you have strong discipline, it's fairly likely that this project would soon become a big
+ball of mud on its early stages.</p>
+<h2 id="annotation-processors">Annotation Processors</h2>
+<p>Vert.x is rather powerful though. It was designed as a toolkit, and can be used to design almost everything. Kos helps
+developers to focus on the business layer by generating the code that "glues" it to Vert.x. This is process happens
+at compile time through the Annotation Processing Tool provided by the JDK. This allows you to develop something
+like the code below and achieve the same result as our previous example.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@RestApi</span>
+<span class="kd">class</span> <span class="nc">HelloBusiness</span> <span class="p">{</span>
+
+    <span class="nd">@GET</span>
+    <span class="kd">fun</span> <span class="nf">sayHelloTo</span><span class="p">(</span><span class="nd">@Param</span> <span class="n">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;Hello </span><span class="si">$</span><span class="n">name</span><span class="s">&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="dependency-injection">Dependency Injection</h2>
+<p>As they are generated at compile time, Kos needs a way to figure out how to discover and instantiate these classes.
+This is why Kos makes usage of a tiny Dependency Injection (DI) library called <a href="https://skullabs.github.com/injector">Injector</a>.
+Whenever the server is initialised, Kos will ask Injector for Web Routes, Validators, Event Listeners and other
+Vert.x components that might have been created during the compilation process.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>You can check the <a href="../../architecture/dependency-injection/">Dependency Injection</a> guide in case you want to
+a different DI library as a replacement for Injector.</p>
+</div>
+<h3 id="implementation-discovery">Implementation Discovery</h3>
+<p>Most of the Kos components are trivial to be configured. However, you might be asked to "Expose" an implementation
+of a given interface, so Kos can find it during the bootstrap process. There are two annotations that can be used
+to make an interface implementation discoverable (or exposed): <code>injector.Exposed</code> and <code>injector.ExposedAs</code>.</p>
+<ul>
+<li><code>ExposedAs</code> is used to explicitly expose the current class as an implementation of a given interface (or superclass)</li>
+<li><code>Exposed</code> will expose the current to all interfaces it is directly implementing (ignoring superinterfaces or 
+  interfaces implemented by its superclass).</li>
+</ul>
+<h3 id="automatically-discovered-classes">Automatically discovered classes</h3>
+<p>As the annotation process takes place, a few classes will be generated making the target class automatically
+exposed on the Class Path. Classes (or classes which methods are) annotated with the following Kos annotations
+will be automatically exposed:</p>
+<ul>
+<li><code>@RestApi</code></li>
+<li><code>@Listener</code></li>
+<li><code>@Validates</code></li>
+</ul>
+<h2 id="the-launcher">The Launcher</h2>
+<p>Kos has a small bootstrap class called <code>kos.core.Launcher</code> that will automatically spin up the server. With a little
+help from our DI, it will read the Vert.x configuration and deploy all verticles found on the class path. So, make
+sure you set this class as your <code>Main-Class</code> and your application good to go.</p>
+<h2 id="kos-context">Kos Context</h2>
+<p>The <code>kos.api.KosContext</code> object contains all the internal components managed by Kos. This includes:
+- <code>io.vertx.core.Vertx</code> instance - used whenever interacting with Vert.x components
+- Log configuration
+- Serialization mechanisms (for both Rest API and Clients)
+- Implementation Loader (Dependency Injection) configuration</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" title="Back to top" data-md-component="top" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"/></svg>
+          </a>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../../getting-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting Started" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Getting Started
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../rest-apis/" class="md-footer__link md-footer__link--next" aria-label="Next: Rest API" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Rest API
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2018 - 2021 Skullabs Contributors
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.82b56eb2.min.js"></script>
+      
+    
+  </body>
+</html>

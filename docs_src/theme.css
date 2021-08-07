@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-ul > li ul > li > .md-nav__link {
-    font-weight: 100;
+@media screen and (min-width: 1144px){
+    .md-main {
+        margin-bottom: 50px;
+    }
 }
 
-.md-nav__link[data-md-state="blur"] {
-    color: #cdcdcd;
+.md-content h1 {
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.8em;
 }
-
-.md-typeset .superfences-tabs > input:checked + label {
-    background: hsla(0,0%,92.5%,.5);
-}
-
-.md-typeset h4 {
-    margin-top: 24px;
-    margin-bottom: 0 !important;
-    color: #565656 !important;
-}
-
-.md-typeset h4 ~ p {
-    margin-top: 0 !important;
-}
-
-nav.md-tabs { display: none; }
