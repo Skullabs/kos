@@ -7,7 +7,7 @@ import kos.api.Validation;
  * Auto generated validation for type {@link java.awt.List }.
  */
 @SuppressWarnings("all")
-@injector.Singleton
+@injector.Exposed
 @javax.annotation.processing.Generated("kos.apt.validation.ValidatorProcessor")
 public class ValidatorWithMultipleValidations$List$Validation2 implements Validation<java.awt.List> {
 

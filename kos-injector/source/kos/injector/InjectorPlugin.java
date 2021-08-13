@@ -16,7 +16,7 @@ public class InjectorPlugin implements Plugin {
 
     @Override
     public void configure(MutableKosContext kosConfiguration) {
-        val loader = new InjectorImplementationLoader(kosConfiguration);
+        val loader = new InjectorImplementationLoader();
         loader.register(KosContext.class, kosConfiguration);
         kosConfiguration.setImplementationLoader(loader);
     }
