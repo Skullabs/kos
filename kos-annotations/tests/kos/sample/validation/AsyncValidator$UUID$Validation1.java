@@ -7,7 +7,7 @@ import kos.api.Validation;
  * Auto generated validation for type {@link java.util.UUID }.
  */
 @SuppressWarnings("all")
-@injector.Singleton
+@injector.Exposed
 @javax.annotation.processing.Generated("kos.apt.validation.ValidatorProcessor")
 public class AsyncValidator$UUID$Validation1 implements Validation<java.util.UUID> {
 

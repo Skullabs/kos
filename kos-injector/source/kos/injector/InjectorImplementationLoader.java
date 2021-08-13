@@ -28,10 +28,8 @@ import lombok.val;
 public class InjectorImplementationLoader implements ImplementationLoader {
 
     private final Injector injector;
-    private final KosContext kosContext;
 
-    public InjectorImplementationLoader(KosContext kosContext) {
-        this.kosContext = kosContext;
+    public InjectorImplementationLoader() {
         this.injector = createInjector();
     }
 
@@ -41,10 +39,7 @@ public class InjectorImplementationLoader implements ImplementationLoader {
 
     @Override
     public <T> Iterable<T> instancesExposedAs(Class<T> interfaceType) {
-        val found = injector.instancesExposedAs(interfaceType);
-        if ( found.iterator().hasNext() )
-            return found;
-        return kosContext.getSpi().instancesExposedAs(interfaceType);
+        return injector.instancesExposedAs(interfaceType);
     }
 
     @Override
