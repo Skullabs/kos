@@ -7,12 +7,12 @@ parent:
 
 groupId: io.skullabs.kos
 artifactId: kos-parent
-version: "0.7.1"
+version: "0.8.0"
 packaging: pom
 
 properties:
   # VERSIONS
-  version.vertx: 4.1.0
+  version.vertx: 4.2.5
   version.injector: 1.5.2
   version.mockito: 2.28.2
   version.lombok: 1.18.20
