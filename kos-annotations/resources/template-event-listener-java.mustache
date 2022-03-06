@@ -18,7 +18,7 @@ public class {{eventListenerClassName}} implements ConfigurationLoadedEventListe
         final ImplementationLoader implementationLoader = event.getKosContext().getImplementationLoader();
 
         // Auto-configure a message producer, if found in the classpath
-        final EventBusSinkManager messageProducerSyncManager = implementationLoader.instanceOfOrFail(EventBusSinkManager.class);
+        final EventBusSinkManager subscriptionManager = implementationLoader.instanceOfOrFail(EventBusSinkManager.class);
 
         final Validation validation = event.getKosContext().getDefaultValidation();
         final Vertx vertx = event.getKosContext().getDefaultVertx();
@@ -42,11 +42,7 @@ public class {{eventListenerClassName}} implements ConfigurationLoadedEventListe
             {{/isAsync}}
         };
         {{/requiresValidation}}
-        EventBusSink.SubscriptionRequest subscriptionRequest{{uniqueIdentifier}} = new EventBusSink.SubscriptionRequest(
-            event.getApplicationConfig(), event.getKosContext(), "{{topicAddressName}}", {{{messageTypeWithTypeErasure}}}.class
-        );
-        messageProducerSyncManager.tryInitialise(subscriptionRequest{{uniqueIdentifier}});
-        vertx.eventBus().consumer("{{topicAddressName}}", EventHandler.async((Message<{{{messageType}}}> message) -> {
+        subscriptionManager.subscribe("{{topicAddressName}}", {{{messageTypeWithTypeErasure}}}.class, EventHandler.async((Message<{{{messageType}}}> message) -> {
             {{{messageType}}} body = message.body();
             {{#requiresValidation}}
             return validation.validate(body, {{{messageType}}}.class)

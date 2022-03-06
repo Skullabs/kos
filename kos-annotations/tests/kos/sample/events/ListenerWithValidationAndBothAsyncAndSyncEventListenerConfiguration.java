@@ -18,7 +18,7 @@ public class ListenerWithValidationAndBothAsyncAndSyncEventListenerConfiguration
         final ImplementationLoader implementationLoader = event.getKosContext().getImplementationLoader();
 
         // Auto-configure a message producer, if found in the classpath
-        final EventBusSinkManager messageProducerSyncManager = implementationLoader.instanceOfOrFail(EventBusSinkManager.class);
+        final EventBusSinkManager subscriptionManager = implementationLoader.instanceOfOrFail(EventBusSinkManager.class);
 
         final Validation validation = event.getKosContext().getDefaultValidation();
         final Vertx vertx = event.getKosContext().getDefaultVertx();
@@ -34,11 +34,7 @@ public class ListenerWithValidationAndBothAsyncAndSyncEventListenerConfiguration
         java.util.function.Function<java.lang.String, Future<Void>> validEventHandler1 = message -> {
             return listener.onDeleteByUsername(message);
         };
-        EventBusSink.SubscriptionRequest subscriptionRequest1 = new EventBusSink.SubscriptionRequest(
-            event.getApplicationConfig(), event.getKosContext(), "gcp::pubsub::users::deleted", java.lang.String.class
-        );
-        messageProducerSyncManager.tryInitialise(subscriptionRequest1);
-        vertx.eventBus().consumer("gcp::pubsub::users::deleted", EventHandler.async((Message<java.lang.String> message) -> {
+        subscriptionManager.subscribe("gcp::pubsub::users::deleted", java.lang.String.class, EventHandler.async((Message<java.lang.String> message) -> {
             java.lang.String body = message.body();
             return validation.validate(body, java.lang.String.class)
                 .compose(validEventHandler1);
@@ -54,11 +50,7 @@ public class ListenerWithValidationAndBothAsyncAndSyncEventListenerConfiguration
             listener.onDeleteById(message);
             return Future.succeededFuture();
         };
-        EventBusSink.SubscriptionRequest subscriptionRequest2 = new EventBusSink.SubscriptionRequest(
-            event.getApplicationConfig(), event.getKosContext(), "gcp::pubsub::users::deleted", java.util.UUID.class
-        );
-        messageProducerSyncManager.tryInitialise(subscriptionRequest2);
-        vertx.eventBus().consumer("gcp::pubsub::users::deleted", EventHandler.async((Message<java.util.UUID> message) -> {
+        subscriptionManager.subscribe("gcp::pubsub::users::deleted", java.util.UUID.class, EventHandler.async((Message<java.util.UUID> message) -> {
             java.util.UUID body = message.body();
             return validation.validate(body, java.util.UUID.class)
                 .compose(validEventHandler2);

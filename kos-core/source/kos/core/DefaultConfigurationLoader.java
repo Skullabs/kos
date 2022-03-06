@@ -14,8 +14,7 @@ public class DefaultConfigurationLoader
  implements WebServerEventListener {
 
     /**
-     * Ensures this configurations will be applied prior to the
-     * user configured ones.
+     * Ensures the configuration will be applied prior to the user defined ones.
      */
     @Override
     public int priority() {

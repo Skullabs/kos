@@ -1,45 +1,94 @@
 package kos.api;
 
+import io.vertx.config.ConfigRetriever;
 import io.vertx.core.Future;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
+import kos.core.client.RestClientSerializer;
 import lombok.NonNull;
 
 /**
- * While Vert.x provides Json-based configuration out-of-box, it is not suitable
- * to configure Vert.x internals. This object is read-only representation of all
- * sensible configuration that have been previously defined at the Kos's launch.
+ * This object is read-only representation of all sensible configuration
+ * that have been previously defined at the Kos' application initialization.
  */
 public interface KosContext
 {
 
+    /**
+     * @return the defined {@link ImplementationLoader}
+     */
     @NonNull ImplementationLoader getImplementationLoader();
 
+    /**
+     * @return the defined {@link PayloadSerializationStrategy}
+     */
     @NonNull PayloadSerializationStrategy getPayloadSerializationStrategy();
 
+    /**
+     * @return the default HTTP Status code for empty responses. By default,
+     *  it returns 204.
+     */
     int getDefaultStatusForEmptyResponses();
 
-    @NonNull io.vertx.core.spi.logging.LogDelegateFactory getLogDelegateFactory();
-
+    /**
+     * @return the default {@link Serializer} used in case the expected {@code Content-Type}
+     *  (defined by the {@code Accept} header) was not provided in the request.
+     */
     @NonNull Serializer getDefaultSerializer();
 
-    @NonNull kos.core.client.RestClientSerializer getDefaultRestClientSerializer();
+    /**
+     * @return the default {@link RestClientSerializer} used to serialize Request Payloads
+     *  used by Kos' Rest Clients.
+     */
+    @NonNull RestClientSerializer getDefaultRestClientSerializer();
 
-    @NonNull io.vertx.core.Vertx getDefaultVertx();
+    /**
+     * @return the default {@link RestClientSerializer} used to serialize Request Payloads
+     *  used by Kos' Rest Clients.
+     */
+    @NonNull EventBusMessageCodecFactory getDefaultEventBusCodecFactory();
 
+    /**
+     * @return the {@link Vertx} instance used by the whole application.
+     */
+    @NonNull Vertx getDefaultVertx();
+
+    /**
+     * @return the {@link WebClient} instance used by the Rest Clients.
+     */
     @NonNull WebClient getDefaultVertxWebClient();
 
+    /**
+     * @return the {@link StringConverter} used to convert String into Objects.
+     */
     @NonNull StringConverter getStringConverter();
 
+    /**
+     * @return the {@link ExceptionHandler} used to handle unhandled exceptions.
+     */
     @NonNull ExceptionHandler getExceptionHandler();
 
+    /**
+     * @return the default {@link Validation} used to assess classes subject
+     * to validation.
+     */
     @NonNull Validation getDefaultValidation();
 
-    @NonNull io.vertx.config.ConfigRetriever getConfigRetriever();
+    /**
+     * @return the default {@link ConfigRetriever} used to read the Vert.x configuration.
+     */
+    @NonNull ConfigRetriever getConfigRetriever();
 
-    @NonNull JsonObject readApplicationConfig();
+    /**
+     * @return the read Vert.x configuration object.
+     */
+    @NonNull JsonObject getApplicationConfig();
 
+    /**
+     * @return the {@link Serializer} configured for a given {@code contentType}.
+     */
     @NonNull Serializer getSerializerForContentType(String contentType);
 
     /**

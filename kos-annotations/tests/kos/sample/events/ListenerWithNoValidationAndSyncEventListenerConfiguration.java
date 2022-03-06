@@ -18,7 +18,7 @@ public class ListenerWithNoValidationAndSyncEventListenerConfiguration implement
         final ImplementationLoader implementationLoader = event.getKosContext().getImplementationLoader();
 
         // Auto-configure a message producer, if found in the classpath
-        final EventBusSinkManager messageProducerSyncManager = implementationLoader.instanceOfOrFail(EventBusSinkManager.class);
+        final EventBusSinkManager subscriptionManager = implementationLoader.instanceOfOrFail(EventBusSinkManager.class);
 
         final Validation validation = event.getKosContext().getDefaultValidation();
         final Vertx vertx = event.getKosContext().getDefaultVertx();
@@ -31,11 +31,7 @@ public class ListenerWithNoValidationAndSyncEventListenerConfiguration implement
          *  - handler is async: false
          *  - requires validation: false
          */
-        EventBusSink.SubscriptionRequest subscriptionRequest1 = new EventBusSink.SubscriptionRequest(
-            event.getApplicationConfig(), event.getKosContext(), "gcp::pubsub::users::deleted", java.lang.String.class
-        );
-        messageProducerSyncManager.tryInitialise(subscriptionRequest1);
-        vertx.eventBus().consumer("gcp::pubsub::users::deleted", EventHandler.async((Message<java.lang.String> message) -> {
+        subscriptionManager.subscribe("gcp::pubsub::users::deleted", java.lang.String.class, EventHandler.async((Message<java.lang.String> message) -> {
             java.lang.String body = message.body();
             listener.on(body);
             return Future.succeededFuture();

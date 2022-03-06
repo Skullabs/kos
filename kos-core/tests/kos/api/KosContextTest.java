@@ -20,11 +20,9 @@ import io.vertx.config.ConfigRetriever;
 import io.vertx.config.impl.ConfigRetrieverImpl;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
-import io.vertx.core.logging.SLF4JLogDelegateFactory;
-import io.vertx.core.spi.logging.LogDelegateFactory;
-import kos.core.exception.PredicateExceptionHandler;
 import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
+import kos.core.exception.PredicateExceptionHandler;
 import kos.core.validation.DefaultValidation;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -139,23 +137,6 @@ class KosContextTest
             conf.setPayloadSerializationStrategy(defined);
 
             assertEquals(defined, conf.getPayloadSerializationStrategy());
-        }
-    }
-
-    @DisplayName("Scenario: LogDelegateFactory")
-    @Nested class LogDelegateFactoryScenario {
-
-        @DisplayName("Should return default value WHEN no object was defined via setter")
-        @Test void scenario1() {
-            assertTrue(conf.getLogDelegateFactory() instanceof SLF4JLogDelegateFactory);
-        }
-
-        @DisplayName("Should the object that was defined via setter")
-        @Test void scenario2(){
-            val defined = mock(LogDelegateFactory.class);
-            conf.setLogDelegateFactory(defined);
-
-            assertEquals(defined, conf.getLogDelegateFactory());
         }
     }
 
