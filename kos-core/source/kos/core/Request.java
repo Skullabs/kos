@@ -19,6 +19,7 @@ package kos.core;
 import io.vertx.core.buffer.*;
 import io.vertx.ext.web.*;
 import kos.api.KosContext;
+import kos.core.exception.KosException;
 import lombok.*;
 import lombok.experimental.*;
 
@@ -44,6 +45,8 @@ public class Request {
 
     public <T> T readBody(KosContext kosContext, RoutingContext context, String name, Class<T> type) {
         val buffer = context.getBody();
+        if (buffer == null)
+            throw new BadRequestException("Cannot read body content: is empty.");
         if (Buffer.class.equals(type))
             return (T) buffer;
         val serializer = kosContext.getPayloadSerializationStrategy().serializerFor(context.request());
@@ -52,5 +55,12 @@ public class Request {
 
     public <T> T readContext(KosContext kosContext, RoutingContext context, String name, Class<T> type) {
         return (T) context.get(name);
+    }
+
+    public static class BadRequestException extends KosException {
+
+        private BadRequestException(String message) {
+            super(message);
+        }
     }
 }
