@@ -5,6 +5,11 @@ They are responsible to perform two basic tasks the Kos needs all the time:
 1. Load an object implementing a given Interface - or extending a given class
 2. Load all objects implementing a given Interface - or extending a given class
 
+Bear in mind that dependencies are lazy loaded, once a dependency for a given type is loaded
+you can't override it. This means that you can safely read any injected dependency using KosContext.
+However, the only place you should be able to deterministically modify these dependencies
+is within a [Plugin](../kos-plugins/) scope.
+
 ## Types of Implementation Loaders
 The next topics will cover all DI mechanism provided out-of-box with Kos.
 

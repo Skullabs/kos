@@ -13,14 +13,14 @@
         <meta name="author" content="Skullabs Contributors">
       
       
-        <link rel="canonical" href="https://skullabs.github.io/kos/manual/architecture/kos-plugins/">
+        <link rel="canonical" href="https://skullabs.github.io/kos/manual/developer/event-listeners/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
     
     
       
-        <title>Plugins - Kos</title>
+        <title>Event Listeners - Kos</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#kos-plugins" class="md-skip">
+        <a href="#event-listeners" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Plugins
+              Event Listeners
             
           </span>
         </div>
@@ -203,7 +203,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../developer/basic-concepts/" class="md-tabs__link md-tabs__link--active">
+      <a href="../basic-concepts/" class="md-tabs__link md-tabs__link--active">
         Manual
       </a>
     </li>
@@ -327,7 +327,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/basic-concepts/" class="md-nav__link">
+      <a href="../basic-concepts/" class="md-nav__link">
         Basic Concepts
       </a>
     </li>
@@ -339,7 +339,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/rest-apis/" class="md-nav__link">
+      <a href="../rest-apis/" class="md-nav__link">
         Rest API
       </a>
     </li>
@@ -351,73 +351,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/rest-clients/" class="md-nav__link">
+      <a href="../rest-clients/" class="md-nav__link">
         Rest Clients
       </a>
     </li>
   
 
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../developer/event-listeners/" class="md-nav__link">
-        Event Listeners
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../developer/logging/" class="md-nav__link">
-        Logging
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../developer/config-files/" class="md-nav__link">
-        Configuration File
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-    
-  
-  
-    
-      
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_7" type="checkbox" id="__nav_3_7" checked>
-      
-      <label class="md-nav__link" for="__nav_3_7">
-        Extending Kos
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="Extending Kos" data-md-level="2">
-        <label class="md-nav__title" for="__nav_3_7">
-          <span class="md-nav__icon md-icon"></span>
-          Extending Kos
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
           
             
   
@@ -434,12 +373,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Plugins
+          Event Listeners
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Plugins
+        Event Listeners
       </a>
       
         
@@ -457,8 +396,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#creating-a-plugin" class="md-nav__link">
-    Creating a Plugin
+  <a href="#how-kos-listeners-work" class="md-nav__link">
+    How Kos Listeners work?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publishing-events" class="md-nav__link">
+    Publishing Events
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clustering-the-eventbus" class="md-nav__link">
+    Clustering the EventBus
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bridging-eventbus-to-a-remote-broker" class="md-nav__link">
+    Bridging EventBus to a remote broker
   </a>
   
 </li>
@@ -476,7 +436,66 @@
   
   
     <li class="md-nav__item">
-      <a href="../kos-context/" class="md-nav__link">
+      <a href="../logging/" class="md-nav__link">
+        Logging
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config-files/" class="md-nav__link">
+        Configuration File
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_7" type="checkbox" id="__nav_3_7" >
+      
+      <label class="md-nav__link" for="__nav_3_7">
+        Extending Kos
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Extending Kos" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_7">
+          <span class="md-nav__icon md-icon"></span>
+          Extending Kos
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/kos-plugins/" class="md-nav__link">
+        Plugins
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/kos-context/" class="md-nav__link">
         Kos Context
       </a>
     </li>
@@ -488,7 +507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../implementation-loaders/" class="md-nav__link">
+      <a href="../../architecture/implementation-loaders/" class="md-nav__link">
         Implementation Loaders
       </a>
     </li>
@@ -500,7 +519,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../internal-events/" class="md-nav__link">
+      <a href="../../architecture/internal-events/" class="md-nav__link">
         Internal Events
       </a>
     </li>
@@ -560,8 +579,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#creating-a-plugin" class="md-nav__link">
-    Creating a Plugin
+  <a href="#how-kos-listeners-work" class="md-nav__link">
+    How Kos Listeners work?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publishing-events" class="md-nav__link">
+    Publishing Events
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clustering-the-eventbus" class="md-nav__link">
+    Clustering the EventBus
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bridging-eventbus-to-a-remote-broker" class="md-nav__link">
+    Bridging EventBus to a remote broker
   </a>
   
 </li>
@@ -578,41 +618,112 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/manual/architecture/kos-plugins.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/manual/developer/event-listeners.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="kos-plugins">Kos Plugins</h1>
-<p>Kos Plugins are useful to change how any internal component will work, being it provided
-by Kos itself or a Vert.x one. Plugins are the only entrypoint that allows developers to
-mutate <code>kos.api.KosContext</code> (through <code>kos.api.MutableKosContext</code>).</p>
-<p>To learn more about KosContext, check <a href="../kos-context/">this page</a>.</p>
-<h2 id="creating-a-plugin">Creating a Plugin</h2>
-<p>Creating a plugin is easy. All it's needed is exposing an implementation of
-the interface <code>kos.api.Plugin</code> and you will have access to a mutable instance
-of <code>kos.api.KosContext</code>.</p>
+                <h1 id="event-listeners">Event Listeners</h1>
+<p>The <a href="https://vertx.io/docs/vertx-core/java/#event_bus">event bus</a> is the nervous system of Vert.x.
+It acts as broker, where <strong>messages</strong> are sent on the event bus to an <strong>address</strong>. Listeners on
+these addresses can react to the incoming messages and perform bespoke code (the so-called <strong>handlers</strong>).</p>
+<p>Vert.x supports the following messaging patterns:</p>
+<ul>
+<li><a href="https://vertx.io/docs/vertx-core/java/#_publish_subscribe_messaging">Publish/Subscribe</a> -
+  This notification pattern allows one to have multiple listeners for each subscription address.
+  The communication happens in uni-directionally from the publisher to all the listeners.</li>
+<li><a href="https://vertx.io/docs/vertx-core/java/#_point_to_point_and_request_response_messaging">Point-to-point</a> -
+  Here messages will be delivered to only one subscriber per address. If multiple listeners are registered,
+  <em>"one will be chosen to use a non-strict round-robin algorithm. When a message is received by a
+  recipient, and has been handled, the recipient can optionally decide to reply to the message.
+  If they do so, the reply handler will be called".</em></li>
+</ul>
+<p>Kos abstracts the Vertx' EventBus API providing a simple annotation based convention. The simplicity
+of its design comes at a cost: it only supports the Publish/Subscribe pattern.</p>
+<h2 id="how-kos-listeners-work">How Kos Listeners work?</h2>
+<p>Kos abstracts this workflow using the <code>@Listener</code> annotation on a listener method. Here are the restrictions
+imposed on these methods:</p>
+<ul>
+<li>it must return either the JVM's <strong>void</strong> or <code>io.vertx.core.Future&lt;Void&gt;</code>. <code>Future</code> is preferred when
+  performing I/O calls.</li>
+<li>it must expect exactly one parameter</li>
+<li>it cannot be a constructor</li>
+<li>the address defined in the <code>@Listener</code> annotation must not be empty</li>
+<li>it must not block the Event Loop </li>
+</ul>
+<p>Here is an example of a listener that listens and consumes for the event <code>UserDeletedEvent</code>.</p>
 <div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Kotlin</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="nd">@Exposed</span>
-<span class="kd">class</span> <span class="nc">MyWebListener</span><span class="p">:</span> <span class="n">Plugin</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Singleton</span>
+<span class="kd">class</span> <span class="nc">UserEventListener</span> <span class="p">{</span>
 
-    <span class="kd">fun</span> <span class="nf">configure</span><span class="p">(</span><span class="n">kosContext</span><span class="p">:</span> <span class="n">MutableKosContext</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">TODO</span><span class="p">(</span><span class="s">&quot;Implement me!&quot;</span><span class="p">)</span>
+    <span class="nd">@Listener</span><span class="p">(</span><span class="s">&quot;user::deleted&quot;</span><span class="p">)</span>
+    <span class="kd">fun</span> <span class="nf">on</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">UserDeletedEvent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">println</span><span class="p">(</span><span class="s">&quot;User </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">userId</span><span class="si">}</span><span class="s"> has been deleted.&quot;</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 </div>
 <input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Java</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="nd">@Exposed</span>
-<span class="kd">class</span> <span class="nc">MyWebListener</span> <span class="kd">implements</span> <span class="n">Plugin</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Singleton</span>
+<span class="kd">class</span> <span class="nc">UserEventListener</span> <span class="p">{</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configure</span><span class="p">(</span><span class="n">MutableKosContext</span> <span class="n">kosContext</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s">&quot;Implement me!&quot;</span><span class="p">);</span>
+    <span class="nd">@Listener</span><span class="p">(</span><span class="s">&quot;user::deleted&quot;</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="nf">on</span><span class="p">(</span><span class="n">UserDeletedEvent</span> <span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;User ${event.userId} has been deleted.&quot;</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 </div>
 </div>
+<h2 id="publishing-events">Publishing Events</h2>
+<p>Unlike listener methods, publisher methods must only be defined on interface methods. Defined by 
+annotating a method with the <code>@Publisher</code> annotation, Kos will generate a concrete class for your
+interface. Restrictions:</p>
+<ul>
+<li>it must return <code>io.vertx.core.Future&lt;Void&gt;</code>, as it will perform an I/O operation</li>
+<li>it must expect exactly one parameter</li>
+<li>the address defined in the <code>@Publisher</code> annotation must not be empty</li>
+<li>it must not block the Event Loop</li>
+</ul>
+<div class="tabbed-set" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">Kotlin</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span> <span class="nc">UserEventPublisher</span> <span class="p">{</span>
+
+    <span class="nd">@Publisher</span><span class="p">(</span><span class="s">&quot;user::deleted&quot;</span><span class="p">)</span>
+    <span class="kd">fun</span> <span class="nf">trigger</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">UserDeletedEvent</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">Java</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">UserEventPublisher</span> <span class="p">{</span>
+
+    <span class="nd">@Publisher</span><span class="p">(</span><span class="s">&quot;user::deleted&quot;</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="nf">trigger</span><span class="p">(</span><span class="n">UserDeletedEvent</span> <span class="n">event</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+<h2 id="clustering-the-eventbus">Clustering the EventBus</h2>
+<p>Vert.x provides EventBus' clustering capabilities out-of-box. Kos will respect any clustering
+configuration if you manually define it - this can be achievable by writing a custom
+<a href="../kos-plugins/">Plugin</a>.</p>
+<h2 id="bridging-eventbus-to-a-remote-broker">Bridging EventBus to a remote broker</h2>
+<p>Kos encourage developers to use the Event Listener/Publisher API to communicate with a remote
+broker (e.g. ApacheMQ, Apache Kafka, AWS SQS, GCP PubSub, etc.). To leverage such capability,
+Kos provides a <code>Sink</code> mechanism, allowing one to relay the messages to a remote broker and vice-versa.
+It's comprised of two interfaces - <code>EventPublisherSink</code> and <code>EventSubscriberSink</code>. Here are a few
+guidelines:</p>
+<ol>
+<li>Both interfaces will expect <code>EventBusSink.Result</code> as return type.</li>
+<li>It is expected that <code>Sink</code> classes will choose which <code>address</code> will be handled and which will be ignored.</li>
+<li>To ignore a given address, one must return <code>EventBusSink.Result.NOT_ATTEMPTED</code></li>
+<li>In case of failure, please do not throw an exception. Return <code>EventBusSink.Result.failure(Throwable)</code> instead.</li>
+<li>If your <code>Sink</code> decides to handle this particular address, make sure to rewrite the original address, creating a dedicated one for each case - one for the <em>listener</em> and one for the <em>producer</em>.</li>
+<li>The <code>EventSubscriberSink</code> must ensure that any message received from the remote broker will be sent to the newly defined <em>listener address</em>.</li>
+<li>The <code>EventPublisherSink</code> must ensure that message sent to the newly created <em>producer address</em> will be relayed to the remote broker.</li>
+<li>The newly created address can be defined by returning <code>EventBusSink.Result.succeededAtAddress(String)</code>.</li>
+</ol>
+<p>If everything was implemented as expected, <code>@Listener</code>s and <code>@Publisher</code>s methods will transparently communicate
+with the remote broker.</p>
                 
               
               
@@ -636,7 +747,7 @@ of <code>kos.api.KosContext</code>.</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../../developer/config-files/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuration File" rel="prev">
+        <a href="../rest-clients/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Rest Clients" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -645,20 +756,20 @@ of <code>kos.api.KosContext</code>.</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Configuration File
+              Rest Clients
             </div>
           </div>
         </a>
       
       
         
-        <a href="../kos-context/" class="md-footer__link md-footer__link--next" aria-label="Next: Kos Context" rel="next">
+        <a href="../logging/" class="md-footer__link md-footer__link--next" aria-label="Next: Logging" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Kos Context
+              Logging
             </div>
           </div>
           <div class="md-footer__button md-icon">

@@ -10,7 +10,7 @@ Kos allows developers to inject SLF4J Loggers into their components.
     ```kotlin
     import org.slf4j.Logger;
     
-    @Service
+    @Singleton
     class MyComponent(val logger: Logger) {
         
     }
@@ -19,7 +19,7 @@ Kos allows developers to inject SLF4J Loggers into their components.
     ```java
     import org.slf4j.Logger;
     
-    @Service
+    @Singleton
     class MyComponent {
     
         Logger logger;

@@ -363,6 +363,18 @@
   
   
     <li class="md-nav__item">
+      <a href="../event-listeners/" class="md-nav__link">
+        Event Listeners
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../logging/" class="md-nav__link">
         Logging
       </a>
@@ -432,30 +444,18 @@
     <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_7" type="checkbox" id="__nav_3_7" >
       
-      <label class="md-nav__link" for="__nav_3_6">
+      <label class="md-nav__link" for="__nav_3_7">
         Extending Kos
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Extending Kos" data-md-level="2">
-        <label class="md-nav__title" for="__nav_3_6">
+        <label class="md-nav__title" for="__nav_3_7">
           <span class="md-nav__icon md-icon"></span>
           Extending Kos
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../architecture/internal-events/" class="md-nav__link">
-        Internal Events
-      </a>
-    </li>
-  
-
           
             
   
@@ -474,8 +474,32 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture/kos-context/" class="md-nav__link">
+        Kos Context
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../architecture/implementation-loaders/" class="md-nav__link">
         Implementation Loaders
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/internal-events/" class="md-nav__link">
+        Internal Events
       </a>
     </li>
   
@@ -558,49 +582,66 @@
                 
                 
                 <h1 id="reading-configuration-file">Reading Configuration File</h1>
-<p>Kos will use Vert.x's core api to read Yaml configuration files available in the class path.
-Once the configuration is read, you will have a <code>JsonObject</code> which you can interact with
-and read the desired configuration property.</p>
-<p>By default, Kos will for a file called <code>application.yml</code> in the classpath. In case
-more than one is found, all <code>application.yml</code> found in the classpath will be merged
-before being used.</p>
+<p>As stated by its <a href="https://vertx.io/docs/vertx-config/java/">documentation</a>, Vert.x provides the
+<code>vertx-config</code> module to efficiently interact with configuration files. Internally,
+this module relies on the <strong>Config Retriever</strong> and <strong>Configuration store</strong> concepts, defining
+"a location from where the configuration data is read and also a format (JSON by default)."</p>
+<p>As an attempt to simplify this process, Kos made the following design choices:</p>
+<ul>
+<li>it only looks after files named <code>application.yml</code> in the classpath. In case
+  more than one is found, they will be merged before being used.</li>
+<li>it fully executes the above by default, but allows one to change the default behaviour (e.g. using a
+  different <em>Configuration Retriever</em>)</li>
+<li>Once the configuration is read, you will have access to an <code>JsonObject</code> - just like you'd have on a
+  typical Vert.x application.</li>
+</ul>
 <h2 id="reading-the-configuration-object">Reading the configuration object</h2>
-<p>Reading the configuration file and transforming it into an object that can be accessed
-globally in the application is a common pattern nowadays. Kos provides a different approach
-to tackle this problem: event-driven configuration.</p>
-<p>All you will need do is to expose an implementation of the <code>ConfigurationLoadedListener.Event</code> interface.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>As your class is annotated with <code>@Exposed</code> annotation, you can inject other components.
-Check the <a href="https://skullabs.github.io/injector">Injector</a> for more details.</p>
-</div>
-<div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Kotlin</label><div class="tabbed-content"></div>
-</div>
-<p><div class="highlight"><pre><span></span><code><span class="nd">@Exposed</span>
-<span class="kd">class</span> <span class="nc">MyAppConfigPlugin</span><span class="p">:</span> <span class="n">ConfigurationLoadedEventListener</span> <span class="p">{</span>
+<p>The easiest way to interaction with the read configuration would be through Dependency Injection.
+You will have full access to <a href="../../architecture/kos-context/">Kos Context</a>, which will expose the
+read configuration file (Vert.x's <code>JsonObject</code>).</p>
+<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Kotlin</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nd">@Singleton</span>
+<span class="kd">class</span> <span class="nc">MyServerConfiguration</span><span class="p">(</span>
+    <span class="kd">private</span> <span class="kd">val</span> <span class="nv">kosContext</span><span class="p">:</span> <span class="n">KosContext</span>
+<span class="p">)</span> <span class="p">{</span>
 
-    <span class="kd">fun</span> <span class="nf">on</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">ConfigurationLoadedEvent</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">val</span> <span class="nv">vertxConf</span> <span class="o">=</span> <span class="n">event</span><span class="p">.</span><span class="na">applicationConfig</span>
-        <span class="kd">val</span> <span class="nv">remoteUrl</span> <span class="o">=</span> <span class="n">URL</span><span class="p">(</span><span class="n">vertxConf</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;myapp.remote.url&quot;</span><span class="p">))</span>
-        <span class="c1">// do something with the `remoteUrl`</span>
+    <span class="kd">val</span> <span class="nv">dbHost</span> <span class="o">=</span> <span class="n">kosContext</span><span class="p">.</span><span class="na">applicationConfig</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.host&quot;</span><span class="p">,</span> <span class="s">&quot;localhost&quot;</span><span class="p">)</span>
+    <span class="kd">val</span> <span class="nv">dbPort</span> <span class="o">=</span> <span class="n">kosContext</span><span class="p">.</span><span class="na">applicationConfig</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.port&quot;</span><span class="p">,</span> <span class="s">&quot;5432&quot;</span><span class="p">)</span>
+    <span class="kd">val</span> <span class="nv">dbUser</span> <span class="o">=</span> <span class="n">kosContext</span><span class="p">.</span><span class="na">applicationConfig</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.user&quot;</span><span class="p">,</span> <span class="s">&quot;postgres&quot;</span><span class="p">)</span>
+    <span class="kd">val</span> <span class="nv">dbPass</span> <span class="o">=</span> <span class="n">kosContext</span><span class="p">.</span><span class="na">applicationConfig</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.pass&quot;</span><span class="p">,</span> <span class="s">&quot;postgres&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Java</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nd">@Singleton</span>
+<span class="kd">class</span> <span class="nc">MyServerConfiguration</span> <span class="p">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">KosContext</span> <span class="n">kosContext</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="nf">MyServerConfiguration</span><span class="p">(</span><span class="n">KosContext</span> <span class="n">kosContext</span><span class="p">){</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">kosContext</span> <span class="o">=</span> <span class="n">kosContext</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDbHost</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">kosContext</span><span class="p">.</span><span class="na">getApplicationConfig</span><span class="p">().</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.host&quot;</span><span class="p">,</span> <span class="s">&quot;localhost&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDbPort</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">kosContext</span><span class="p">.</span><span class="na">getApplicationConfig</span><span class="p">().</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.port&quot;</span><span class="p">,</span> <span class="s">&quot;5432&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDbUser</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">kosContext</span><span class="p">.</span><span class="na">getApplicationConfig</span><span class="p">().</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.user&quot;</span><span class="p">,</span> <span class="s">&quot;postgres&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDbPass</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">kosContext</span><span class="p">.</span><span class="na">getApplicationConfig</span><span class="p">().</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.pass&quot;</span><span class="p">,</span> <span class="s">&quot;postgres&quot;</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nd">@Exposed</span>
-<span class="kd">class</span> <span class="nc">MyAppConfigPlugin</span> <span class="kd">implements</span> <span class="n">ConfigurationLoadedEventListener</span> <span class="p">{</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">on</span><span class="p">(</span><span class="n">ConfigurationLoadedEvent</span> <span class="n">event</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">try</span> <span class="p">{</span>
-            <span class="n">JsonObject</span> <span class="n">vertxConf</span> <span class="o">=</span> <span class="n">event</span><span class="p">.</span><span class="na">getApplicationConfig</span><span class="p">();</span>
-            <span class="n">URL</span> <span class="n">remoteUrl</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="p">(</span><span class="n">vertxConf</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;myapp.remote.url&quot;</span><span class="p">));</span>
-            <span class="c1">// do something with the `remoteUrl`</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">MalformedURLException</span> <span class="n">cause</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">cause</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></p>
+</div>
+</div>
+<p>Another option would be listening to Kos' <a href="../architecture/internal-events/">internal events</a>.</p>
                 
               
               
@@ -640,13 +681,13 @@ Check the <a href="https://skullabs.github.io/injector">Injector</a> for more de
       
       
         
-        <a href="../../architecture/internal-events/" class="md-footer__link md-footer__link--next" aria-label="Next: Internal Events" rel="next">
+        <a href="../../architecture/kos-plugins/" class="md-footer__link md-footer__link--next" aria-label="Next: Plugins" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Internal Events
+              Plugins
             </div>
           </div>
           <div class="md-footer__button md-icon">

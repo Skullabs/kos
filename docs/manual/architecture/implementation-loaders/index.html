@@ -363,6 +363,18 @@
   
   
     <li class="md-nav__item">
+      <a href="../../developer/event-listeners/" class="md-nav__link">
+        Event Listeners
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../developer/logging/" class="md-nav__link">
         Logging
       </a>
@@ -394,14 +406,14 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_7" type="checkbox" id="__nav_3_7" checked>
       
-      <label class="md-nav__link" for="__nav_3_6">
+      <label class="md-nav__link" for="__nav_3_7">
         Extending Kos
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Extending Kos" data-md-level="2">
-        <label class="md-nav__title" for="__nav_3_6">
+        <label class="md-nav__title" for="__nav_3_7">
           <span class="md-nav__icon md-icon"></span>
           Extending Kos
         </label>
@@ -412,8 +424,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../internal-events/" class="md-nav__link">
-        Internal Events
+      <a href="../kos-plugins/" class="md-nav__link">
+        Plugins
       </a>
     </li>
   
@@ -424,8 +436,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../kos-plugins/" class="md-nav__link">
-        Plugins
+      <a href="../kos-context/" class="md-nav__link">
+        Kos Context
       </a>
     </li>
   
@@ -499,6 +511,18 @@
   
 </nav>
       
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internal-events/" class="md-nav__link">
+        Internal Events
+      </a>
     </li>
   
 
@@ -606,6 +630,10 @@ They are responsible to perform two basic tasks the Kos needs all the time:</p>
 <li>Load an object implementing a given Interface - or extending a given class</li>
 <li>Load all objects implementing a given Interface - or extending a given class</li>
 </ol>
+<p>Bear in mind that dependencies are lazy loaded, once a dependency for a given type is loaded
+you can't override it. This means that you can safely read any injected dependency using KosContext.
+However, the only place you should be able to deterministically modify these dependencies
+is within a <a href="../kos-plugins/">Plugin</a> scope.</p>
 <h2 id="types-of-implementation-loaders">Types of Implementation Loaders</h2>
 <p>The next topics will cover all DI mechanism provided out-of-box with Kos.</p>
 <h3 id="injector">Injector</h3>
@@ -687,7 +715,7 @@ your just created class.</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../kos-plugins/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Plugins" rel="prev">
+        <a href="../kos-context/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Kos Context" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -696,20 +724,20 @@ your just created class.</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Plugins
+              Kos Context
             </div>
           </div>
         </a>
       
       
         
-        <a href="../../../license/" class="md-footer__link md-footer__link--next" aria-label="Next: License" rel="next">
+        <a href="../internal-events/" class="md-footer__link md-footer__link--next" aria-label="Next: Internal Events" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              License
+              Internal Events
             </div>
           </div>
           <div class="md-footer__button md-icon">

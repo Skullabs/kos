@@ -10,8 +10,8 @@ title: Getting Started
     a blueprint project that you can change according to your needs?
 
     - **Gradle+Kotlin Project**
-    [[Download](https://github.com/Skullabs/kos-completeExample-gradle/archive/v0.6.0.zip)]
-    [[Source Code](https://github.com/Skullabs/kos-completeExample-gradle)]
+    [[Download](https://github.com/Skullabs/kos-sample-gradle/archive/refs/tags/v0.8.0.zip)]
+    [[Source Code](https://github.com/Skullabs/kos-sample-gradle/)]
 
 Kos is mostly written in Java and carefully designed to be easily integrated
 other JVM languages like Kotlin and Scala. To import Kos you should include

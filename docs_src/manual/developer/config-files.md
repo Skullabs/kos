@@ -1,49 +1,64 @@
 # Reading Configuration File
-Kos will use Vert.x's core api to read Yaml configuration files available in the class path.
-Once the configuration is read, you will have a `JsonObject` which you can interact with
-and read the desired configuration property.
+As stated by its [documentation](https://vertx.io/docs/vertx-config/java/), Vert.x provides the
+`vertx-config` module to efficiently interact with configuration files. Internally,
+this module relies on the **Config Retriever** and **Configuration store** concepts, defining
+"a location from where the configuration data is read and also a format (JSON by default)."
 
-By default, Kos will for a file called `application.yml` in the classpath. In case
-more than one is found, all `application.yml` found in the classpath will be merged
-before being used.
+As an attempt to simplify this process, Kos made the following design choices:
+
+- it only looks after files named `application.yml` in the classpath. In case
+  more than one is found, they will be merged before being used.
+- it fully executes the above by default, but allows one to change the default behaviour (e.g. using a
+  different _Configuration Retriever_)
+- Once the configuration is read, you will have access to an `JsonObject` - just like you'd have on a
+  typical Vert.x application.
 
 ## Reading the configuration object
-Reading the configuration file and transforming it into an object that can be accessed
-globally in the application is a common pattern nowadays. Kos provides a different approach
-to tackle this problem: event-driven configuration.
-
-All you will need do is to expose an implementation of the `ConfigurationLoadedListener.Event` interface.
-
-!!! note
-    As your class is annotated with `@Exposed` annotation, you can inject other components.
-    Check the [Injector](https://skullabs.github.io/injector) for more details.
+The easiest way to interaction with the read configuration would be through Dependency Injection.
+You will have full access to [Kos Context](../../architecture/kos-context/), which will expose the
+read configuration file (Vert.x's `JsonObject`).
 
 === "Kotlin"
-```kotlin
-@Exposed
-class MyAppConfigPlugin: ConfigurationLoadedEventListener {
+    ```kotlin
+    @Singleton
+    class MyServerConfiguration(
+        private val kosContext: KosContext
+    ) {
 
-    fun on(event: ConfigurationLoadedEvent) {
-        val vertxConf = event.applicationConfig
-        val remoteUrl = URL(vertxConf.getString("myapp.remote.url"))
-        // do something with the `remoteUrl`
+        val dbHost = kosContext.applicationConfig.getString("db.host", "localhost")
+        val dbPort = kosContext.applicationConfig.getString("db.port", "5432")
+        val dbUser = kosContext.applicationConfig.getString("db.user", "postgres")
+        val dbPass = kosContext.applicationConfig.getString("db.pass", "postgres")
     }
-}
-```
-```java
-@Exposed
-class MyAppConfigPlugin implements ConfigurationLoadedEventListener {
+    ```
 
-    @Override
-    public void on(ConfigurationLoadedEvent event) {
-        try {
-            JsonObject vertxConf = event.getApplicationConfig();
-            URL remoteUrl = new URL(vertxConf.getString("myapp.remote.url"));
-            // do something with the `remoteUrl`
-        } catch (MalformedURLException cause) {
-            cause.printStackTrace();
+=== "Java"
+    ```java
+    @Singleton
+    class MyServerConfiguration {
+
+        private final KosContext kosContext;
+
+        public MyServerConfiguration(KosContext kosContext){
+            this.kosContext = kosContext;
+        }
+
+        public String getDbHost() {
+            return kosContext.getApplicationConfig().getString("db.host", "localhost");
+        }
+
+        public String getDbPort() {
+            return kosContext.getApplicationConfig().getString("db.port", "5432");
+        }
+
+        public String getDbUser() {
+            return kosContext.getApplicationConfig().getString("db.user", "postgres");
+        }
+
+        public String getDbPass() {
+            return kosContext.getApplicationConfig().getString("db.pass", "postgres");
         }
     }
-}
+    ```
 
-```
+Another option would be listening to Kos' [internal events](../architecture/internal-events/).

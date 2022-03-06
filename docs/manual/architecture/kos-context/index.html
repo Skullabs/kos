@@ -13,14 +13,14 @@
         <meta name="author" content="Skullabs Contributors">
       
       
-        <link rel="canonical" href="https://skullabs.github.io/kos/manual/architecture/kos-plugins/">
+        <link rel="canonical" href="https://skullabs.github.io/kos/manual/architecture/kos-context/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
     
     
       
-        <title>Plugins - Kos</title>
+        <title>Kos Context - Kos</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#kos-plugins" class="md-skip">
+        <a href="#the-kos-context" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Plugins
+              Kos Context
             
           </span>
         </div>
@@ -422,6 +422,18 @@
             
   
   
+  
+    <li class="md-nav__item">
+      <a href="../kos-plugins/" class="md-nav__link">
+        Plugins
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
     
   
   
@@ -434,12 +446,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Plugins
+          Kos Context
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Plugins
+        Kos Context
       </a>
       
         
@@ -457,8 +469,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#creating-a-plugin" class="md-nav__link">
-    Creating a Plugin
+  <a href="#things-you-can-do-with-it" class="md-nav__link">
+    Things you can do with it
   </a>
   
 </li>
@@ -467,18 +479,6 @@
   
 </nav>
       
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../kos-context/" class="md-nav__link">
-        Kos Context
-      </a>
     </li>
   
 
@@ -560,8 +560,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#creating-a-plugin" class="md-nav__link">
-    Creating a Plugin
+  <a href="#things-you-can-do-with-it" class="md-nav__link">
+    Things you can do with it
   </a>
   
 </li>
@@ -578,41 +578,29 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/manual/architecture/kos-plugins.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/skullabs/kos/edit/master/docs_src/manual/architecture/kos-context.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="kos-plugins">Kos Plugins</h1>
-<p>Kos Plugins are useful to change how any internal component will work, being it provided
-by Kos itself or a Vert.x one. Plugins are the only entrypoint that allows developers to
-mutate <code>kos.api.KosContext</code> (through <code>kos.api.MutableKosContext</code>).</p>
-<p>To learn more about KosContext, check <a href="../kos-context/">this page</a>.</p>
-<h2 id="creating-a-plugin">Creating a Plugin</h2>
-<p>Creating a plugin is easy. All it's needed is exposing an implementation of
-the interface <code>kos.api.Plugin</code> and you will have access to a mutable instance
-of <code>kos.api.KosContext</code>.</p>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Kotlin</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="nd">@Exposed</span>
-<span class="kd">class</span> <span class="nc">MyWebListener</span><span class="p">:</span> <span class="n">Plugin</span> <span class="p">{</span>
-
-    <span class="kd">fun</span> <span class="nf">configure</span><span class="p">(</span><span class="n">kosContext</span><span class="p">:</span> <span class="n">MutableKosContext</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">TODO</span><span class="p">(</span><span class="s">&quot;Implement me!&quot;</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-</div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Java</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="nd">@Exposed</span>
-<span class="kd">class</span> <span class="nc">MyWebListener</span> <span class="kd">implements</span> <span class="n">Plugin</span> <span class="p">{</span>
-
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configure</span><span class="p">(</span><span class="n">MutableKosContext</span> <span class="n">kosContext</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s">&quot;Implement me!&quot;</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-</div>
-</div>
+                <h1 id="the-kos-context">The Kos Context</h1>
+<p><code>kos.api.KosContext</code> is the backbone of the system, containing all the basic components
+in which Kos will interact with. To avoid misconfiguration, there will be
+only one instance of this object (managed by Kos) in the  whole application. The
+only way to mutate its content is by creating a <a href="../kos-plugins/">Plugin</a>.</p>
+<h2 id="things-you-can-do-with-it">Things you can do with it</h2>
+<ul>
+<li><strong>Programmatically access injectable dependencies</strong> - By invoking <code>KosContext.getImplementationLoader()</code> you will be able to directly interact
+with all <a href="../implementation-loaders/">injectable dependencies found at compile time</a>. If you have access to a <code>MutableKosContext</code>
+instance, you will also be able to define a customised dependency injection framework - replacing <em>Injector</em> completely.</li>
+<li><strong>Use a different serialization strategy</strong> - By default, just as any other web server, Kos will always respect the HTTP Headers to infer which
+type of serialization to use when handling a Http Request. You can change this by passing your own <code>PayloadSerialisationStrategy</code>
+implementation to <code>MutableKosContext.setPayloadSerializationStrategy</code>.</li>
+<li><strong>Change the default payload serializer</strong> - When using the default serialization strategy, Kos will use JSON as default serializer whenever the response Content-Type is
+not defined or the Context-Type header is not present in the request. You can use the <code>MutableKosContext.setDefaultSerializer</code>
+to modify the serialization type.</li>
+</ul>
+<p>For more details, check the <code>KosContext</code> and <code>MutableKosContext</code> javadoc.</p>
                 
               
               
@@ -636,7 +624,7 @@ of <code>kos.api.KosContext</code>.</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../../developer/config-files/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuration File" rel="prev">
+        <a href="../kos-plugins/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Plugins" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -645,20 +633,20 @@ of <code>kos.api.KosContext</code>.</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Configuration File
+              Plugins
             </div>
           </div>
         </a>
       
       
         
-        <a href="../kos-context/" class="md-footer__link md-footer__link--next" aria-label="Next: Kos Context" rel="next">
+        <a href="../implementation-loaders/" class="md-footer__link md-footer__link--next" aria-label="Next: Implementation Loaders" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Kos Context
+              Implementation Loaders
             </div>
           </div>
           <div class="md-footer__button md-icon">
