@@ -70,7 +70,7 @@ class YamlConfigRetrieverTest {
 
     @DisplayName("Can merge yml files correctly")
     @Test void canMergeYmlCorrectly(){
-        val config = kosConfiguration.readApplicationConfig();
+        val config = kosConfiguration.getApplicationConfig();
         val expected = new JsonObject()
             .put("https",new JsonObject().put("port", 8443))
             .put("http",new JsonObject().put("port", 9999).put("host","0.0.0.0"))
