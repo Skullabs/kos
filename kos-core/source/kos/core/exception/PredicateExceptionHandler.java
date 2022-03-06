@@ -14,6 +14,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
@@ -72,8 +73,7 @@ public class PredicateExceptionHandler implements ExceptionHandler
         cause.printStackTrace(new PrintWriter(stackTrace));
 
         val serialized = Buffer.buffer(stackTrace.toString());
-        val headers = Collections.singletonMap(CONTENT_TYPE, "text/plain");
-        return Response.wrap(serialized).statusCode(500).headers(headers);
+        return Response.wrap(serialized).statusCode(500).addHeader(CONTENT_TYPE, "text/plain");
     }
 
     @RequiredArgsConstructor(staticName = "with")

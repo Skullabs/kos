@@ -56,10 +56,10 @@ class ResponseTest {
     @Test void empty(){
         val response = Response.empty();
         assertTrue(response instanceof EmptyResponse);
-        assertEquals(200, response.statusCode());
+        assertEquals(204, response.statusCode());
 
         response.send(kosContext, serverResponse);
-        verify(serverResponse).setStatusCode(eq(200));
+        verify(serverResponse).setStatusCode(eq(204));
         verify(serverResponse).end();
         verifyNoMoreInteractions(serverResponse);
     }
@@ -109,7 +109,7 @@ class ResponseTest {
     )
     @Test void sendRoutingContextResponse(){
         val response = Response.of("Hello World")
-            .headers( Lang.mapOf("X-Token", "123456").build())
+            .addHeader("X-Token", "123456")
             .statusCode(201);
 
         Response.send(kosContext, routingContext, response);

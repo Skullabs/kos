@@ -20,10 +20,8 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
-import lombok.val;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,16 +36,17 @@ public interface Response {
     int statusCode();
     Response statusCode(int value);
 
-    Map<? extends CharSequence, ? extends CharSequence> headers();
-    Response headers(Map<? extends CharSequence, ? extends CharSequence> value);
+    Map<CharSequence, CharSequence> headers();
+    Response addHeader(CharSequence key, CharSequence value);
+    Response headers(Map<CharSequence, CharSequence> value);
 
     void send(KosContext kosContext, HttpServerResponse response );
 
     /**
-     * Creates an empty response.
+     * Creates an empty response (defaults to 204 HTTP Status).
      */
     static Response empty(){
-        return new EmptyResponse();
+        return new EmptyResponse().statusCode(204);
     }
 
     /**
@@ -58,21 +57,22 @@ public interface Response {
     }
 
     /**
-     * Wraps a Buffer into a response.
+     * Wraps a Buffer into a response (defaults to 200 HTTP Status).
      */
     static Response wrap(Buffer serialized) {
         return new RawResponse(serialized);
     }
 
     /**
-     * Wraps an object as a response.
+     * Wraps an object as a response (defaults to 200 HTTP Status).
      */
     static <T> Response of( T payload ) {
         return new SerializableResponse<>(payload);
     }
 
     /**
-     * Wraps a nullable object as a response.
+     * Wraps a nullable object as a response. Null payloads results in 204 HTTP Status,
+     * resulting in 200 otherwise.
      */
     static <T> Response ofNullable( T payload ) {
         if ( payload == null )
@@ -169,11 +169,13 @@ public interface Response {
     }
 }
 
-@Data @Accessors(fluent = true)
-class EmptyResponse implements Response {
+@Getter @Setter
+@Accessors(fluent = true)
+@AllArgsConstructor
+abstract class AbstractResponse implements Response {
 
-    int statusCode = 200;
-    Map<? extends CharSequence, ? extends CharSequence> headers = new HashMap<>();
+    int statusCode;
+    @NonNull Map<CharSequence, CharSequence> headers;
 
     @Override
     public void send(KosContext kosContext, HttpServerResponse response) {
@@ -188,10 +190,46 @@ class EmptyResponse implements Response {
     }
 }
 
-@RequiredArgsConstructor
-class RawResponse extends EmptyResponse {
+
+class EmptyResponse extends AbstractResponse {
+
+    public EmptyResponse() {
+        this(200, new HashMap<>());
+    }
+
+    private EmptyResponse(int statusCode, @NonNull Map<CharSequence, CharSequence> headers) {
+        super(statusCode, headers);
+    }
+
+    public Response addHeader(CharSequence key, CharSequence value) {
+        val newHeaders = new HashMap<>(headers);
+        newHeaders.put(key, value);
+
+        return new EmptyResponse(statusCode, newHeaders);
+    }
+}
+
+@ToString
+@EqualsAndHashCode(callSuper = true)
+class RawResponse extends AbstractResponse {
     
     final Buffer buffer;
+
+    public RawResponse(Buffer buffer) {
+        this(200, new HashMap<>(), buffer);
+    }
+
+    private RawResponse(int statusCode, @NonNull Map<CharSequence, CharSequence> headers, Buffer buffer) {
+        super(statusCode, headers);
+        this.buffer = buffer;
+    }
+
+    public Response addHeader(CharSequence key, CharSequence value) {
+        val newHeaders = new HashMap<>(headers);
+        newHeaders.put(key, value);
+
+        return new RawResponse(statusCode, newHeaders, buffer);
+    }
 
     @Override
     public void send(KosContext kosContext, HttpServerResponse response) {
@@ -200,10 +238,27 @@ class RawResponse extends EmptyResponse {
     }
 }
 
-@RequiredArgsConstructor
-class SerializableResponse<T> extends EmptyResponse {
+@ToString
+@EqualsAndHashCode(callSuper = true)
+class SerializableResponse<T> extends AbstractResponse {
     
     final T payload;
+
+    public SerializableResponse(T payload) {
+        this(200, new HashMap<>(), payload);
+    }
+
+    private SerializableResponse(int statusCode, @NonNull Map<CharSequence, CharSequence> headers, T payload) {
+        super(statusCode, headers);
+        this.payload = payload;
+    }
+
+    public Response addHeader(CharSequence key, CharSequence value) {
+        val newHeaders = new HashMap<>(headers);
+        newHeaders.put(key, value);
+
+        return new SerializableResponse<>(statusCode, newHeaders, payload);
+    }
 
     @Override
     public void send(KosContext kosContext, HttpServerResponse response) {
