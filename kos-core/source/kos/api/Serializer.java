@@ -48,7 +48,7 @@ public interface Serializer {
         }
 
         @Override
-        public <T> T deserialize(Buffer buffer, Class<T> type) {
+        public <T> T deserialize(@NonNull Buffer buffer, @NonNull Class<T> type) {
             return Json.decodeValue( buffer, type );
         }
     }
