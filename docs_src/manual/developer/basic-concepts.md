@@ -52,13 +52,10 @@ class Server :  AbstractVerticle() {
 ```
 
 For this small example, it doesn't worth the effort: the `Server` class is a bit more complex, and the business logic
-is a just a single line. In the real world, though, this design actually pays off. The current design certainly increased
-clarity of the business layer, the one which is more likely to expand as the time passes by.
-
-If we expand this example ever further, this simple would become unmaintainable. Imagine what would happen if try to
-persist users, parse input parameters, deserialize request payload or externalize the server configuration through to a
-configuration file. Unless you have strong discipline, it's fairly likely that this project would soon become a big
-ball of mud on its early stages.
+is a just a single line. If we expand this example ever further, though, it would become unmaintainable. Imagine what would happen if we try to
+persist users, parse input parameters, deserialize request payload or use a configuration file to define the web server
+port. Unless you have strong discipline, it's fairly likely that this project would soon become a big
+ball of mud.
 
 ## Annotation Processors
 Vert.x is rather powerful though. It was designed as a toolkit, and can be used to design almost everything. Kos helps
@@ -81,11 +78,11 @@ Whenever the server is initialised, Kos will ask Injector for Web Routes, Valida
 Vert.x components that might have been created during the compilation process.
 
 !!! info
-    You can check the [Dependency Injection](../../architecture/dependency-injection/) guide in case you want to
+    You can check the [Dependency Injection](../../architecture/implementation-loaders/) guide in case you want to
     a different DI library as a replacement for Injector.
 
 ### Implementation Discovery
-Most of the Kos components are trivial to be configured. However, you might be asked to "Expose" an implementation
+Most of the Kos components are trivial to be configured. In the process, you might be asked to _"Expose"_ an implementation
 of a given interface, so Kos can find it during the bootstrap process. There are two annotations that can be used
 to make an interface implementation discoverable (or exposed): `injector.Exposed` and `injector.ExposedAs`.
 
@@ -98,17 +95,19 @@ As the annotation process takes place, a few classes will be generated making th
 exposed on the Class Path. Classes (or classes which methods are) annotated with the following Kos annotations
 will be automatically exposed:
 
-- `@RestApi`
-- `@Listener`
-- `@Validates`
+- `@RestApi` - automatically exposes [Rest endpoints](../rest-apis/)
+- `@RestClient` - automatically exposes [Rest clients](../rest-clients/)
+- `@Listener` - automatically listens for Vert.x's Event-Loop internal events
+- `@Validates` - turns a method into an object validator for Event listeners and Rest endpoints
 
 ## The Launcher
 Kos has a small bootstrap class called `kos.core.Launcher` that will automatically spin up the server. With a little
-help from our DI, it will read the Vert.x configuration and deploy all verticles found on the class path. So, make
-sure you set this class as your `Main-Class` and your application good to go.
+help from [the Implementation Loader](../../architecture/implementation-loaders/), it will read the Vert.x configuration and deploy all verticles found on the class path. So, make
+sure you set this class as your `Main-Class`.
 
 ## Kos Context
-The `kos.api.KosContext` object contains all the internal components managed by Kos. This includes:
+The `kos.api.KosContext` object contains all the internal components managed by Kos. Among many other features, it holds:
+
 - `io.vertx.core.Vertx` instance - used whenever interacting with Vert.x components
 - Log configuration
 - Serialization mechanisms (for both Rest API and Clients)

@@ -1,12 +1,9 @@
 # Kos Plugins
-Kos Plugins are useful to change how any internal component
-will work on Kos, being it provided by Kos itself or a Vert.x one.
+Kos Plugins are useful to change how any internal component will work, being it provided
+by Kos itself or a Vert.x one. Plugins are the only entrypoint that allows developers to
+mutate `kos.api.KosContext` (through `kos.api.MutableKosContext`).
 
-## The Kos Context
-`kos.api.KosContext` is the backbone of the system, contains all basic components
-in which Kos will interact with. Thus, to avoid misconfiguration, there will be
-only one instance of this object (managed by Kos) in the  whole application. The
-only way to mutate its content is by creating a `kos.api.Plugin` implementation.
+To learn more about KosContext, check [this page](../kos-context/).
 
 ## Creating a Plugin
 Creating a plugin is easy. All it's needed is exposing an implementation of
