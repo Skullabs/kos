@@ -58,10 +58,12 @@ nav:
       - Basic Concepts: manual/developer/basic-concepts.md
       - Rest API: manual/developer/rest-apis.md
       - Rest Clients: manual/developer/rest-clients.md
+      - Event Listeners: manual/developer/event-listeners.md
       - Logging: manual/developer/logging.md
       - Configuration File: manual/developer/config-files.md
       - Extending Kos:
-        - Internal Events: manual/architecture/internal-events.md
         - Plugins: manual/architecture/kos-plugins.md
+        - Kos Context: manual/architecture/kos-context.md
         - Implementation Loaders: manual/architecture/implementation-loaders.md
+        - Internal Events: manual/architecture/internal-events.md
   - License: license.md
