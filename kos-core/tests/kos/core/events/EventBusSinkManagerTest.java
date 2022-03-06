@@ -1,6 +1,14 @@
 package kos.core.events;
 
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.MessageConsumer;
+import io.vertx.core.eventbus.MessageProducer;
+import io.vertx.core.json.JsonObject;
 import kos.api.EventBusSink;
+import kos.api.EventSubscriptionSink;
+import kos.api.KosContext;
+import kos.api.MutableKosContext;
 import kos.core.exception.KosException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,50 +18,68 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+
+import java.util.Collections;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static kos.api.EventBusSink.Result.NOT_ATTEMPTED;
-import static kos.api.EventBusSink.Result.SUCCEEDED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class EventBusSinkManagerTest {
 
-    EventBusSink.SubscriptionRequest subscriptionRequest = new EventBusSink.SubscriptionRequest(
-        null, null, "address", Object.class
-    );
+    @Mock Vertx vertx;
+    @Mock EventBus eventBus;
+    @Mock MessageConsumer messageConsumer;
+    @Mock MessageProducer messageProducer;
 
-    @Mock EventBusSink eventBusSink;
-    @Mock EventBusSink eventBusSink2;
-    @Mock EventBusSink eventBusSink3;
+    @Mock EventSubscriptionSink eventSubscriptionSink;
+    @Mock EventSubscriptionSink eventSubscriptionSink2;
+    @Mock EventSubscriptionSink eventSubscriptionSink3;
 
+    KosContext kosContext;
     EventBusSinkManager manager;
+    List<EventSubscriptionSink> allSinks;
 
     @BeforeEach
     void setupMock()
     {
-        manager = new EventBusSinkManager(asList(
-            eventBusSink, eventBusSink2, eventBusSink3
-        ));
+        kosContext = new MutableKosContext()
+                .setDefaultVertx(vertx)
+                .setApplicationConfig(new JsonObject());
+        manager = new EventBusSinkManager(kosContext, Collections.emptyList(), Collections.emptyList());
+        allSinks = asList(
+            eventSubscriptionSink, eventSubscriptionSink2, eventSubscriptionSink3
+        );
+    }
+
+    @BeforeEach
+    void setupVertx(){
+        doReturn(eventBus).when(vertx).eventBus();
+        doReturn(messageConsumer).when(eventBus).consumer(any(), any());
+        doReturn(messageProducer).when(eventBus).publisher(any());
     }
 
     @Nested class WhenNoSinkAttemptedToInitialize {
 
         @BeforeEach
         void ensureMocksNoAttemptToInitialize() {
-            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any());
-            doReturn(NOT_ATTEMPTED).when(eventBusSink2).tryInitialise(any());
-            doReturn(NOT_ATTEMPTED).when(eventBusSink3).tryInitialise(any());
+            doReturn(NOT_ATTEMPTED).when(eventSubscriptionSink).initialize(any());
+            doReturn(NOT_ATTEMPTED).when(eventSubscriptionSink2).initialize(any());
+            doReturn(NOT_ATTEMPTED).when(eventSubscriptionSink3).initialize(any());
         }
 
-        @DisplayName("Should return NOT_ATTEMPTED")
-        @Test void tryInitialise()
+        @DisplayName("Should do nothing")
+        @Test void tryInitializeSink()
         {
-            val result = manager.tryInitialise(subscriptionRequest);
-            assertEquals(NOT_ATTEMPTED, result);
+            manager.tryInitializeSink("address", Object.class, allSinks);
         }
     }
 
@@ -61,39 +87,39 @@ class EventBusSinkManagerTest {
 
         @BeforeEach
         void ensureMocksNoAttemptToInitialize() {
-            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any());
-            doReturn(SUCCEEDED).when(eventBusSink2).tryInitialise(any());
+            doReturn(NOT_ATTEMPTED).when(eventSubscriptionSink).initialize(any());
+            doReturn(EventBusSink.Result.succeededAtAddress("rewritten")).when(eventSubscriptionSink2).initialize(any());
         }
 
-        @DisplayName("Should return SUCCEEDED")
-        @Test void tryInitialise()
+        @DisplayName("Should return the rewritten address")
+        @Test void tryInitializeSink()
         {
-            val result = manager.tryInitialise(subscriptionRequest);
-            assertEquals(SUCCEEDED, result);
+            val rewrittenAddress = manager.tryInitializeSink("address", Object.class, allSinks);
+            assertEquals("rewritten", rewrittenAddress);
         }
 
         @DisplayName("Should not invoke subsequent sinks after the successful ones")
-        @Test void tryInitialise2()
+        @Test void tryInitializeSink2()
         {
-            manager.tryInitialise(subscriptionRequest);
+            manager.tryInitializeSink("address", Object.class, allSinks);
 
-            verify(eventBusSink3, never()).tryInitialise(any());
+            verify(eventSubscriptionSink3, never()).initialize(any());
         }
 
         @DisplayName("Should invoke the ones before the successful attempt")
-        @Test void tryInitialise3()
+        @Test void tryInitializeSink3()
         {
-            manager.tryInitialise(subscriptionRequest);
+            manager.tryInitializeSink("address", Object.class, allSinks);
 
-            verify(eventBusSink).tryInitialise(eq(subscriptionRequest));
+            verify(eventSubscriptionSink).initialize(any());
         }
 
         @DisplayName("Should invoke the successful attempt")
-        @Test void tryInitialise4()
+        @Test void tryInitializeSink4()
         {
-            manager.tryInitialise(subscriptionRequest);
+            manager.tryInitializeSink("address", Object.class, allSinks);
 
-            verify(eventBusSink2).tryInitialise(eq(subscriptionRequest));
+            verify(eventSubscriptionSink2).initialize(any());
         }
     }
 
@@ -103,38 +129,38 @@ class EventBusSinkManagerTest {
 
         @BeforeEach
         void ensureMocksNoAttemptToInitialize() {
-            doReturn(NOT_ATTEMPTED).when(eventBusSink).tryInitialise(any());
-            doThrow(FAILURE).when(eventBusSink2).tryInitialise(any());
+            doReturn(NOT_ATTEMPTED).when(eventSubscriptionSink).initialize(any());
+            doThrow(FAILURE).when(eventSubscriptionSink2).initialize(any());
         }
 
         @DisplayName("Should return Failure")
-        @Test void tryInitialise()
+        @Test void tryInitializeSink()
         {
-            assertThrows(KosException.class, () -> manager.tryInitialise(subscriptionRequest));
+            assertThrows(KosException.class, () -> manager.tryInitializeSink("address", Object.class, allSinks));
         }
 
         @DisplayName("Should not invoke subsequent sinks after the successful ones")
-        @Test void tryInitialise2()
+        @Test void tryInitializeSink2()
         {
-            assertThrows(KosException.class, () -> manager.tryInitialise(subscriptionRequest));
+            assertThrows(KosException.class, () -> manager.tryInitializeSink("address", Object.class, allSinks));
 
-            verify(eventBusSink3, never()).tryInitialise(any());
+            verify(eventSubscriptionSink3, never()).initialize(any());
         }
 
         @DisplayName("Should invoke the ones before the successful attempt")
-        @Test void tryInitialise3()
+        @Test void tryInitializeSink3()
         {
-            assertThrows(KosException.class, () -> manager.tryInitialise(subscriptionRequest));
+            assertThrows(KosException.class, () -> manager.tryInitializeSink("address", Object.class, allSinks));
 
-            verify(eventBusSink).tryInitialise(eq(subscriptionRequest));
+            verify(eventSubscriptionSink).initialize(any());
         }
 
         @DisplayName("Should invoke the successful attempt")
-        @Test void tryInitialise4()
+        @Test void tryInitializeSink4()
         {
-            assertThrows(KosException.class, () -> manager.tryInitialise(subscriptionRequest));
+            assertThrows(KosException.class, () -> manager.tryInitializeSink("address", Object.class, allSinks));
 
-            verify(eventBusSink2).tryInitialise(eq(subscriptionRequest));
+            verify(eventSubscriptionSink2).initialize(any());
         }
     }
 }

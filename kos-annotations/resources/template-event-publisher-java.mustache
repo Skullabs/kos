@@ -1,0 +1,43 @@
+package {{packageName}};
+
+import injector.*;
+import kos.api.*;
+import kos.core.events.*;
+import io.vertx.core.*;
+import io.vertx.core.eventbus.*;
+
+/**
+ * Auto generated event bus publisher for {@link {{packageName}}.{{eventPublisherInterfaceName}}}.
+ */
+@Singleton
+@ExposedAs(ConfigurationLoadedEventListener.class)
+@{{jdkGeneratedAnnotation}}("kos.apt.EventPublisherKosProcessor")
+public class {{eventPublisherClassName}} implements ConfigurationLoadedEventListener, {{eventPublisherInterfaceName}} {
+
+    {{#methods}}
+    /**
+     * Message producer for {{name}}({{{messageType}}}).
+     */
+    MessageProducer<{{{messageType}}}> {{targetMethodName}}Producer{{uniqueIdentifier}};
+
+    @Override
+    public Future<Void> {{targetMethodName}}({{{messageType}}} value) {
+        return {{targetMethodName}}Producer{{uniqueIdentifier}}.write(value);
+    }
+
+    {{/methods}}
+    @Override
+    public void on(ConfigurationLoadedEvent configurationLoadedEvent) {
+        final ImplementationLoader implementationLoader = configurationLoadedEvent.getKosContext().getImplementationLoader();
+        final EventBusSinkManager eventPublisherManager = implementationLoader.instanceOfOrFail(EventBusSinkManager.class);
+
+        {{#methods}}
+        {{targetMethodName}}Producer{{uniqueIdentifier}} = eventPublisherManager.createProducer("{{topicAddressName}}", {{{messageType}}}.class);
+        {{/methods}}
+    }
+
+    @Producer
+    public {{eventPublisherInterfaceName}} produce{{eventPublisherInterfaceName}}() {
+        return this;
+    }
+}

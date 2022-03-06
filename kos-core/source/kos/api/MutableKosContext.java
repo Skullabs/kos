@@ -24,11 +24,10 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.SLF4JLogDelegateFactory;
-import io.vertx.core.spi.logging.LogDelegateFactory;
 import io.vertx.ext.web.client.WebClient;
 import kos.core.Lang;
 import kos.core.client.RestClientSerializer;
+import kos.core.events.DefaultEventBusMessageCodecFactory;
 import kos.core.exception.PredicateExceptionHandler;
 import kos.core.validation.DefaultValidation;
 import lombok.Getter;
@@ -56,10 +55,10 @@ public class MutableKosContext implements KosContext
 
     private PayloadSerializationStrategy payloadSerializationStrategy;
     private int defaultStatusForEmptyResponses = 204;
-    private LogDelegateFactory logDelegateFactory;
     private HttpServerOptions httpServerOptions;
 
     private Serializer defaultSerializer;
+    private EventBusMessageCodecFactory defaultEventBusCodecFactory;
     private RestClientSerializer defaultRestClientSerializer;
     private Vertx defaultVertx;
     private WebClient defaultVertxWebClient;
@@ -79,9 +78,9 @@ public class MutableKosContext implements KosContext
         this.serializers = loadSerializers();
         this.implementationLoader = spi;
         this.defaultSerializer = getSerializers().get("application/json");
+        this.defaultEventBusCodecFactory = new DefaultEventBusMessageCodecFactory();
         this.payloadSerializationStrategy = new SingleSerializerStrategy(getDefaultSerializer());
         this.httpServerOptions = new HttpServerOptions().setPort(9000);
-        this.logDelegateFactory = new SLF4JLogDelegateFactory();
         this.exceptionHandler = new PredicateExceptionHandler();
         this.defaultValidation = new DefaultValidation();
         this.stringConverter = new StringConverter.DefaultStringConverter();
@@ -135,7 +134,7 @@ public class MutableKosContext implements KosContext
         return getSerializers().computeIfAbsent(contentType, INVALID_SERIALIZER);
     }
 
-    public JsonObject readApplicationConfig() {
+    public JsonObject getApplicationConfig() {
         if (applicationConfig != null) return applicationConfig;
 
         Future<JsonObject> future = Future.future(getConfigRetriever()::getConfig);
@@ -185,7 +184,6 @@ public class MutableKosContext implements KosContext
                 ", implementationLoader=" + implementationLoader +
                 ", payloadSerializationStrategy=" + payloadSerializationStrategy +
                 ", defaultStatusForEmptyResponses=" + defaultStatusForEmptyResponses +
-                ", logDelegateFactory=" + logDelegateFactory +
                 ", httpServerOptions=" + httpServerOptions +
                 ", defaultSerializer=" + defaultSerializer +
                 ", defaultRestClientSerializer=" + defaultRestClientSerializer +
