@@ -15,6 +15,7 @@ import kos.api.EventSubscriptionSink;
 import kos.api.KosContext;
 import kos.core.exception.KosException;
 import lombok.NonNull;
+import lombok.Value;
 import lombok.val;
 
 import java.util.Comparator;
@@ -53,8 +54,8 @@ public class EventBusSinkManager {
      * @throws KosException whenever it reaches a terminal, but unrecoverable state.
      */
     public <T> void subscribe(String address, Class<T> expectedType, Handler<Message<T>> messageHandler) {
-        val rewrittenAddress = tryInitializeSink(address, expectedType, eventSubscriberSinks);
-        kosContext.getDefaultVertx().eventBus().consumer(rewrittenAddress, messageHandler);
+        val result = tryInitializeSink(address, expectedType, eventSubscriberSinks);
+        kosContext.getDefaultVertx().eventBus().consumer(result.rewrittenAddress, messageHandler);
     }
 
     /**
@@ -66,8 +67,12 @@ public class EventBusSinkManager {
      * @throws KosException whenever it reaches a terminal, but unrecoverable state.
      */
     public <T> MessageProducer<T> createProducer(String address, Class<T> expectedType) {
-        val rewrittenAddress = tryInitializeSink(address, expectedType, eventPublisherSinks);
-        return kosContext.getDefaultVertx().eventBus().publisher(rewrittenAddress);
+        val eventBus = kosContext.getDefaultVertx().eventBus();
+        val result = tryInitializeSink(address, expectedType, eventPublisherSinks);
+        if (result.eventuallyConsistent)
+            return eventBus.publisher(result.rewrittenAddress);
+        else
+            return new AlwaysConsistentMessageProducer<>(result.rewrittenAddress, eventBus);
     }
 
     /**
@@ -76,8 +81,9 @@ public class EventBusSinkManager {
      * Sinks must be able to successfully finish its initialization. Any Exception thrown during
      * this process will be considered a terminal, non-recoverable state - leading to an abrupt
      * interruption of the whole application.
+     * @return
      */
-    final <T> String tryInitializeSink(@NonNull String address, Class<T> expectedType, Iterable<? extends EventBusSink> eventBusSinks) {
+    final <T> InitializationResult tryInitializeSink(@NonNull String address, Class<T> expectedType, Iterable<? extends EventBusSink> eventBusSinks) {
         try {
             ensureEventBusCanSerializeType(expectedType);
             return performInitialization(address, expectedType, eventBusSinks);
@@ -88,7 +94,7 @@ public class EventBusSinkManager {
         }
     }
 
-    private <T> String performInitialization(@NonNull String address, Class<T> expectedType, Iterable<? extends EventBusSink> eventBusSinks) {
+    private <T> InitializationResult performInitialization(@NonNull String address, Class<T> expectedType, Iterable<? extends EventBusSink> eventBusSinks) {
         val request = constructPublishingRequestFor(address, expectedType);
         EventBusSink.Result result = EventBusSink.Result.NOT_ATTEMPTED;
 
@@ -103,7 +109,10 @@ public class EventBusSinkManager {
             logger.debug("No custom EventBusSink was initialized for address '" + address + ".");
         }
 
-        return result.getRewrittenAddressOr(address);
+        return new InitializationResult(
+            result.getRewrittenAddressOr(address),
+            result.isEventuallyConsistent()
+        );
     }
 
     private <T> EventBusSink.EventBusSyncInitializationRequest<T> constructPublishingRequestFor(String address, Class<T> expectedType) {
@@ -122,5 +131,11 @@ public class EventBusSinkManager {
             eventBus.registerDefaultCodec(targetType, codec);
             classesWhichCodedHaveBeenRegistered.add(targetType);
         }
+    }
+
+    @Value
+    static class InitializationResult {
+        String rewrittenAddress;
+        Boolean eventuallyConsistent;
     }
 }

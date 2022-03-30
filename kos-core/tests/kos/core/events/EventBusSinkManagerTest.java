@@ -94,8 +94,8 @@ class EventBusSinkManagerTest {
         @DisplayName("Should return the rewritten address")
         @Test void tryInitializeSink()
         {
-            val rewrittenAddress = manager.tryInitializeSink("address", Object.class, allSinks);
-            assertEquals("rewritten", rewrittenAddress);
+            val result = manager.tryInitializeSink("address", Object.class, allSinks);
+            assertEquals("rewritten", result.getRewrittenAddress());
         }
 
         @DisplayName("Should not invoke subsequent sinks after the successful ones")
