@@ -20,10 +20,9 @@ public class DefaultAsyncEventReplier<T> implements Handler<AsyncResult<Void>> {
     @Override
     public void handle(AsyncResult<Void> result) {
         if (result.succeeded()) {
-            message.replyAddress();
+            message.reply(message.address());
         } else {
             message.fail(1, result.cause().getMessage());
-            result.cause().printStackTrace();
         }
     }
 }
