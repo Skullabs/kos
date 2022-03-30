@@ -10,6 +10,7 @@ import kos.core.events.*;
  */
 @SuppressWarnings("all")
 @injector.Singleton
+@injector.ExposedAs(ConfigurationLoadedEventListener.class)
 @javax.annotation.processing.Generated("kos.apt.EventListenerKosProcessor")
 public class ListenerWithValidationAndBothAsyncAndSyncEventListenerConfiguration implements ConfigurationLoadedEventListener {
 
