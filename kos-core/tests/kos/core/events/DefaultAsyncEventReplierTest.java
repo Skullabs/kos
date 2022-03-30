@@ -53,13 +53,14 @@ class DefaultAsyncEventReplierTest {
         @BeforeEach
         void assume() {
             doReturn(true).when(result).succeeded();
+            doReturn("local").when(message).address();
         }
 
         @DisplayName("Should send a failure reply to sender")
         @Test void handle()
         {
             replier.handle(result);
-            verify(message).replyAddress();
+            verify(message).reply(eq("local"));
         }
     }
 }
