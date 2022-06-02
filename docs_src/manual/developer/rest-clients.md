@@ -93,7 +93,7 @@ how authentication might work, etc.
     class CalculatorApiClientConfiguration(
         val restClientFactory: RestClientFactory
     ){
-        @Produces
+        @Producer
         fun produceClient(): CalculatorApiClient {
             val baseUrl = "https://empty.url"
             val restConf = RestClientConfiguration.withUrl(baseUrl).build()
