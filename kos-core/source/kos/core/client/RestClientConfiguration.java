@@ -94,6 +94,11 @@ public class RestClientConfiguration {
             return "/" + path;
     }
 
+    public String computeValidRelativeUrlTo(String relativeUrl) {
+        return (getBaseUrl() + relativeUrl)
+            .replaceFirst("^//+", "/");
+    }
+
     public static MutableRestClientConfiguration withUrl(String url) {
         try {
             return defaults().url(new URL(url));
