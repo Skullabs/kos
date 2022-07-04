@@ -18,6 +18,8 @@ package kos.api;
 
 import io.vertx.config.ConfigRetriever;
 import io.vertx.config.impl.ConfigRetrieverImpl;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import kos.core.Lang;
@@ -31,6 +33,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,11 +58,24 @@ class KosContextTest
     @Nested class RunBlocking {
 
         @SneakyThrows
-        @DisplayName("Should compute a value in backgroup")
+        @DisplayName("Should compute a value in background")
         @Test void scenario1(){
             val future = conf.computeBlocking(() -> 123);
             val computed = Lang.waitFor(future);
             assertEquals(Integer.valueOf(123), computed);
+        }
+
+        @SneakyThrows
+        @DisplayName("Should compute a value in background many times")
+        @Test void scenario1ManyTimes() {
+            List<Future> futures = new ArrayList<>();
+            for (int i = 0; i < 100; i++)
+                futures.add(
+                    conf.computeBlocking(() -> 123)
+                );
+
+            val allFutures = CompositeFuture.all(futures);
+            Lang.waitFor(allFutures);
         }
 
         @SneakyThrows
