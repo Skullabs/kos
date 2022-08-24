@@ -3,7 +3,7 @@ modelVersion: 4.0.0
 parent:
   groupId: io.skullabs.kos
   artifactId: kos-parent
-  version: "0.8.2"
+  version: "0.8.3"
   relativePath: "../pom.yml"
 
 artifactId: kos-injector
