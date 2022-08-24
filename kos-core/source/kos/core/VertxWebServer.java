@@ -103,14 +103,18 @@ public class VertxWebServer extends AbstractVerticle {
     public void start(Promise<Void> startFuture) {
         try {
             beforeStart();
-            tryToStartServer( startFuture );
+            tryToStartServer().onComplete(ar -> {
+                if (ar.succeeded()) startFuture.complete();
+                else startFuture.fail(ar.cause());
+            });
         } catch ( Throwable cause ) {
             log.error( "Could not start server", cause );
             startFuture.fail(cause);
         }
     }
 
-    private void tryToStartServer(Promise<Void> startFuture ) {
+    public Future<HttpServer> tryToStartServer() {
+        val startFuture = Promise.<HttpServer>promise();
         vertx.createHttpServer( kosContext.getHttpServerOptions() )
             .requestHandler( router() )
                 .listen( as -> {
@@ -120,9 +124,11 @@ public class VertxWebServer extends AbstractVerticle {
                         val server = as.result();
                         Runtime.getRuntime().addShutdownHook(new Thread(server::close));
                         afterStart(server);
-                        startFuture.complete();
+                        startFuture.complete(server);
                     }
                 });
+
+        return startFuture.future();
     }
 
     private void notifyWebServerDeploymentListeners() {
