@@ -52,7 +52,7 @@ class RequestInterceptorHandlerTest {
         interceptorHandler.handle(request);
 
         verify( interceptor ).handle( eq(request), eq(wrappedHandler) );
-        verifyZeroInteractions(wrappedHandler);
+        verifyNoInteractions(wrappedHandler);
     }
 
     @DisplayName("SHOULD call the wrapped handler WHEN no interceptor is registered")

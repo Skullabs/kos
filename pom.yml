@@ -14,14 +14,16 @@ properties:
   # VERSIONS
   version.vertx: 4.2.5
   version.injector: 1.5.2
-  version.mockito: 2.28.2
+  version.mockito: 4.9.0
   version.lombok: 1.18.20
   version.slf4j: 1.7.9
   version.logback: 1.2.3
   version.google-truth: 0.30
   version.compile-testing: "0.18"
   version.class-generator: "0.4.0"
-  version.jacoco: "0.8.5"
+  version.jacoco: "0.8.8"
+
+  version.junit.jupiter: 5.7.2
 
   # CONFIGS
   sonar.jacoco.reportPaths: "${project.basedir}/../report/output/aggregated.exec"

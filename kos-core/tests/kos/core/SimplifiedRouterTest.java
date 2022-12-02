@@ -63,7 +63,7 @@ class SimplifiedRouterTest {
 
         simplifiedRouter.handle(request);
         verify(interceptor).handle(eq(request), any());
-        verifyZeroInteractions(requestHandler);
+        verifyNoInteractions(requestHandler);
     }
 
     @DisplayName("Interceptors SHOULD be able to allow the request chain to be called")
