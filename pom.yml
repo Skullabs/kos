@@ -24,6 +24,7 @@ properties:
   version.jacoco: "0.8.8"
 
   version.junit.jupiter: 5.7.2
+  version.nexus-staging.plugin: "1.6.13"
 
   # CONFIGS
   sonar.jacoco.reportPaths: "${project.basedir}/../report/output/aggregated.exec"
