@@ -24,12 +24,12 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
     /**
      * Response Handler for PATCH requests received by {@link SimpleApi.patchUser}.
      */
-    private static class ResponseTypeHandlerFor$PatchUser$PATCH433226443 implements Handler<AsyncResult<kos.api.Response>> {
+    private static class ResponseTypeHandlerFor$PatchUser$PATCH453745825 implements Handler<AsyncResult<kos.api.Response>> {
 
         private final KosContext kosContext;
         private final RoutingContext routingContext;
 
-        ResponseTypeHandlerFor$PatchUser$PATCH433226443(KosContext kosContext, RoutingContext routingContext) {
+        ResponseTypeHandlerFor$PatchUser$PATCH453745825(KosContext kosContext, RoutingContext routingContext) {
             this.routingContext = routingContext;
             this.kosContext = kosContext;
         }
@@ -45,12 +45,12 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
     /**
      * Response Handler for GET requests received by {@link SimpleApi.retrieveUser}.
      */
-    private static class ResponseTypeHandlerFor$RetrieveUser$GET872878332 implements Handler<AsyncResult<kos.sample.rest.api.User>> {
+    private static class ResponseTypeHandlerFor$RetrieveUser$GET860966350 implements Handler<AsyncResult<kos.sample.rest.api.User>> {
 
         private final KosContext kosContext;
         private final RoutingContext routingContext;
 
-        ResponseTypeHandlerFor$RetrieveUser$GET872878332(KosContext kosContext, RoutingContext routingContext) {
+        ResponseTypeHandlerFor$RetrieveUser$GET860966350(KosContext kosContext, RoutingContext routingContext) {
             this.routingContext = routingContext;
             this.kosContext = kosContext;
         }
@@ -76,7 +76,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#deleteUser}.
          */
-        Handler<RoutingContext> handlerForDeleteUser$DELETE1662323373 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForDeleteUser$DELETE1849506963 = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -95,12 +95,12 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
             }
         };
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.DELETE, "/api/simple/:user_id", handlerForDeleteUser$DELETE1662323373);
+        event.getRouter().route( HttpMethod.DELETE, "/api/simple/:user_id", handlerForDeleteUser$DELETE1849506963);
 
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#patchUser}.
          */
-        Handler<RoutingContext> handlerForPatchUser$PATCH433226443 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForPatchUser$PATCH453745825 = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -115,19 +115,19 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                             Request.readBody( kosContext, routingContext, "user", kos.sample.rest.api.User.class )
                         );
                     /* Wraps response as Future */
-                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$PatchUser$PATCH433226443(kosContext, routingContext));
+                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$PatchUser$PATCH453745825(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
             }
         };
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.PATCH, "/api/simple/:user_id", handlerForPatchUser$PATCH433226443);
+        event.getRouter().route( HttpMethod.PATCH, "/api/simple/:user_id", handlerForPatchUser$PATCH453745825);
 
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#retrieveUser}.
          */
-        Handler<RoutingContext> handlerForRetrieveUser$GET872878332 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForRetrieveUser$GET860966350 = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -136,19 +136,19 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         handler.retrieveUser(
                         );
                     /* Wraps response as Future */
-                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveUser$GET872878332(kosContext, routingContext));
+                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveUser$GET860966350(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
             }
         };
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.GET, "/api/simple", handlerForRetrieveUser$GET872878332);
+        event.getRouter().route( HttpMethod.GET, "/api/simple", handlerForRetrieveUser$GET860966350);
 
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#retrieveUser}.
          */
-        Handler<RoutingContext> handlerForRetrieveUser$GET872878332 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForRetrieveUser$GET860966350 = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -157,19 +157,19 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
                         handler.retrieveUser(
                         );
                     /* Wraps response as Future */
-                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveUser$GET872878332(kosContext, routingContext));
+                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveUser$GET860966350(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
             }
         };
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.GET, "/api/simple/all", handlerForRetrieveUser$GET872878332);
+        event.getRouter().route( HttpMethod.GET, "/api/simple/all", handlerForRetrieveUser$GET860966350);
 
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#saveUser}.
          */
-        Handler<RoutingContext> handlerForSaveUser$POST1663379216 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForSaveUser$POST2072131618 = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -186,12 +186,12 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
             }
         };
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.POST, "/api/simple", handlerForSaveUser$POST1663379216);
+        event.getRouter().route( HttpMethod.POST, "/api/simple", handlerForSaveUser$POST2072131618);
 
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#updateUser}.
          */
-        Handler<RoutingContext> handlerForUpdateUser$PUT1179257411 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForUpdateUser$PUT1562071373 = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -208,7 +208,7 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
             }
         };
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.PUT, "/api/simple/:id", handlerForUpdateUser$PUT1179257411);
+        event.getRouter().route( HttpMethod.PUT, "/api/simple/:id", handlerForUpdateUser$PUT1562071373);
 
     }
 
