@@ -9,6 +9,9 @@ parent:
 artifactId: tests-report
 packaging: jar
 
+properties:
+  version.nexus-staging.plugin: "1.6.13"
+
 dependencies:
 - { groupId: io.skullabs.kos, artifactId: kos-core }
 - { groupId: io.skullabs.kos, artifactId: kos-annotations }

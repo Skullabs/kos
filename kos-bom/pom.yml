@@ -24,6 +24,9 @@ scm:
   developerConnection: "scm:git:git@github.com:Skullabs/kos.git/kos-parent"
   url: "scm:git:git@github.com:Skullabs/kos.git/kos-parent"
 
+properties:
+  version.nexus-staging.plugin: "1.6.13"
+
 dependencyManagement:
   dependencies:
   - { groupId: "io.skullabs.kos", artifactId: kos-core, version: "0.8.5" }
@@ -42,7 +45,7 @@ profiles:
     build:
       plugins:
         - groupId: org.sonatype.plugins
-          version: 1.6.3
+          version: "${version.nexus-staging.plugin}"
           artifactId: nexus-staging-maven-plugin
           extensions: true
           configuration:
