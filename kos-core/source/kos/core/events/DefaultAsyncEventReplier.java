@@ -1,8 +1,14 @@
 package kos.core.events;
 
+import io.netty.util.internal.ThrowableUtil;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.eventbus.ReplyFailure;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Automatically replies to async events received from EventBus. In case
@@ -22,7 +28,14 @@ public class DefaultAsyncEventReplier<T> implements Handler<AsyncResult<Void>> {
         if (result.succeeded()) {
             message.reply(message.address());
         } else {
-            message.fail(1, result.cause().getMessage());
+            message.fail(1, convertThrowableToMessage(result.cause()));
         }
+    }
+
+    private String convertThrowableToMessage(Throwable throwable) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        throwable.printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 }
