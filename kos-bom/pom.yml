@@ -2,7 +2,7 @@ modelVersion: 4.0.0
 
 groupId: io.skullabs.kos
 artifactId: kos-bom
-version: "0.8.5"
+version: "0.8.6"
 packaging: pom
 
 name: kos-bom
@@ -29,12 +29,12 @@ properties:
 
 dependencyManagement:
   dependencies:
-  - { groupId: "io.skullabs.kos", artifactId: kos-core, version: "0.8.5" }
-  - { groupId: "io.skullabs.kos", artifactId: kos-annotations, version: "0.8.5" }
-  - { groupId: "io.skullabs.kos", artifactId: kos-config-yaml, version: "0.8.5" }
-  - { groupId: "io.skullabs.kos", artifactId: kos-logging-slf4j, version: "0.8.5" }
-  - { groupId: "io.skullabs.kos", artifactId: kos-injector, version: "0.8.5" }
-  - { groupId: "io.skullabs.kos", artifactId: kos-webapp, version: "0.8.5" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-core, version: "0.8.6" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-annotations, version: "0.8.6" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-config-yaml, version: "0.8.6" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-logging-slf4j, version: "0.8.6" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-injector, version: "0.8.6" }
+  - { groupId: "io.skullabs.kos", artifactId: kos-webapp, version: "0.8.6" }
 
 profiles:
   - id: use-sonatype-stagging-repo
