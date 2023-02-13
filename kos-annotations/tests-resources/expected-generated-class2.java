@@ -24,12 +24,12 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
     /**
      * Response Handler for GET requests received by {@link ApiWithNoPath.retrieveLocation}.
      */
-    private static class ResponseTypeHandlerFor$RetrieveLocation$GET1506637657 implements Handler<AsyncResult<java.lang.String>> {
+    private static class ResponseTypeHandlerFor$RetrieveLocation$d632b5942ddb36866459dced761f4c0733b946262327108293bffef0e710faf3 implements Handler<AsyncResult<java.lang.String>> {
 
         private final KosContext kosContext;
         private final RoutingContext routingContext;
 
-        ResponseTypeHandlerFor$RetrieveLocation$GET1506637657(KosContext kosContext, RoutingContext routingContext) {
+        ResponseTypeHandlerFor$RetrieveLocation$d632b5942ddb36866459dced761f4c0733b946262327108293bffef0e710faf3(KosContext kosContext, RoutingContext routingContext) {
             this.routingContext = routingContext;
             this.kosContext = kosContext;
         }
@@ -55,7 +55,7 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.ApiWithNoPath#retrieveLocation}.
          */
-        Handler<RoutingContext> handlerForRetrieveLocation$GET1506637657 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForRetrieveLocation$d632b5942ddb36866459dced761f4c0733b946262327108293bffef0e710faf3 = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -64,14 +64,14 @@ public class ApiWithNoPathRoutingContextHandler implements WebServerEventListene
                         handler.retrieveLocation(
                         );
                     /* Wraps response as Future */
-                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveLocation$GET1506637657(kosContext, routingContext));
+                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveLocation$d632b5942ddb36866459dced761f4c0733b946262327108293bffef0e710faf3(kosContext, routingContext));
                 } catch (Throwable cause){
                     Response.sendError(kosContext, routingContext, cause);
                 }
             }
         };
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.GET, "/location", handlerForRetrieveLocation$GET1506637657);
+        event.getRouter().route( HttpMethod.GET, "/location", handlerForRetrieveLocation$d632b5942ddb36866459dced761f4c0733b946262327108293bffef0e710faf3);
 
     }
 

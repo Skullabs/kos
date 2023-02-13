@@ -22,11 +22,11 @@ import kos.apt.spi.SpiClass;
 import kos.core.Lang;
 import kos.core.exception.KosException;
 import kos.rest.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Value;
-import lombok.val;
+import lombok.*;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -89,6 +89,7 @@ import static kos.core.Lang.*;
 }
 
 @EqualsAndHashCode(exclude = "uniqueName")
+@ToString(exclude = "uniqueName")
 @Value class Method {
 
     String httpMethod;
@@ -108,9 +109,27 @@ import static kos.core.Lang.*;
     @Getter(lazy = true)
     String uniqueName = computeUniqueName();
 
-    private String computeUniqueName(){
-        long hashCode = Math.abs((long)(Integer.MAX_VALUE + hashCode()));
-        return Character.toUpperCase(getName().charAt(0)) + getName().substring(1) + "$" + httpMethod + hashCode;
+    private String computeUniqueName() {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(toString().getBytes(StandardCharsets.UTF_8));
+            String hashCode = bytesToHex(encodedhash);
+            return Character.toUpperCase(getName().charAt(0)) + getName().substring(1) + "$" + hashCode;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 
     static Method from(Iterable<String> rootPath, SimplifiedAST.Method method) {

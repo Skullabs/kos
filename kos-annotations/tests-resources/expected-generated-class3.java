@@ -34,7 +34,7 @@ public class ApiWithValidationRoutingContextHandler implements WebServerEventLis
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.ApiWithValidation#updateEvent}.
          */
-        Handler<RoutingContext> handlerForUpdateEvent$PUT1808506145 = new Handler<RoutingContext>() {
+        Handler<RoutingContext> handlerForUpdateEvent$aba16933d56868661ebf08881d96b7d1710e23f8002080f8f7e70ef1cce0717b = new Handler<RoutingContext>() {
 
             public void handle(final RoutingContext routingContext) {
                 try {
@@ -54,9 +54,9 @@ public class ApiWithValidationRoutingContextHandler implements WebServerEventLis
         };
 
         // Validates the parameter identified as receivedEvent
-        handlerForUpdateEvent$PUT1808506145 = webPointcutValidation.wrapForBody( kos.sample.rest.api.Event.class, "receivedEvent", handlerForUpdateEvent$PUT1808506145 );
+        handlerForUpdateEvent$aba16933d56868661ebf08881d96b7d1710e23f8002080f8f7e70ef1cce0717b = webPointcutValidation.wrapForBody( kos.sample.rest.api.Event.class, "receivedEvent", handlerForUpdateEvent$aba16933d56868661ebf08881d96b7d1710e23f8002080f8f7e70ef1cce0717b );
         // Maps the method handler to an HTTP endpoint
-        event.getRouter().route( HttpMethod.PUT, "/events/:id", handlerForUpdateEvent$PUT1808506145);
+        event.getRouter().route( HttpMethod.PUT, "/events/:id", handlerForUpdateEvent$aba16933d56868661ebf08881d96b7d1710e23f8002080f8f7e70ef1cce0717b);
 
     }
 

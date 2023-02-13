@@ -48,7 +48,11 @@ public class RestApiProcessor extends AbstractRestKosProcessor {
 
     protected void processClasses(List<SimplifiedAST.Type> types) throws Exception {
         val routes = types.stream()
-            .map((SimplifiedAST.Type type) -> Type.from(type, "RoutingContextHandler"))
+            .map((SimplifiedAST.Type type) -> {
+                val t = Type.from(type, "RoutingContextHandler");
+                System.out.println("TYPE: " + t);
+                return t;
+            })
             .collect(Collectors.toList());
 
         routeClassGenerator.generateClasses(routes);
