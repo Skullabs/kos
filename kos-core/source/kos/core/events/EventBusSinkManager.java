@@ -2,11 +2,10 @@ package kos.core.events;
 
 import injector.AllOf;
 import injector.Singleton;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.eventbus.MessageCodec;
-import io.vertx.core.eventbus.MessageProducer;
+import io.vertx.core.eventbus.*;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import kos.api.EventBusSink;
@@ -15,6 +14,7 @@ import kos.api.EventSubscriptionSink;
 import kos.api.KosContext;
 import kos.core.exception.KosException;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.val;
 
@@ -69,10 +69,14 @@ public class EventBusSinkManager {
     public <T> MessageProducer<T> createProducer(String address, Class<T> expectedType) {
         val eventBus = kosContext.getDefaultVertx().eventBus();
         val result = tryInitializeSink(address, expectedType, eventPublisherSinks);
+
+        MessageProducer<T> messageProducer;
         if (result.eventuallyConsistent)
-            return eventBus.publisher(result.rewrittenAddress);
+            messageProducer = eventBus.publisher(result.rewrittenAddress);
         else
-            return new AlwaysConsistentMessageProducer<>(result.rewrittenAddress, eventBus);
+            messageProducer = new AlwaysConsistentMessageProducer<>(result.rewrittenAddress, eventBus);
+
+        return new CodecAwareMessageProducer<>(messageProducer);
     }
 
     /**
@@ -137,5 +141,51 @@ public class EventBusSinkManager {
     static class InitializationResult {
         String rewrittenAddress;
         Boolean eventuallyConsistent;
+    }
+
+    /**
+     * Ensures that the type {@link T} will be serialisable using
+     * the default Codec.
+     *
+     * @param <T>
+     */
+    @RequiredArgsConstructor
+    private class CodecAwareMessageProducer<T> implements MessageProducer<T> {
+
+        private final MessageProducer<T> delegated;
+
+        @Override
+        public MessageProducer<T> deliveryOptions(DeliveryOptions deliveryOptions) {
+            return delegated.deliveryOptions(deliveryOptions);
+        }
+
+        @Override
+        public String address() {
+            return delegated.address();
+        }
+
+        @Override
+        public void write(T t, Handler<AsyncResult<Void>> handler) {
+            if (t != null)
+                ensureEventBusCanSerializeType(t.getClass());
+            delegated.write(t, handler);
+        }
+
+        @Override
+        public Future<Void> write(T t) {
+            if (t != null)
+                ensureEventBusCanSerializeType(t.getClass());
+            return delegated.write(t);
+        }
+
+        @Override
+        public Future<Void> close() {
+            return delegated.close();
+        }
+
+        @Override
+        public void close(Handler<AsyncResult<Void>> handler) {
+            delegated.close(handler);
+        }
     }
 }
