@@ -28,7 +28,7 @@ class EventListenerType implements SpiClass {
     static EventListenerType from(SimplifiedAST.Type type)
     {
         val methods = Lang.filter(
-            Lang.convertIndex(type.getMethods(), EventListenerMethod::from),
+            Lang.convertIndex(type.getMethods(), (counter, targetMethod) -> EventListenerMethod.from(counter, type, targetMethod)),
             Objects::nonNull
         );
 
@@ -61,7 +61,7 @@ class EventListenerMethod {
     final String targetMethodName;
     final int uniqueIdentifier;
 
-    public static EventListenerMethod from(int counter, SimplifiedAST.Method targetMethod)
+    public static EventListenerMethod from(int counter, SimplifiedAST.Type type, SimplifiedAST.Method targetMethod)
     {
         if (targetMethod.isConstructor()) return null;
 
@@ -69,15 +69,15 @@ class EventListenerMethod {
         if (topicAddressName == null) return null;
 
         if (targetMethod.getParameters().isEmpty()) {
-            throw new UnsupportedOperationException("Missing event type in listener method.");
+            throw new InvalidAnnotationPlacement(type.getCanonicalName() + "." + targetMethod.getName(), "Missing event type in listener method.");
         }
 
         if (targetMethod.getParameters().size() != 1) {
-            throw new UnsupportedOperationException("Listener methods cannot have more than one parameter.");
+            throw new InvalidAnnotationPlacement(type.getCanonicalName() + "." + targetMethod.getName(), "Listener methods cannot have more than one parameter.");
         }
 
         if (!targetMethod.isVoidMethod() && !targetMethod.getType().equals(VERTX_FUTURE_OF_VOID)) {
-            throw new UnsupportedOperationException("Listener methods should return void or " + VERTX_FUTURE_OF_VOID + ".");
+            throw new InvalidAnnotationPlacement(type.getCanonicalName() + "." + targetMethod.getName(), "Listener methods should return void or " + VERTX_FUTURE_OF_VOID + ".");
         }
 
         val parameter = targetMethod.getParameters().get(0);
@@ -100,5 +100,11 @@ class EventListenerMethod {
             .map(SimplifiedAST.Annotation::getValue)
             .map(TypeUtils::annotationValueAsString)
             .orElse(null);
+    }
+}
+
+class InvalidAnnotationPlacement extends UnsupportedOperationException {
+    InvalidAnnotationPlacement(String location, String message) {
+        super(message + " Location: " + location);
     }
 }
