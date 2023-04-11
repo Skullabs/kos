@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * A bespoken {@link MessageProducer} implementation designed to provide <i>always consistent</i>
+ * A bespoke {@link MessageProducer} implementation designed to provide <i>always consistent</i>
  * semantics when sending messages to Vertx' EventBus. This class was implemented to allow
  * {@link kos.api.EventPublisherSink} to reliably send messages to a remote event broker, hence
  * a few of its methods are just stubs and might fail if used outside this context.
