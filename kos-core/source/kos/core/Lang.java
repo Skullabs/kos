@@ -50,6 +50,14 @@ public final class Lang {
         }
     }
 
+    public static <T> Class<T> classForOrNull( String canonicalName ){
+        try {
+            return (Class<T>) Class.forName( canonicalName );
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
+
     public static <T> T instantiate( Class<T> type ) {
         try {
             return type.getDeclaredConstructor().newInstance();

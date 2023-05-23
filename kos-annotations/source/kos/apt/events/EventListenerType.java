@@ -76,7 +76,7 @@ class EventListenerMethod {
             throw new InvalidAnnotationPlacement(type.getCanonicalName() + "." + targetMethod.getName(), "Listener methods cannot have more than one parameter.");
         }
 
-        if (!targetMethod.isVoidMethod() && !targetMethod.getType().equals(VERTX_FUTURE_OF_VOID)) {
+        if (!targetMethod.isVoidMethod() && !TypeUtils.isVertxEmptyFuture(targetMethod.getType())) {
             throw new InvalidAnnotationPlacement(type.getCanonicalName() + "." + targetMethod.getName(), "Listener methods should return void or " + VERTX_FUTURE_OF_VOID + ".");
         }
 

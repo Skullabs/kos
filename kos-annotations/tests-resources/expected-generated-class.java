@@ -63,6 +63,27 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         }
     }
 
+    /**
+     * Response Handler for GET requests received by {@link SimpleApi.retrieveUser2}.
+     */
+    private static class ResponseTypeHandlerFor$RetrieveUser2$a89554055c3afd125604d252adc856f946cc802ece070914a23af1a1a70d2326 implements Handler<AsyncResult<kos.sample.rest.api.User>> {
+
+        private final KosContext kosContext;
+        private final RoutingContext routingContext;
+
+        ResponseTypeHandlerFor$RetrieveUser2$a89554055c3afd125604d252adc856f946cc802ece070914a23af1a1a70d2326(KosContext kosContext, RoutingContext routingContext) {
+            this.routingContext = routingContext;
+            this.kosContext = kosContext;
+        }
+
+        public void handle( AsyncResult<kos.sample.rest.api.User> as ) {
+            if (as.succeeded())
+                Response.send(kosContext, routingContext, as.result());
+            else
+                Response.sendError(kosContext, routingContext, as.cause());
+        }
+    }
+
 
     public void on(WebServerEventListener.BeforeDeployWebServerEvent event) {
         final KosContext kosContext = event.getKosContext();
@@ -165,6 +186,48 @@ public class SimpleApiRoutingContextHandler implements WebServerEventListener {
         };
         // Maps the method handler to an HTTP endpoint
         event.getRouter().route( HttpMethod.GET, "/api/simple/all", handlerForRetrieveUser$503ad392d03d2f606bae554cab497033540ab30b069b679547715448c2c2ba2d);
+
+        /**
+         * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#retrieveUser2}.
+         */
+        Handler<RoutingContext> handlerForRetrieveUser2$a89554055c3afd125604d252adc856f946cc802ece070914a23af1a1a70d2326 = new Handler<RoutingContext>() {
+
+            public void handle(final RoutingContext routingContext) {
+                try {
+                    /* Call original handler */
+                    final kos.sample.StubFuture<kos.sample.rest.api.User> response =
+                        handler.retrieveUser2(
+                        );
+                    /* Wraps response as Future */
+                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveUser2$a89554055c3afd125604d252adc856f946cc802ece070914a23af1a1a70d2326(kosContext, routingContext));
+                } catch (Throwable cause){
+                    Response.sendError(kosContext, routingContext, cause);
+                }
+            }
+        };
+        // Maps the method handler to an HTTP endpoint
+        event.getRouter().route( HttpMethod.GET, "/api/simple/2", handlerForRetrieveUser2$a89554055c3afd125604d252adc856f946cc802ece070914a23af1a1a70d2326);
+
+        /**
+         * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#retrieveUser2}.
+         */
+        Handler<RoutingContext> handlerForRetrieveUser2$a89554055c3afd125604d252adc856f946cc802ece070914a23af1a1a70d2326 = new Handler<RoutingContext>() {
+
+            public void handle(final RoutingContext routingContext) {
+                try {
+                    /* Call original handler */
+                    final kos.sample.StubFuture<kos.sample.rest.api.User> response =
+                        handler.retrieveUser2(
+                        );
+                    /* Wraps response as Future */
+                    futures.asFuture(response).onComplete(new ResponseTypeHandlerFor$RetrieveUser2$a89554055c3afd125604d252adc856f946cc802ece070914a23af1a1a70d2326(kosContext, routingContext));
+                } catch (Throwable cause){
+                    Response.sendError(kosContext, routingContext, cause);
+                }
+            }
+        };
+        // Maps the method handler to an HTTP endpoint
+        event.getRouter().route( HttpMethod.GET, "/api/simple/all2", handlerForRetrieveUser2$a89554055c3afd125604d252adc856f946cc802ece070914a23af1a1a70d2326);
 
         /**
          * Handle incoming requests mapped for {@link kos.sample.rest.api.SimpleApi#saveUser}.

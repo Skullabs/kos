@@ -16,12 +16,12 @@
 
 package kos.apt;
 
+import io.vertx.core.Future;
+import kos.sample.StubFuture;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -41,28 +41,14 @@ class TypeUtilsTest {
         assertEquals("java.lang.Character", TypeUtils.getBoxedType("char"));
     }
 
-    @Test @DisplayName("SHOULD return object unwrapped (inside Future generic)")
+    @Test @DisplayName("SHOULD unwrapped the first generic type (the one defined for the Future)")
     void unwrapFutureGenericType(){
         val wrapped = "io.vertx.core.Future<java.client.List<java.lang.String>>";
         val expected = "java.client.List<java.lang.String>";
         assertEquals( expected, TypeUtils.unwrapFutureGenericType(wrapped) );
     }
 
-    @Test @DisplayName("SHOULD return object unwrapped (inside JDK Future generic)")
-    void unwrapFutureGenericType2(){
-        val wrapped = "java.util.concurrent.Future<java.client.List<java.lang.String>>";
-        val expected = "java.client.List<java.lang.String>";
-        assertEquals( expected, TypeUtils.unwrapFutureGenericType(wrapped) );
-    }
-
-    @Test @DisplayName("SHOULD return object unwrapped (inside CompletableFuture generic)")
-    void unwrapFutureGenericType3(){
-        val wrapped = "java.util.concurrent.CompletableFuture<java.client.List<java.lang.String>>";
-        val expected = "java.client.List<java.lang.String>";
-        assertEquals( expected, TypeUtils.unwrapFutureGenericType(wrapped) );
-    }
-
-    @Test @DisplayName("SHOULD return origin class when is not inside Future generic")
+    @Test @DisplayName("SHOULD return original class when is not inside Future generic")
     void unwrapFutureGenericType1(){
         val wrapped = "java.client.List<java.lang.String>";
         val expected = "java.client.List<java.lang.String>";
@@ -82,6 +68,39 @@ class TypeUtilsTest {
         val wrapped = "\"some 'important' \" value\"";
         val expected = "some 'important' \" value";
         assertEquals(expected, TypeUtils.annotationValueAsString(wrapped));
+    }
+
+    @Nested class IsVertxFuture {
+
+        @Test @DisplayName("SHOULD match subclasses of Vert.x's Future")
+        void isVertxFuture1() {
+            val canonicalName = StubFuture.class.getCanonicalName() + "<java.lang.String>";
+            assertTrue(TypeUtils.isVertxFuture(canonicalName));
+        }
+
+        @Test @DisplayName("SHOULD match direct reference of Vert.x's Future interface")
+        void isVertxFuture2() {
+            val canonicalName = Future.class.getCanonicalName() + "<java.lang.String>";
+            assertTrue(TypeUtils.isVertxFuture(canonicalName));
+        }
+
+        @Test @DisplayName("SHOULD NOT match other Futures implementations")
+        void isVertxFuture3() {
+            val canonicalName = java.util.concurrent.Future.class.getCanonicalName() + "<java.lang.String>";
+            assertFalse(TypeUtils.isVertxFuture(canonicalName));
+        }
+
+        @Test @DisplayName("SHOULD NOT match other types")
+        void isVertxFuture4() {
+            val canonicalName = "<java.lang.String>";
+            assertFalse(TypeUtils.isVertxFuture(canonicalName));
+        }
+
+        @Test @DisplayName("SHOULD match Vert.x's Empty Future")
+        void isVertxFuture5() {
+            val canonicalName = StubFuture.class.getCanonicalName() + "<java.lang.Void>";
+            assertTrue(TypeUtils.isVertxEmptyFuture(canonicalName));
+        }
     }
 
     @Nested class GenerateHttpPaths {
@@ -125,3 +144,4 @@ class TypeUtilsTest {
         }
     }
 }
+

@@ -33,7 +33,7 @@ public interface ApiWithAllAnnotations {
     Future<Response> amendMySystem();
 
     @DELETE
-    CompletableFuture<Response> deleteData(
+    Future<Response> deleteData(
         @Context SomethingElse somethingElse
     );
 }

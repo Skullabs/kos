@@ -19,6 +19,7 @@ package kos.sample.rest.api;
 import io.vertx.core.Future;
 import io.vertx.core.http.*;
 import kos.api.Response;
+import kos.sample.StubFuture;
 import kos.rest.*;
 import lombok.*;
 
@@ -27,6 +28,9 @@ public interface SimpleApi {
 
     @GET({"/","all"})
     Future<User> retrieveUser();
+
+    @GET({"/2","all2"})
+    StubFuture<User> retrieveUser2();
 
     @POST void saveUser(
         @Body User user

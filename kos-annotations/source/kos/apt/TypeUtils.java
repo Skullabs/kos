@@ -137,11 +137,26 @@ public class TypeUtils {
     }
 
     public String unwrapFutureGenericType(String responseType) {
-        return futureWrapper.matchedGroup(responseType, 2).orElse(responseType);
+        val begin = responseType.indexOf("<") + 1;
+        val end = responseType.lastIndexOf(">");
+
+        if (!isVertxFuture(responseType))
+            return responseType;
+        return responseType.substring(begin, end);
     }
 
     public boolean isVertxFuture( String type ){
-        return type.startsWith(Future.class.getCanonicalName());
+        val foundRawType = rawType(type).map(Lang::classForOrNull).orElse(null);
+
+        if (foundRawType == null)
+            return false;
+
+        return Future.class.isAssignableFrom(foundRawType);
+    }
+
+    public boolean isVertxEmptyFuture( String type ) {
+        val genericType = Lang.classFor( unwrapFutureGenericType(type) );
+        return isVertxFuture(type) && genericType.equals(Void.class);
     }
 
     public Optional<String> rawType(String wrapped) {
