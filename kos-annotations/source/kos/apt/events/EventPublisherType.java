@@ -62,6 +62,7 @@ class EventPublisherMethod {
     final boolean requiresValidation;
     final boolean isAsync;
     final String targetMethodName;
+    final String targetMethodReturnType;
     final int uniqueIdentifier;
 
     public static EventPublisherMethod from(int counter, SimplifiedAST.Method targetMethod)
@@ -97,6 +98,7 @@ class EventPublisherMethod {
                 parameter.getAnnotation(Valid.class) != null,
                 !targetMethod.isVoidMethod(),
                 targetMethod.getName(),
+                targetMethod.getType(),
                 counter
         );
     }

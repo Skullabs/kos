@@ -21,7 +21,7 @@ public class {{eventPublisherClassName}} implements ConfigurationLoadedEventList
     MessageProducer<{{{messageType}}}> {{targetMethodName}}Producer{{uniqueIdentifier}};
 
     @Override
-    public Future<Void> {{targetMethodName}}({{{messageType}}} value) {
+    public {{{targetMethodReturnType}}} {{targetMethodName}}({{{messageType}}} value) {
         return {{targetMethodName}}Producer{{uniqueIdentifier}}.write(value);
     }
 

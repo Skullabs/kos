@@ -20,7 +20,7 @@ public class PublisherWithMultipleMethodsImpl implements ConfigurationLoadedEven
     MessageProducer<java.util.UUID> userDeletedProducer0;
 
     @Override
-    public Future<Void> userDeleted(java.util.UUID value) {
+    public io.vertx.core.Future<java.lang.Void> userDeleted(java.util.UUID value) {
         return userDeletedProducer0.write(value);
     }
 
