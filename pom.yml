@@ -12,7 +12,7 @@ packaging: pom
 
 properties:
   # VERSIONS
-  version.vertx: 4.2.5
+  version.vertx: 4.4.1
   version.injector: 1.5.3
   version.mockito: 4.9.0
   version.lombok: 1.18.20

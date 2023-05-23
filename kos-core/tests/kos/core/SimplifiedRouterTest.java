@@ -58,8 +58,10 @@ class SimplifiedRouterTest {
     @Test void intercept()
     {
         val interceptor = mock(RequestInterceptor.class);
-        simplifiedRouter.route(GET, "/", requestHandler);
+        doNothing().when(interceptor).handle(any(), any());
+
         simplifiedRouter.intercept(interceptor);
+        simplifiedRouter.route(GET, "/", requestHandler);
 
         simplifiedRouter.handle(request);
         verify(interceptor).handle(eq(request), any());
@@ -69,8 +71,8 @@ class SimplifiedRouterTest {
     @DisplayName("Interceptors SHOULD be able to allow the request chain to be called")
     @Test void intercept1()
     {
-        simplifiedRouter.route(GET, "/", requestHandler);
         simplifiedRouter.intercept(new ByPassInterceptor());
+        simplifiedRouter.route(GET, "/", requestHandler);
 
         simplifiedRouter.handle(request);
         verify(requestHandler).handle(any());
