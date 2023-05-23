@@ -79,7 +79,7 @@ class EventPublisherMethod {
             throw new UnsupportedOperationException("Publisher methods cannot have more than one parameter.");
         }
 
-        if (!targetMethod.getType().equals(VERTX_FUTURE_OF_VOID)) {
+        if (!TypeUtils.isVertxEmptyFuture(targetMethod.getType())) {
             throw new UnsupportedOperationException("Publisher methods should return " + VERTX_FUTURE_OF_VOID + ".");
         }
 
@@ -87,7 +87,7 @@ class EventPublisherMethod {
         val messageType = parameter.getType();
 
         val erasedMessageType = TypeUtils.rawType(messageType).orElse(messageType);
-        if (erasedMessageType != messageType) {
+        if (!erasedMessageType.equals(messageType)) {
             throw new UnsupportedOperationException("Publisher does not support types with generics");
         }
 
