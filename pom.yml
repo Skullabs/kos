@@ -79,7 +79,7 @@ build:
   pluginManagement:
     plugins:
       - groupId: org.sonatype.plugins
-        version: 1.6.3
+        version: 1.7.0
         artifactId: nexus-staging-maven-plugin
         extensions: true
         configuration:
