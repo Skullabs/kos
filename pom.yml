@@ -86,6 +86,7 @@ build:
           serverId: ossrh
           nexusUrl: https://oss.sonatype.org/
           autoReleaseAfterClose: true
+          keepStagingRepositoryOnCloseRuleFailure: true
 
       - groupId: org.jacoco
         version: "${version.jacoco}"
