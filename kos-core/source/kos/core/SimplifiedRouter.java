@@ -145,6 +145,7 @@ public class SimplifiedRouter implements Handler<HttpServerRequest> {
             mapOf( HttpMethod.POST, false )
              .and( HttpMethod.PUT, false )
              .and( HttpMethod.PATCH, false )
+             .and( HttpMethod.DELETE, false )
                 .build();
 
         return new SimplifiedRouter(
